@@ -31,6 +31,11 @@ config:
  	       --go_out=paths=source_relative:./internal \
 	       $(INTERNAL_PROTO_FILES)
 
+.PHONY: wire
+# wire
+wire:
+	cd cmd/hollow/ && wire
+
 .PHONY: api
 # generate api proto
 api:

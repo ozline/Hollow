@@ -3,37 +3,110 @@
 
 openapi: 3.0.3
 info:
-    title: Greeter API
+    title: Users API
     description: The greeting service definition.
     version: 0.0.1
 paths:
-    /helloworld/{name}:
-        get:
+    /api/user/login:
+        post:
             tags:
-                - Greeter
-                - subgroup
-            description: Sends a greeting
-            operationId: Greeter_SayHello
-            parameters:
-                - name: name
-                  in: path
-                  required: true
-                  schema:
-                    type: string
+                - Users
+            description: Login a user
+            operationId: Users_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/user.v1.LoginUserRequest'
+                required: true
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/helloworld.v1.HelloReply'
+                                $ref: '#/components/schemas/user.v1.LoginUserReply'
+    /api/user/register:
+        post:
+            tags:
+                - Users
+            description: Register a user
+            operationId: Users_Register
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/user.v1.RegisterUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/user.v1.RegisterUserReply'
 components:
     schemas:
-        helloworld.v1.HelloReply:
+        user.v1.LoginUserReply:
             type: object
             properties:
-                message:
+                code:
+                    type: integer
+                    format: int64
+                msg:
                     type: string
-            description: The response message containing the greetings
+                token:
+                    type: string
+                data:
+                    $ref: '#/components/schemas/user.v1.User'
+        user.v1.LoginUserRequest:
+            type: object
+            properties:
+                username:
+                    type: string
+                password:
+                    type: string
+        user.v1.RegisterUserReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int64
+                msg:
+                    type: string
+                data:
+                    $ref: '#/components/schemas/user.v1.User'
+        user.v1.RegisterUserRequest:
+            type: object
+            properties:
+                username:
+                    type: string
+                password:
+                    type: string
+                email:
+                    type: string
+                phone:
+                    type: integer
+                    format: int64
+        user.v1.User:
+            type: object
+            properties:
+                userid:
+                    type: integer
+                    format: int64
+                username:
+                    type: string
+                status:
+                    type: string
+                email:
+                    type: string
+                nickname:
+                    type: string
+                createdAt:
+                    type: integer
+                    format: int64
+                phone:
+                    type: integer
+                    format: int64
 tags:
-    - name: Greeter
+    - name: Users
