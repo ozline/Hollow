@@ -98,17 +98,36 @@ export default {
                 this.$refs.form.validate()
                 return
             }
-            this.dialog = {
-                show: true,
-                title: '账号信息',
-                content: '用户名：'+this.username+'\n密码:'+this.password,
-            }
+
+            var data = JSON.stringify({
+                username: this.username,
+                password: this.password,
+            })
+
+            this.axios.post("/apis/user/login", data).then(res => {
+                var result = JSON.parse(JSON.stringify(res.data))
+                if(result.code == 200){
+                    this.showDialog('登录成功','登录成功')
+                }
+                else{
+                    this.showDialog('登录出错','错误代码:'+result.code+"\n错误信息:"+result.msg)
+                }
+            }).catch(err => {
+                this.showDialog('登录出错','错误代码:'+err.code+"\n错误信息:"+err.message)
+            })
         },
         register() {
             this.$router.push('/user/register');
         },
         update(data) {
             this.dialog = data;
+        },
+        showDialog(title, content){
+            this.dialog = {
+                show: true,
+                title: title,
+                content: content,
+            }
         },
     },
 }

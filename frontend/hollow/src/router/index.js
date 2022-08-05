@@ -29,6 +29,8 @@ const storeGlobal = globalStore(pinia);
 router.beforeEach((to,from,next)=>{
     // console.log('组件跳转 从 '+from.meta.title+" 至 "+to.meta.title)
     const authCheck = to.meta.auth;
+
+    //鉴权验证
     if(authCheck == true){
         if(storeGlobal.isLogin == false){
             console.log("Auth Failed")

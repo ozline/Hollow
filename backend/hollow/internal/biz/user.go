@@ -45,14 +45,14 @@ func NewUserUsecase(repo UserRepo, logger log.Logger) *UserUsecase {
 
 func (uc *UserUsecase) LoginUser(ctx context.Context, u *v1.LoginUserRequest) (*User, error) {
 	if len(u.Username) == 0 || len(u.Password) == 0 {
-		return nil, errors.New(422, "Params", "Missing Params Data")
+		return nil, errors.New(422, v1.ErrorReason_PARAMS_ILLEGAL.String(), "missing params data")
 	}
 	data, err := uc.ur.GetUserByUsername(ctx, u.Username)
 	if err != nil {
 		return nil, err
 	}
 	if GenerateTokenSHA256(u.Password) != data.Password {
-		return nil, errors.New(422, "Params", "username of password invalid")
+		return nil, errors.New(422, v1.ErrorReason_PARAMS_ILLEGAL.String(), "username of password invalid")
 	}
 
 	return data, err
@@ -60,12 +60,12 @@ func (uc *UserUsecase) LoginUser(ctx context.Context, u *v1.LoginUserRequest) (*
 
 func (uc *UserUsecase) RegisterUser(ctx context.Context, u *v1.RegisterUserRequest) (*User, error) {
 	if len(u.Username) == 0 || len(u.Password) == 0 || u.Phone == 0 || len(u.Email) == 0 {
-		return nil, errors.New(422, "Params", "Missing Params Data")
+		return nil, errors.New(422, v1.ErrorReason_PARAMS_ILLEGAL.String(), "Missing Params Data")
 	}
 
 	//检查用户名是否重复
 	if uc.ur.CheckIsUserExist(ctx, u.Username) {
-		return nil, errors.New(422, "Params", "User Existed")
+		return nil, errors.New(422, v1.ErrorReason_PARAMS_ILLEGAL.String(), "User Existed")
 	}
 
 	//创建用户

@@ -6,6 +6,7 @@ import (
 	v1 "hollow/api/hollow/v1"
 	"hollow/internal/biz"
 
+	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
@@ -43,10 +44,17 @@ func (r *userRepo) CheckIsUserExist(ctx context.Context, username string) bool {
 
 func (r *userRepo) GetUserByUsername(ctx context.Context, username string) (user *biz.User, err error) {
 	u := new(User)
-	res := r.data.db.Table("users").Where("username = ?", username).First(u)
+	var count int64
+	res := r.data.db.Table("users").Where("username = ?", username).Count(&count)
 	if res.Error != nil {
 		return nil, err
 	}
+
+	if count == 0 {
+		return nil, errors.New(500, v1.ErrorReason_USER_NOT_FOUND.String(), "user not exist")
+	}
+
+	_ = res.First(&u)
 
 	return &biz.User{
 		Username:  u.Username,
