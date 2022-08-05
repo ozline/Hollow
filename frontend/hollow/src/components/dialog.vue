@@ -5,7 +5,7 @@
         <v-card-title>{{ dialog.title }}</v-card-title>
         <v-card-text>{{ dialog.content }}</v-card-text>
         <v-card-actions>
-            <v-btn color="primary" block @click="close">关闭</v-btn>
+            <v-btn color="primary" block @click="eventConfirm">确认</v-btn>
         </v-card-actions>
     </v-card>
 </v-dialog>
@@ -44,21 +44,26 @@ export default defineComponent({
                     type: String,
                     default: "null",
                 },
-                confirm: {
-                    type: Function,
-                    default: () => {},
-                },
-                cancel: {
-                    type: Function,
-                    default: () => {},
-                },
             }),
+        },
+        confirm: {
+            type: Function,
+            default: null,
+        },
+        cancel: {
+            type: Function,
+            default: null,
         },
     },
 
     methods: {
-        close(){
+        eventConfirm(){
+            if(this.confirm != null) this.confirm();
             this.dialog.show = false;
+        },
+        eventCancel(){
+            this.dialog.show = false;
+            if(this.cancel != null) this.cancel();
         }
     }
 })

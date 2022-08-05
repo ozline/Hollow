@@ -10,6 +10,10 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 )
 
+var (
+	ErrUserNotExisted = errors.New(422, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "user not existed")
+)
+
 type userRepo struct {
 	data *Data
 	log  *log.Helper
@@ -51,7 +55,7 @@ func (r *userRepo) GetUserByUsername(ctx context.Context, username string) (user
 	}
 
 	if count == 0 {
-		return nil, errors.New(500, v1.ErrorReason_USER_NOT_FOUND.String(), "user not exist")
+		return nil, ErrUserNotExisted
 	}
 
 	_ = res.First(&u)
@@ -63,6 +67,7 @@ func (r *userRepo) GetUserByUsername(ctx context.Context, username string) (user
 		Create_at: u.Created_at,
 		Email:     u.Email,
 		Password:  u.Password,
+		Nickname:  u.Nickname,
 		ID:        u.ID,
 	}, nil
 }

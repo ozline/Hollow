@@ -8,6 +8,8 @@ option java_package = "helloworld.v1";
 option objc_class_prefix = "APIHelloworldV1";
 
 enum ErrorReason {
-  PARAMS_ILLEGAL = 0; //参数不合法
-  USER_NOT_FOUND = 1; //用户未找到
+  NORMAL_ERROR = 0;
+  PARAMS_ILLEGAL = 1; //参数不合法
+  INFORMATION_ILLEGAL = 2; //数据不合法
+  INFOMATION_NOT_FOUND = 3; //数据未找到
 }

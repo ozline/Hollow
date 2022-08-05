@@ -47,7 +47,7 @@ message RegisterUserRequest{
 message User{
     int64 userid = 1;
     string username = 2;
-    string status = 3;
+    int64 status = 3;
     string email = 4;
     string nickname = 5;
     int64 created_at = 6;

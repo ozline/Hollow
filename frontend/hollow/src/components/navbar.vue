@@ -21,6 +21,9 @@
     ></v-list-item>
     </v-list>
     <template v-slot:append>
+        <div class="pa-2" v-show="global.isLogin">
+            <v-btn block color="error" @click="logout">退出账号</v-btn>
+        </div>
         <div class="pa-2" style="text-align : center;">
             {{ new Date().getFullYear() }} — <strong>Hollow</strong>
         </div>
@@ -32,13 +35,16 @@
 <script>
 
 import { navbarStore } from '../store/navbar';
+import { globalStore } from '../store/global';
 
 export default {
     name: 'ComponentNavbar',
     setup(){
         const storeNavbar = navbarStore();
+        const global = globalStore();
         return{
             storeNavbar,
+            global,
         }
     },
     data: () => ({
@@ -54,7 +60,11 @@ export default {
     },
     methods: {
         changePage(page){
-            this.$router.push(page);
+            this.$router.push(page)
+        },
+        logout(){
+            this.global.logout()
+            this.changePage('/user/login')
         }
     }
 }

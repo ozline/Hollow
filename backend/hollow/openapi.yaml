@@ -97,7 +97,8 @@ components:
                 username:
                     type: string
                 status:
-                    type: string
+                    type: integer
+                    format: int64
                 email:
                     type: string
                 nickname:

@@ -2,9 +2,11 @@ package service
 
 import (
 	"context"
+	"strconv"
 
 	v1 "hollow/api/hollow/v1"
 	"hollow/internal/biz"
+	"hollow/internal/pkg/middleware/auth"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
@@ -26,20 +28,20 @@ func (s *UserService) Login(ctx context.Context, req *v1.LoginUserRequest) (repl
 	data, err := s.uc.LoginUser(ctx, req)
 
 	if err != nil {
-		return &v1.LoginUserReply{
-			Code: 400,
-			Msg:  err.Error(),
-		}, err
+		return nil, err
 	} else {
-		// token, _ := auth.GetAuthToken(strconv.FormatInt(data.ID, 10), data.Username, int(data.Status), "MTAxNTkwMTg1Mw==")
-		token := "testUserCase"
+		token, _ := auth.GetAuthToken(strconv.FormatInt(data.ID, 10), data.Username, int(data.Status), "MTAxNTkwMTg1Mw==")
 		return &v1.LoginUserReply{
 			Code:  200,
 			Msg:   "ok",
 			Token: token,
 			Data: &v1.User{
 				Userid:    data.ID,
+				Phone:     data.Phone,
+				Email:     data.Email,
 				Username:  data.Username,
+				Nickname:  data.Nickname,
+				Status:    data.Status,
 				CreatedAt: data.Create_at,
 			},
 		}, nil
@@ -52,17 +54,18 @@ func (s *UserService) Register(ctx context.Context, req *v1.RegisterUserRequest)
 	data, err := s.uc.RegisterUser(ctx, req)
 
 	if err != nil {
-		return &v1.RegisterUserReply{
-			Code: 400,
-			Msg:  err.Error(),
-		}, nil
+		return nil, err
 	} else {
 		return &v1.RegisterUserReply{
 			Code: 200,
 			Msg:  "ok",
 			Data: &v1.User{
 				Userid:    data.ID,
+				Phone:     data.Phone,
+				Email:     data.Email,
 				Username:  data.Username,
+				Nickname:  data.Nickname,
+				Status:    data.Status,
 				CreatedAt: data.Create_at,
 			},
 		}, nil

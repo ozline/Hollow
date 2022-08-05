@@ -3,6 +3,7 @@
     <h1 style="margin-bottom: 26px;"> 账号登录 </h1>
     <v-form
         ref="form"
+        v-model="valid"
         lazy-validation
     >
         <v-text-field
@@ -60,6 +61,9 @@
 
 <script>
 import ComponentDialog from '../../components/dialog.vue'
+import { globalStore } from '../../store/global';
+
+
 export default {
     name: "userLogin",
 
@@ -67,7 +71,15 @@ export default {
         'Component-Dialog' : ComponentDialog,
     },
 
+    setup(){
+        const global = globalStore();
+        return{
+            global,
+        }
+    },
+
     data: () => ({
+        valid: false,
         username: '',
         usernameRules: [
             v => !!v || '请输入用户名',
@@ -78,10 +90,12 @@ export default {
             v => !!v || '请输入密码',
             v => (v && v.length <= 16) || '密码长度超限',
         ],
+
         dialog: {
             show: false,
             title: 'Title',
             content: 'Content',
+            confirm: null,
         },
     }),
 
@@ -94,8 +108,10 @@ export default {
             this.$refs.form.resetValidation()
         },
         login() {
-            if(this.isEmptyStr(this.username) || this.isEmptyStr(this.password)){
-                this.$refs.form.validate()
+            this.$refs.form.validate()
+
+            if(this.valid==false){
+                this.showDialog('提示','请检查输入的信息是否正确')
                 return
             }
 
@@ -107,13 +123,14 @@ export default {
             this.axios.post("/apis/user/login", data).then(res => {
                 var result = JSON.parse(JSON.stringify(res.data))
                 if(result.code == 200){
-                    this.showDialog('登录成功','登录成功')
+                    this.global.setUser(true, result.data,result.token)
+                    this.$router.push('/')
                 }
                 else{
-                    this.showDialog('登录出错','错误代码:'+result.code+"\n错误信息:"+result.msg)
+                    this.handleError(result)
                 }
             }).catch(err => {
-                this.showDialog('登录出错','错误代码:'+err.code+"\n错误信息:"+err.message)
+                this.handleError(err.response.data)
             })
         },
         register() {
@@ -122,13 +139,20 @@ export default {
         update(data) {
             this.dialog = data;
         },
-        showDialog(title, content){
+        showDialog(title, content,confirm){
             this.dialog = {
                 show: true,
                 title: title,
                 content: content,
+                confirm: (confirm != undefined && confirm != null) ? confirm : null,
             }
         },
+        handleError(error){
+            var reason = (error.reason == undefined ? 'NULL' : error.reason)
+            var code = (error.code == undefined ? 'NULL' : error.code)
+            var message = (error.message == undefined ? 'NULL' : error.message)
+            this.showDialog("出现错误",'代码:'+code+"\n原因:"+reason+"\n信息:"+message)
+        }
     },
 }
 </script>
