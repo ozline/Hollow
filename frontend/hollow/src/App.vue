@@ -19,7 +19,8 @@ export default {
 
     if(mediaQuery.matches)
     {
-      console.log("黑暗模式")
+      console.log("system dark mode");
+      //TODO: 切换主题~
     }
   },
   components: {

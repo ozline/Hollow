@@ -1,6 +1,7 @@
 package server
 
 import (
+	"context"
 	v1 "hollow/api/hollow/v1"
 	"hollow/internal/conf"
 	"hollow/internal/service"
@@ -12,10 +13,17 @@ import (
 )
 
 // NewGRPCServer new a gRPC server.
-func NewGRPCServer(c *conf.Server, greeter *service.UserService, logger log.Logger) *grpc.Server {
+func NewGRPCServer(c *conf.Server, users *service.UserService, forests *service.ForestService, logger log.Logger) *grpc.Server {
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
-			recovery.Recovery(),
+			recovery.Recovery(
+				recovery.WithLogger(log.DefaultLogger),
+				recovery.WithHandler(func(ctx context.Context, req, err interface{}) error {
+
+					//还没遇到需要处理的panic..
+					return nil
+				}),
+			),
 			logging.Server(logger),
 		),
 	}
@@ -29,6 +37,7 @@ func NewGRPCServer(c *conf.Server, greeter *service.UserService, logger log.Logg
 		opts = append(opts, grpc.Timeout(c.Grpc.Timeout.AsDuration()))
 	}
 	srv := grpc.NewServer(opts...)
-	v1.RegisterUsersServer(srv, greeter)
+	v1.RegisterUsersServer(srv, users)
+	v1.RegisterForestsServer(srv, forests)
 	return srv
 }

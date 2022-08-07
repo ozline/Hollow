@@ -95,6 +95,7 @@ export default {
             v => !!v || '请输入密码',
             v => (v && v.length >=6) || '最少需要6位密码',
             v => (v && v.length <= 16) || '密码长度超限',
+            //TODO:再加个密码复杂度呗
         ],
 
         phone: '',

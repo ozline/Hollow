@@ -24,6 +24,7 @@
         <div class="pa-2" v-show="global.isLogin">
             <v-btn block color="error" @click="logout">退出账号</v-btn>
         </div>
+        <v-divider></v-divider>
         <div class="pa-2" style="text-align : center;">
             {{ new Date().getFullYear() }} — <strong>Hollow</strong>
         </div>

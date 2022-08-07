@@ -4,15 +4,20 @@ import Login from '../views/user/login.vue'
 import Register from '../views/user/register.vue'
 import Detail from '../views/user/detail.vue'
 import NotFound from '../views/404.vue'
+import Upload from '../views/forest/upload.vue'
 import pinia from '../store/store'
 import { globalStore } from '../store/global';
 
 
 const routes=[
     { path:'/', component:Main, meta:{ title: '首页', auth: false }},
+
     { path:'/user/login', component:Login, meta:{ title: '账号登录', auth: false }},
     { path:'/user/register', component:Register, meta:{ title: '账号注册', auth: false }},
     { path:'/user/detail', component:Detail, meta:{ title: '账号信息', auth: true }},
+
+    { path:'/forest/upload', component:Upload, meta:{ title: '发表想法', auth: true }},
+
     { path:'/404', component:NotFound, meta:{ title: '404', auth: false }},
     { path:'/:pathMatch(.*)', redirect:'/404'},
 ]

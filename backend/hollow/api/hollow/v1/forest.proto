@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package forest.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "hollow/api/forest/v1;v1";
+option java_multiple_files = true;
+option java_package = "dev.kratos.api.forest.v1";
+option java_outer_classname = "ForestProtoV1";
+
+// The greeting service definition.
+service Forests {
+
+    // Push a Leaf
+    rpc Push (PushLeafRequest) returns (PushLeafReply) {
+        option (google.api.http) = {
+            post: "/api/forest/push",
+            body: "*",
+        };
+    }
+
+    // Get Leafs
+    rpc Get (GetLeafsRequest) returns (GetLeafsReply) {
+        option (google.api.http) = {
+            post: "/api/forest/all",
+            body: "*",
+        };
+    }
+}
+//Request Messages
+
+message PushLeafRequest{
+    int64 userid = 1;
+    string message = 2;
+}
+
+message GetLeafsRequest{
+    int64 page = 1;
+    int64 pagesize = 2;
+}
+
+//Reply Messages
+
+message Leaf{
+    int64 id = 1;
+    int64 owner = 2;
+    string message = 3;
+    int64 create_at = 4;
+    int64 status = 5;
+}
+
+message MultipleTodoReply{
+    repeated Leaf list = 1;
+    int64 total = 2;
+}
+
+message PushLeafReply{
+    int64 code = 1;
+    string msg = 2;
+    // Leaf data = 3;
+}
+
+message GetLeafsReply{
+    int64 code = 1;
+    string msg = 2;
+    MultipleTodoReply data = 3;
+}

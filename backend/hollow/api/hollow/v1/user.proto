@@ -3,8 +3,9 @@ syntax = "proto3";
 package user.v1;
 
 import "google/api/annotations.proto";
+import "validate/validate.proto";
 
-option go_package = "todolist/api/todolist/v1;v1";
+option go_package = "hollow/api/user/v1;v1";
 option java_multiple_files = true;
 option java_package = "dev.kratos.api.user.v1";
 option java_outer_classname = "UserProtoV1";
@@ -14,7 +15,7 @@ service Users {
 
     // Register a user
     rpc Register (RegisterUserRequest) returns (RegisterUserReply) {
-            option (google.api.http) = {
+        option (google.api.http) = {
             post: "/api/user/register",
             body: "*",
         };
@@ -22,7 +23,7 @@ service Users {
 
     // Login a user
     rpc Login (LoginUserRequest) returns (LoginUserReply) {
-            option (google.api.http) = {
+        option (google.api.http) = {
             post: "/api/user/login",
             body: "*",
         };
@@ -31,14 +32,14 @@ service Users {
 //Request Messages
 
 message LoginUserRequest{
-    string username = 1;
-    string password = 2;
+    string username = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    string password = 2 [(validate.rules).string = {min_len: 6, max_len: 16}];
 }
 
 message RegisterUserRequest{
-    string username = 1;
-    string password = 2;
-    string email = 3;
+    string username = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
+    string password = 2 [(validate.rules).string = {min_len: 6, max_len: 16}];
+    string email = 3 [(validate.rules).string.email = true];
     int64 phone = 4;
 }
 

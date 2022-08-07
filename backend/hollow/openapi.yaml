@@ -3,10 +3,47 @@
 
 openapi: 3.0.3
 info:
-    title: Users API
-    description: The greeting service definition.
+    title: ""
     version: 0.0.1
 paths:
+    /api/forest/all:
+        post:
+            tags:
+                - Forests
+            description: Get Leafs
+            operationId: Forests_Get
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/forest.v1.GetLeafsRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/forest.v1.GetLeafsReply'
+    /api/forest/push:
+        post:
+            tags:
+                - Forests
+            description: Push a Leaf
+            operationId: Forests_Push
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/forest.v1.PushLeafRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/forest.v1.PushLeafReply'
     /api/user/login:
         post:
             tags:
@@ -47,6 +84,68 @@ paths:
                                 $ref: '#/components/schemas/user.v1.RegisterUserReply'
 components:
     schemas:
+        forest.v1.GetLeafsReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int64
+                msg:
+                    type: string
+                data:
+                    $ref: '#/components/schemas/forest.v1.MultipleTodoReply'
+        forest.v1.GetLeafsRequest:
+            type: object
+            properties:
+                page:
+                    type: integer
+                    format: int64
+                pagesize:
+                    type: integer
+                    format: int64
+        forest.v1.Leaf:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                owner:
+                    type: integer
+                    format: int64
+                message:
+                    type: string
+                createAt:
+                    type: integer
+                    format: int64
+                status:
+                    type: integer
+                    format: int64
+        forest.v1.MultipleTodoReply:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/forest.v1.Leaf'
+                total:
+                    type: integer
+                    format: int64
+        forest.v1.PushLeafReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int64
+                msg:
+                    type: string
+        forest.v1.PushLeafRequest:
+            type: object
+            properties:
+                userid:
+                    type: integer
+                    format: int64
+                message:
+                    type: string
         user.v1.LoginUserReply:
             type: object
             properties:
@@ -110,4 +209,7 @@ components:
                     type: integer
                     format: int64
 tags:
+    - name: Forests
+      description: The greeting service definition.
     - name: Users
+      description: The greeting service definition.

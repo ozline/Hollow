@@ -6,29 +6,12 @@ import (
 	v1 "hollow/api/hollow/v1"
 	"hollow/internal/biz"
 
-	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
-)
-
-var (
-	ErrUserNotExisted = errors.New(422, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "user not existed")
 )
 
 type userRepo struct {
 	data *Data
 	log  *log.Helper
-}
-
-type User struct {
-	ID         int64
-	Username   string
-	Password   string
-	Status     int64
-	Email      string
-	Nickname   string
-	Phone      int64
-	Updated_at int64
-	Created_at int64
 }
 
 // NewGreeterRepo .
@@ -42,14 +25,14 @@ func NewUserRepo(data *Data, logger log.Logger) biz.UserRepo {
 func (r *userRepo) CheckIsUserExist(ctx context.Context, username string) bool {
 
 	var count int64
-	_ = r.data.db.Table("users").Where("username = ?", username).Count(&count)
+	_ = r.data.db.Table(TABLE_USERS).Where("username = ?", username).Count(&count)
 	return count != 0
 }
 
 func (r *userRepo) GetUserByUsername(ctx context.Context, username string) (user *biz.User, err error) {
 	u := new(User)
 	var count int64
-	res := r.data.db.Table("users").Where("username = ?", username).Count(&count)
+	res := r.data.db.Table(TABLE_USERS).Where("username = ?", username).Count(&count)
 	if res.Error != nil {
 		return nil, err
 	}
@@ -85,7 +68,7 @@ func (r *userRepo) CreateUser(ctx context.Context, g *v1.RegisterUserRequest) er
 		Nickname:   g.Username,
 	}
 
-	res := r.data.db.Table("users").Create(&u)
+	res := r.data.db.Table(TABLE_USERS).Create(&u)
 
 	return res.Error
 }
