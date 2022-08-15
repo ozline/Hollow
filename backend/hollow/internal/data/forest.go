@@ -35,7 +35,7 @@ func NewForestRepo(data *Data, logger log.Logger) biz.ForestRepo {
 func (r *forestRepo) PushLeaf(ctx context.Context, g *v1.PushLeafRequest) error {
 	timeStamp := biz.GetTimestamp13()
 
-	u := Leaf{
+	u := biz.Leaf{
 		// Owner:     getUserid(ctx),
 		Owner:     g.Userid,
 		Create_at: timeStamp,
@@ -50,7 +50,7 @@ func (r *forestRepo) PushLeaf(ctx context.Context, g *v1.PushLeafRequest) error 
 
 func (r *forestRepo) GetForest(ctx context.Context, g *v1.GetLeafsRequest) (list []*biz.Leaf, total int64, err error) {
 
-	var leafs []Leaf
+	var leafs []biz.Leaf
 	var count int64
 	var res *gorm.DB
 

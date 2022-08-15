@@ -2,8 +2,8 @@
 <template>
 <v-app>
   <v-layout>
-    <ComponentNavbar></ComponentNavbar>
-    <ComponentRouterView></ComponentRouterView>
+    <navbar></navbar>
+    <routerView></routerView>
   </v-layout>
 </v-app>
 </template>
@@ -24,8 +24,8 @@ export default {
     }
   },
   components: {
-    ComponentNavbar,
-    ComponentRouterView
+    'navbar' : ComponentNavbar,
+    'routerView' : ComponentRouterView
   },
 }
 </script>

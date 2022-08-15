@@ -22,23 +22,3 @@ var (
 
 	//FOREST
 )
-
-//TYPES
-type User struct {
-	ID         int64
-	Username   string
-	Password   string
-	Status     int64
-	Email      string
-	Nickname   string
-	Phone      int64
-	Updated_at int64
-	Created_at int64
-}
-type Leaf struct {
-	ID        int64
-	Owner     int64
-	Create_at int64
-	Status    int64
-	Message   string
-}

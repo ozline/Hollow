@@ -18,14 +18,6 @@ type ForestUsecase struct {
 	log *log.Helper
 }
 
-type Leaf struct {
-	ID        int64
-	Owner     int64
-	Create_at int64
-	Status    int64
-	Message   string
-}
-
 func converttoReply(forest *Leaf) *v1.Leaf {
 	return &v1.Leaf{
 		Id:       forest.ID,

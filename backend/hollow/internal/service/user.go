@@ -45,7 +45,7 @@ func (s *UserService) Login(ctx context.Context, req *v1.LoginUserRequest) (repl
 			Username:  data.Username,
 			Nickname:  data.Nickname,
 			Status:    data.Status,
-			CreatedAt: data.Create_at,
+			CreatedAt: data.Created_at,
 		},
 	}, nil
 }
@@ -72,7 +72,7 @@ func (s *UserService) Register(ctx context.Context, req *v1.RegisterUserRequest)
 			Username:  data.Username,
 			Nickname:  data.Nickname,
 			Status:    data.Status,
-			CreatedAt: data.Create_at,
+			CreatedAt: data.Created_at,
 		},
 	}, nil
 }

@@ -23,8 +23,7 @@ service Forests {
     // Get Leafs
     rpc Get (GetLeafsRequest) returns (GetLeafsReply) {
         option (google.api.http) = {
-            post: "/api/forest/all",
-            body: "*",
+            get: "/api/forest/all",
         };
     }
 }

@@ -30,7 +30,7 @@ func (r *userRepo) CheckIsUserExist(ctx context.Context, username string) bool {
 }
 
 func (r *userRepo) GetUserByUsername(ctx context.Context, username string) (user *biz.User, err error) {
-	u := new(User)
+	u := new(biz.User)
 	var count int64
 	res := r.data.db.Table(TABLE_USERS).Where("username = ?", username).Count(&count)
 	if res.Error != nil {
@@ -43,22 +43,13 @@ func (r *userRepo) GetUserByUsername(ctx context.Context, username string) (user
 
 	_ = res.First(&u)
 
-	return &biz.User{
-		Username:  u.Username,
-		Status:    u.Status,
-		Phone:     u.Phone,
-		Create_at: u.Created_at,
-		Email:     u.Email,
-		Password:  u.Password,
-		Nickname:  u.Nickname,
-		ID:        u.ID,
-	}, nil
+	return u, nil
 }
 
 func (r *userRepo) CreateUser(ctx context.Context, g *v1.RegisterUserRequest) error {
 
 	timeStamp := biz.GetTimestamp13()
-	u := User{
+	u := biz.User{
 		Username:   g.Username,
 		Password:   biz.GenerateTokenSHA256(g.Password),
 		Phone:      g.Phone,

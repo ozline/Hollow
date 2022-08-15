@@ -1,6 +1,6 @@
 <template>
-    <v-main fill-height>
-        <router-view v-slot="{ Component }" style="outline: 0;">
+    <v-main>
+        <router-view v-slot="{ Component }">
             <transition name="fade" mode="out-in">
                 <component :is="Component" />
             </transition>

@@ -17,15 +17,22 @@ var (
 
 //TYPES
 type User struct {
+	ID         int64
+	Status     int64
+	Username   string
+	Email      string
+	Phone      int64
+	Created_at int64
+	Deleted_at int64
+	Updated_at int64
+	Password   string
+	Nickname   string
+}
+
+type Leaf struct {
 	ID        int64
-	Status    int64
-	Username  string
-	Email     string
-	Phone     int64
+	Owner     int64
 	Create_at int64
-	Delete_at int64
-	Update_at int64
-	Password  string
-	Nickname  string
-	Token     string
+	Status    int64
+	Message   string
 }

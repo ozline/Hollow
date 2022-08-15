@@ -7,17 +7,22 @@ info:
     version: 0.0.1
 paths:
     /api/forest/all:
-        post:
+        get:
             tags:
                 - Forests
             description: Get Leafs
             operationId: Forests_Get
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/forest.v1.GetLeafsRequest'
-                required: true
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+                - name: pagesize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
             responses:
                 "200":
                     description: OK
@@ -94,15 +99,6 @@ components:
                     type: string
                 data:
                     $ref: '#/components/schemas/forest.v1.MultipleTodoReply'
-        forest.v1.GetLeafsRequest:
-            type: object
-            properties:
-                page:
-                    type: integer
-                    format: int64
-                pagesize:
-                    type: integer
-                    format: int64
         forest.v1.Leaf:
             type: object
             properties:
