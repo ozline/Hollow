@@ -1,11 +1,11 @@
 <template>
 
-<v-dialog v-model="dialog.show">
+<v-dialog v-model="message.show">
     <v-card>
-        <v-card-title>{{ dialog.title }}</v-card-title>
-        <v-card-text>{{ dialog.content }}</v-card-text>
+        <v-card-title>{{ message.title }}</v-card-title>
+        <v-card-text>{{ message.content }}</v-card-text>
         <v-card-actions>
-            <v-btn color="primary" block @click="eventConfirm">确认</v-btn>
+            <v-btn color="primary" block @click="message.show = false">确认</v-btn>
         </v-card-actions>
     </v-card>
 </v-dialog>
@@ -14,58 +14,19 @@
 
 <script>
 import { computed, defineComponent } from 'vue-demi';
+import { dialogStore } from '../store/dialog';
+
 export default defineComponent({
-    name: 'ComponentDialog',
+    name: 'ComponentMessage',
 
-    setup(props,ctx)
-    {
-        const dialog = computed({
-            get: () => props.data,
-            set: val => ctx.emit('update', { dialog: val })
-        });
-        return{
-            dialog
-        }
+    setup(){
+        const dialog = dialogStore();
+        const message = computed({
+            get: () => dialog.data,
+            set: val => dialog.update(val)
+        })
+
+        return{ message }
     },
-
-    props: {
-        data: {
-            type: Object,
-            default: () => ({
-                show: {
-                    type: Boolean,
-                    default: false,
-                },
-                title: {
-                    type: String,
-                    default: "null",
-                },
-                content: {
-                    type: String,
-                    default: "null",
-                },
-            }),
-        },
-        //TODO: 传入回调函数
-        confirm: {
-            type: Function,
-            default: null,
-        },
-        cancel: {
-            type: Function,
-            default: null,
-        },
-    },
-
-    methods: {
-        eventConfirm(){
-            if(this.confirm != null) this.confirm();
-            this.dialog.show = false;
-        },
-        eventCancel(){
-            this.dialog.show = false;
-            if(this.cancel != null) this.cancel();
-        }
-    }
 })
 </script>

@@ -3,7 +3,8 @@
 <v-app>
   <v-layout>
     <navbar></navbar>
-    <routerView></routerView>
+    <router-view></router-view>
+    <dialog-view></dialog-view>
   </v-layout>
 </v-app>
 </template>
@@ -11,6 +12,7 @@
 <script>
 import ComponentNavbar from './components/navbar.vue'
 import ComponentRouterView from './components/view.vue'
+import ComponentMessage from './components/dialog.vue'
 
 export default {
   name: 'App',
@@ -25,7 +27,8 @@ export default {
   },
   components: {
     'navbar' : ComponentNavbar,
-    'routerView' : ComponentRouterView
+    'router-view' : ComponentRouterView,
+    'dialog-view' : ComponentMessage
   },
 }
 </script>

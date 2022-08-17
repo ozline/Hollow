@@ -89,10 +89,15 @@ export default {
             }
         },
         handleError(error){
-            var reason = (error.reason == undefined ? 'NULL' : error.reason)
-            var code = (error.code == undefined ? 'NULL' : error.code)
-            var message = (error.message == undefined ? 'NULL' : error.message)
-            this.showDialog("出现错误",'代码:'+code+"\n原因:"+reason+"\n信息:"+message)
+            var status = error.status
+            if(status == 500){
+                this.showDialog("出现错误","服务器请求失败,请检查网络连接")
+                return
+            }
+            var reason = (error.reason == undefined ? 'NULL' : error.data.reason)
+            var code = (error.code == undefined ? 'NULL' : error.data.code)
+            var message = (error.message == undefined ? 'NULL' : error.data.message)
+            this.showDialog("出现错误","代码:"+code+"\n原因:"+reason+"\n信息:"+message)
         },
         back(){
             if(window.history.length >1){
@@ -128,7 +133,7 @@ export default {
                     this.handleError(result)
                 }
             }).catch(err => {
-                this.handleError(err.response.data)
+                this.handleError(err.response)
             })
         }
     }

@@ -22,6 +22,9 @@ export const globalStore = defineStore('globalStore', {
             this.isLogin = false
             this.user = []
             this.token = ''
-        }
+        },
+        isEmptyStr(str){
+            return (str == undefined || str == null || str == '')
+        },
     }
 })

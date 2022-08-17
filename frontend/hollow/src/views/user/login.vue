@@ -49,29 +49,24 @@
         注册账号
         </v-btn>
     </v-form>
-
-    <!-- 通知框 -->
-    <Component-Dialog :data="dialog" @update="update"></Component-Dialog>
 </v-container>
 </template>
 
 
 <script>
-import ComponentDialog from '../../components/dialog.vue'
 import { globalStore } from '../../store/global';
+import { dialogStore } from '../../store/dialog';
 
 
 export default {
     name: "userLogin",
 
-    components:{
-        'Component-Dialog' : ComponentDialog,
-    },
-
     setup(){
         const global = globalStore();
+        const dialog = dialogStore();
         return{
             global,
+            dialog
         }
     },
 
@@ -87,19 +82,9 @@ export default {
             v => !!v || '请输入密码',
             v => (v && v.length <= 16) || '密码长度超限',
         ],
-
-        dialog: {
-            show: false,
-            title: 'Title',
-            content: 'Content',
-            confirm: null,
-        },
     }),
 
     methods: {
-        isEmptyStr(str){
-            return (str == undefined || str == null || str == '')
-        },
         reset() {
             this.$refs.form.reset()
             this.$refs.form.resetValidation()
@@ -124,32 +109,15 @@ export default {
                     this.$router.push('/')
                 }
                 else{
-                    this.handleError(result)
+                    this.dialog.handleError(result)
                 }
             }).catch(err => {
-                this.handleError(err.response.data)
+                this.dialog.handleError(err.response)
             })
         },
         register() {
             this.$router.push('/user/register');
         },
-        update(data) {
-            this.dialog = data;
-        },
-        showDialog(title, content,confirm){
-            this.dialog = {
-                show: true,
-                title: title,
-                content: content,
-                confirm: (confirm != undefined && confirm != null) ? confirm : null,
-            }
-        },
-        handleError(error){
-            var reason = (error.reason == undefined ? 'NULL' : error.reason)
-            var code = (error.code == undefined ? 'NULL' : error.code)
-            var message = (error.message == undefined ? 'NULL' : error.message)
-            this.showDialog("出现错误",'代码:'+code+"\n原因:"+reason+"\n信息:"+message)
-        }
     },
 }
 </script>

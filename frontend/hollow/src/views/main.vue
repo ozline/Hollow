@@ -15,27 +15,23 @@
         @click="cardClickEvent(item.id)"
     ></v-card>
 
-    <!-- 通知框 -->
-    <Component-Dialog :data="dialog" @update="update"></Component-Dialog>
 </v-container>
 
 </template>
 
 <script>
-import ComponentDialog from '../components/dialog.vue'
 import { globalStore } from '../store/global';
+import { dialogStore } from '../store/dialog';
 
 export default {
     name: 'MainPage',
 
-    components:{
-        'Component-Dialog' : ComponentDialog,
-    },
-
     setup(){
         const global = globalStore();
+        const dialog = dialogStore();
         return{
             global,
+            dialog
         }
     },
 
@@ -49,22 +45,12 @@ export default {
             total: 0,
             pagesize: 10,
             current: 1,
-
-            dialog: {
-                show: false,
-                title: 'Title',
-                content: 'Content',
-                confirm: null,
-            },
         }
     },
 
     methods:{
         upload(){
             this.$router.push('/forest/upload');
-        },
-        update(data) {
-            this.dialog = data;
         },
         refresh(){
             var data = JSON.stringify({
@@ -80,32 +66,14 @@ export default {
                     this.total = result.data.total
                 }
                 else{
-                    this.handleError(result)
+                    this.dialog.handleError(result)
                 }
             }).catch(err => {
-                this.handleError(err.response.data)
+                this.dialog.handleError(err.response)
             })
         },
-        handleError(error){
-            var reason = (error.reason == undefined ? 'NULL' : error.reason)
-            var code = (error.code == undefined ? 'NULL' : error.code)
-            var message = (error.message == undefined ? 'NULL' : error.message)
-            this.showDialog("出现错误",'代码:'+code+"\n原因:"+reason+"\n信息:"+message)
-        },
-        showDialog(title, content,confirm){
-            this.dialog = {
-                show: true,
-                title: title,
-                content: content,
-                confirm: (confirm != undefined && confirm != null) ? confirm : null,
-            }
-        },
         cardClickEvent(id){
-            this.dialog = {
-                show: true,
-                title: '提示',
-                content: 'ID: '+ id,
-            }
+            this.dialog.show("提示", 'ID:' + id)
         }
     }
 }
