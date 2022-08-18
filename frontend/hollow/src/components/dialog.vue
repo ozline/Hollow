@@ -1,6 +1,6 @@
 <template>
 
-<v-dialog v-model="message.show">
+<v-dialog v-model="message.show" multi-line>
     <v-card>
         <v-card-title>{{ message.title }}</v-card-title>
         <v-card-text>{{ message.content }}</v-card-text>

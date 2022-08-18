@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-export const navbarStore = defineStore('navbarStore', {
+export const navbarStore = defineStore('navbar', {
     state: () => {
         return {
             title: "Hollow 抒发树洞",

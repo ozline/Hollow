@@ -54,21 +54,9 @@
 
 
 <script>
-import { globalStore } from '../../store/global';
-import { dialogStore } from '../../store/dialog';
-
 
 export default {
     name: "userLogin",
-
-    setup(){
-        const global = globalStore();
-        const dialog = dialogStore();
-        return{
-            global,
-            dialog
-        }
-    },
 
     data: () => ({
         valid: false,
@@ -93,26 +81,19 @@ export default {
             this.$refs.form.validate()
 
             if(this.valid==false){
-                this.showDialog('提示','请检查输入的信息是否正确')
+                this.dialog.show('提示','请检查输入的信息是否正确')
                 return
             }
 
-            var data = JSON.stringify({
+            var data = {
                 username: this.username,
                 password: this.password,
-            })
+            }
 
-            this.axios.post("/apis/user/login", data).then(res => {
-                var result = JSON.parse(JSON.stringify(res.data))
-                if(result.code == 200){
-                    this.global.setUser(true, result.data,result.token)
-                    this.$router.push('/')
-                }
-                else{
-                    this.dialog.handleError(result)
-                }
-            }).catch(err => {
-                this.dialog.handleError(err.response)
+            this.http.post('/user/login', data).then(res => {
+                this.global.setUser(true, res.data,res.token)
+                this.snackbar.show("登录成功")
+                this.$router.push('/')
             })
         },
         register() {

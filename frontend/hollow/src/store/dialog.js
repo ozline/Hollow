@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-export const dialogStore = defineStore('dialogStore', {
+export const dialogStore = defineStore('dialog', {
     state: () => {
         return {
             data:{
@@ -31,10 +31,12 @@ export const dialogStore = defineStore('dialogStore', {
                 this.show("出现错误","服务器请求失败,请检查网络连接")
                 return
             }
-            var reason = (error.reason == undefined ? 'NULL' : error.data.reason)
-            var code = (error.code == undefined ? 'NULL' : error.data.code)
-            var message = (error.message == undefined ? 'NULL' : error.data.message)
+            var reason = (error.data.reason == undefined ? 'NULL' : error.data.reason)
+            var code = (error.data.code == undefined ? 'NULL' : error.data.code)
+            var message = (error.data.message == undefined ? 'NULL' : error.data.message)
             this.show("出现错误","代码:"+code+"\n原因:"+reason+"\n信息:"+message)
         }
     }
 })
+
+export default global

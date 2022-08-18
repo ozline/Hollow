@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-export const globalStore = defineStore('globalStore', {
+export const globalStore = defineStore('global', {
     state: () => {
         return {
             isLogin: false,

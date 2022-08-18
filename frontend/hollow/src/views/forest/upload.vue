@@ -32,9 +32,6 @@
         </template>
         产品没开发完成前，随便说！
     </v-alert>
-
-    <!-- 通知框 -->
-    <Component-Dialog :data="dialog" @update="update"></Component-Dialog>
 </v-container>
 
 </template>
@@ -43,22 +40,8 @@
 
 <script>
 
-import { globalStore } from '../../store/global';
-import ComponentDialog from '../../components/dialog.vue'
-
 export default {
     name: 'forestUpload',
-
-    components:{
-        'Component-Dialog' : ComponentDialog,
-    },
-
-    setup(){
-        const storeGlobal = globalStore();
-        return{
-            storeGlobal,
-        }
-    },
 
     data: () => ({
         valid: false,
@@ -67,38 +50,9 @@ export default {
             v => !!v || '请输入内容',
             v => (v && v.length <= 140) || '内容长度不能超过140个字符',
         ],
-
-        dialog: {
-            show: false,
-            title: 'Title',
-            content: 'Content',
-            confirm: null,
-        },
     }),
 
     methods:{
-        update(data) {
-            this.dialog = data;
-        },
-        showDialog(title, content,confirm){
-            this.dialog = {
-                show: true,
-                title: title,
-                content: content,
-                confirm: (confirm != undefined && confirm != null) ? confirm : null,
-            }
-        },
-        handleError(error){
-            var status = error.status
-            if(status == 500){
-                this.showDialog("出现错误","服务器请求失败,请检查网络连接")
-                return
-            }
-            var reason = (error.reason == undefined ? 'NULL' : error.data.reason)
-            var code = (error.code == undefined ? 'NULL' : error.data.code)
-            var message = (error.message == undefined ? 'NULL' : error.data.message)
-            this.showDialog("出现错误","代码:"+code+"\n原因:"+reason+"\n信息:"+message)
-        },
         back(){
             if(window.history.length >1){
                 this.$router.go(-1)
@@ -112,28 +66,28 @@ export default {
             this.$refs.form.validate()
 
             if(this.valid==false){
-                this.showDialog('提示','请检查输入的信息是否正确')
+                this.dialog.show('提示','请检查输入的信息是否正确')
                 return
             }
 
             var data = JSON.stringify({
-                userid: Number(this.storeGlobal.user.userid),
+                userid: Number(this.global.user.userid),
                 message: this.message,
             })
 
             this.axios.post("/apis/forest/push", data).then(res => {
                 var result = JSON.parse(JSON.stringify(res.data))
                 if(result.code == 200){
-                    this.showDialog('提示','发送成功!!3秒后跳转首页')
+                    this.dialog.show('提示','发送成功!!3秒后跳转首页')
                     setTimeout(() => {
                         this.$router.push('/');
                     }, 3000);
                 }
                 else{
-                    this.handleError(result)
+                    this.dialog.handleError(result)
                 }
             }).catch(err => {
-                this.handleError(err.response)
+                this.dialog.handleError(err.response)
             })
         }
     }

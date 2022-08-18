@@ -66,15 +66,9 @@
 
 
 <script>
-import { dialogStore } from '../../store/dialog';
 
 export default {
     name: "userRegister",
-
-    setup(){
-        const dialog = dialogStore();
-        return{ dialog }
-    },
 
     data: () => ({
         valid: false,

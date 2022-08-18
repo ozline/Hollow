@@ -7,15 +7,8 @@
 
 <script>
 
-import { globalStore } from '../../store/global';
-
 export default {
     name: 'userDetail',
-    setup(){
-        const storeGlobal = globalStore();
-        return{
-            storeGlobal,
-        }
-    },
 }
+
 </script>

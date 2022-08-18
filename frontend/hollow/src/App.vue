@@ -4,7 +4,11 @@
   <v-layout>
     <navbar></navbar>
     <router-view></router-view>
+
+    <!-- 全局组件 -->
     <dialog-view></dialog-view>
+    <snackbar></snackbar>
+
   </v-layout>
 </v-app>
 </template>
@@ -13,6 +17,7 @@
 import ComponentNavbar from './components/navbar.vue'
 import ComponentRouterView from './components/view.vue'
 import ComponentMessage from './components/dialog.vue'
+import ComponentSnackbar from './components/snackbar.vue'
 
 export default {
   name: 'App',
@@ -28,7 +33,8 @@ export default {
   components: {
     'navbar' : ComponentNavbar,
     'router-view' : ComponentRouterView,
-    'dialog-view' : ComponentMessage
+    'dialog-view' : ComponentMessage,
+    'snackbar' : ComponentSnackbar
   },
 }
 </script>

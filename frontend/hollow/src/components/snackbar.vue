@@ -1,51 +1,35 @@
 <template>
     <v-snackbar
-        v-model="snackbar.show"
-        multi-line
+        v-model="message.show"
+        :timeout="message.timeout"
     >
-        {{ snackbar.context }}
+        {{ message.content }}
 
         <template v-slot:actions>
             <v-btn
-                color="red"
+                :color="message.color"
                 variant="text"
-                @click="snackbar.show = false"
-            >
-                关闭
-            </v-btn>
+                @click="message.show = false"
+            >关闭</v-btn>
         </template>
     </v-snackbar>
 </template>
 
 <script>
-import { defineComponent } from "vue-demi";
+import { computed, defineComponent } from 'vue-demi';
+import { snackbarStore } from '../store/snackbar';
 
 export default defineComponent({
-    name: "ComponentSnackbar",
-    setup() {
-        const snackbar = computed({
-            get: () => props.data,
-            set: val => ctx.emit('update', { snackbar: val })
-        });
-        return{
-            snackbar
-        }
-    },
+    name: 'ComponentSnackbar',
 
-    props: {
-        data: {
-            type: Object,
-            default: () => ({
-                show: {
-                    type: Boolean,
-                    default: false,
-                },
-                content: {
-                    type: String,
-                    default: "null",
-                },
-            }),
-        },
-    }
-});
+    setup(){
+        const snackbar = snackbarStore();
+        const message = computed({
+            get: () => snackbar.data,
+            set: val => snackbar.update(val)
+        })
+
+        return{ message }
+    },
+})
 </script>

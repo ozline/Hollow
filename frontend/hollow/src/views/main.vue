@@ -20,20 +20,9 @@
 </template>
 
 <script>
-import { globalStore } from '../store/global';
-import { dialogStore } from '../store/dialog';
 
 export default {
     name: 'MainPage',
-
-    setup(){
-        const global = globalStore();
-        const dialog = dialogStore();
-        return{
-            global,
-            dialog
-        }
-    },
 
     created(){
         this.refresh()
@@ -53,23 +42,14 @@ export default {
             this.$router.push('/forest/upload');
         },
         refresh(){
-            var data = JSON.stringify({
+            var data = {
                 page: this.current,
                 pagesize: this.pagesize,
-            })
+            }
 
-            this.axios.post("/apis/forest/all", data).then(res => {
-                var result = JSON.parse(JSON.stringify(res.data))
-                if(result.code == 200){
-                    console.log(result)
-                    this.datas = result.data.list
-                    this.total = result.data.total
-                }
-                else{
-                    this.dialog.handleError(result)
-                }
-            }).catch(err => {
-                this.dialog.handleError(err.response)
+            this.http.get('/forest/all', data).then(res => {
+                this.datas = res.data.list
+                this.total = res.data.total
             })
         },
         cardClickEvent(id){

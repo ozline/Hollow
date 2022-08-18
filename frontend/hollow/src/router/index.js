@@ -6,7 +6,8 @@ import Detail from '../views/user/space.vue'
 import NotFound from '../views/404.vue'
 import Upload from '../views/forest/upload.vue'
 import pinia from '../store/store'
-import { globalStore } from '../store/global';
+import { globalStore } from '../store/global'
+import { snackbarStore } from '../store/snackbar'
 
 
 /*
@@ -69,7 +70,8 @@ const router = createRouter({
     }
 })
 
-const storeGlobal = globalStore(pinia);
+const global = globalStore(pinia);
+const snackbar = snackbarStore();
 
 router.beforeEach((to,from,next)=>{
     // console.log('组件跳转 从 '+from.meta.title+" 至 "+to.meta.title)
@@ -77,8 +79,8 @@ router.beforeEach((to,from,next)=>{
 
     //鉴权验证
     if(authCheck == true){
-        if(storeGlobal.isLogin == false){
-            console.log("Auth Failed")
+        if(global.isLogin == false){
+            snackbar.show("需要登录账号,请先登录")
             next('/user/login');
             return;
         }

@@ -8,11 +8,5 @@
 <script>
 export default {
     name: 'forestDetail',
-    setup(){
-        const storeGlobal = globalStore();
-        return{
-            storeGlobal,
-        }
-    },
 }
 </script>
