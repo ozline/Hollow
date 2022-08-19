@@ -36,16 +36,13 @@
 <script>
 
 import { navbarStore } from '../store/navbar';
-import { globalStore } from '../store/global';
 
 export default {
     name: 'ComponentNavbar',
     setup(){
         const storeNavbar = navbarStore();
-        const global = globalStore();
         return{
             storeNavbar,
-            global,
         }
     },
     data: () => ({

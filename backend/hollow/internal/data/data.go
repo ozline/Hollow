@@ -36,7 +36,7 @@ func NewDB(c *conf.Data) *gorm.DB {
 
 	db, err := gorm.Open(mysql.Open(path), &gorm.Config{})
 	if err != nil {
-		panic("failed to connect database")
+		panic(err)
 	}
 
 	if err := db.AutoMigrate(); err != nil {

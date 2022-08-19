@@ -3,6 +3,11 @@
 <v-app>
   <v-layout>
     <navbar></navbar>
+
+    <!-- <div style="overflow: auto">
+      <router-view></router-view>
+    </div> -->
+
     <router-view></router-view>
 
     <!-- 全局组件 -->

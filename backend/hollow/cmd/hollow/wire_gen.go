@@ -19,7 +19,7 @@ import (
 // Injectors from wire.go:
 
 // wireApp init kratos application.
-func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*kratos.App, func(), error) {
+func wireApp(confServer *conf.Server, confData *conf.Data, auth *conf.Auth, logger log.Logger) (*kratos.App, func(), error) {
 	db := data.NewDB(confData)
 	dataData, cleanup, err := data.NewData(confData, logger, db)
 	if err != nil {
@@ -31,8 +31,8 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	forestRepo := data.NewForestRepo(dataData, logger)
 	forestUsecase := biz.NewForestUsecase(forestRepo, logger)
 	forestService := service.NewForestService(forestUsecase)
-	grpcServer := server.NewGRPCServer(confServer, userService, forestService, logger)
-	httpServer := server.NewHTTPServer(confServer, userService, forestService, logger)
+	grpcServer := server.NewGRPCServer(confServer, auth, userService, forestService, logger)
+	httpServer := server.NewHTTPServer(confServer, auth, userService, forestService, logger)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()
