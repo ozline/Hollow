@@ -2,7 +2,6 @@ package data
 
 import (
 	"context"
-	"fmt"
 
 	v1 "hollow/api/hollow/v1"
 	"hollow/internal/biz"
@@ -25,17 +24,18 @@ func NewForestRepo(data *Data, logger log.Logger) biz.ForestRepo {
 
 func (r *forestRepo) PushLeaf(ctx context.Context, g *v1.PushLeafRequest) error {
 	timeStamp := biz.GetTimestamp13()
-	// userid := getUserid(ctx)
-	userid := int64(26)
+	user := getUserInfo(ctx) //获取用户信息
+
+	if user.ID == -1 {
+		return ErrUserInvalid
+	}
 
 	u := biz.Leaf{
-		Owner:     userid,
+		Owner:     user.ID,
 		Create_at: timeStamp,
 		Status:    g.Status,
 		Message:   g.Message,
 	}
-
-	fmt.Println(u)
 
 	res := r.data.db.Table(TABLE_FOREST).Create(&u)
 
@@ -47,8 +47,6 @@ func (r *forestRepo) GetForest(ctx context.Context, g *v1.GetLeafsRequest) (list
 	var leafs []biz.Leaf
 	var count int64
 	var res *gorm.DB
-
-	fmt.Println("用户id:", getUserid(ctx))
 
 	res = r.data.db.Table(TABLE_FOREST).Order("id desc")
 	res = res.Offset(int((g.Page - 1) * g.Pagesize)).Limit(int(g.Pagesize)).Find(&leafs).Count(&count)

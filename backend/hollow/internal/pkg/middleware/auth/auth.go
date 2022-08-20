@@ -21,33 +21,33 @@ type CurrentUser struct {
 }
 
 var (
-	ErrorCode       = 500
+	ErrorCode       = 500 //JWT解析错误返回状态码
 	ErrMissingToken = errors.New(ErrorCode, v1.ErrorReason_PARAMS_ILLEGAL.String(), "Token Missing")
 	ErrInvaildToken = errors.New(ErrorCode, v1.ErrorReason_PARAMS_ILLEGAL.String(), "Token Invalid")
 )
 
 type JWTClaims struct {
-	Id       int64  `json:"id" example:"-1"`
-	Username string `json:"username"`
-	Status   int64  `json:"status" example:"0"`
+	Id       int64  `json:"id" example:"-1"`    //用户ID
+	Username string `json:"username"`           //用户名
+	Status   int64  `json:"status" example:"0"` //用户状态
 	jwt.StandardClaims
 }
 
 func JWTAuth(secret string) middleware.Middleware {
 	return func(handler middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
-			//获取JWTTOKEN
+
 			var JWTToken string
 			if md, ok := metadata.FromServerContext(ctx); ok {
 				JWTToken = md.Get("x-md-global-token")
 			} else if tr, ok := transport.FromServerContext(ctx); ok {
-				AuthToken := tr.RequestHeader().Get("Authorization")
-				if len(AuthToken) == 0 {
-					return nil, ErrMissingToken
-				}
+				JWTToken = tr.RequestHeader().Get("Authorization")
 				// JWTToken = strings.SplitN(AuthToken, " ", 2)[1]
-				JWTToken = AuthToken
 			} else {
+				return nil, ErrMissingToken
+			}
+
+			if len(JWTToken) == 0 {
 				return nil, ErrMissingToken
 			}
 

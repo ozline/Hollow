@@ -2,7 +2,6 @@ package data
 
 import (
 	"context"
-	"fmt"
 	v1 "hollow/api/hollow/v1"
 
 	"hollow/internal/pkg/middleware/auth"
@@ -19,16 +18,16 @@ const (
 //ERRORS
 var (
 	//UNIVERSE
-	ErrNormal = errors.New(500, v1.ErrorReason_NORMAL_ERROR.String(), "unknow error")
+	ErrNormal = errors.New(500, v1.ErrorReason_NORMAL_ERROR.String(), "Unknown Error")
 
 	//USERS
-	ErrUserNotExisted = errors.New(422, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "user not existed")
+	ErrUserNotExisted = errors.New(422, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "User Not Existed")
 
 	//FOREST
+	ErrUserInvalid = errors.New(422, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "User Invalid")
 )
 
-func getUserid(ctx context.Context) int64 {
+func getUserInfo(ctx context.Context) *auth.CurrentUser {
 	currentUser := auth.FromContext(ctx)
-	fmt.Println(currentUser)
-	return currentUser.ID
+	return currentUser
 }
