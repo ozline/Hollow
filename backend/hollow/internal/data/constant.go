@@ -1,7 +1,11 @@
 package data
 
 import (
+	"context"
+	"fmt"
 	v1 "hollow/api/hollow/v1"
+
+	"hollow/internal/pkg/middleware/auth"
 
 	"github.com/go-kratos/kratos/v2/errors"
 )
@@ -22,3 +26,9 @@ var (
 
 	//FOREST
 )
+
+func getUserid(ctx context.Context) int64 {
+	currentUser := auth.FromContext(ctx)
+	fmt.Println(currentUser)
+	return currentUser.ID
+}

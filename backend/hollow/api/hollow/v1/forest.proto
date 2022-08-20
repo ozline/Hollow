@@ -30,13 +30,18 @@ service Forests {
 //Request Messages
 
 message PushLeafRequest{
-    int64 userid = 1;
+    int64 status = 1;   //0=匿名 1=实名
     string message = 2;
 }
 
 message GetLeafsRequest{
     int64 page = 1;
     int64 pagesize = 2;
+}
+
+message CommentLeafRequest{
+    int64 leafid = 1;
+    string message = 2;
 }
 
 //Reply Messages

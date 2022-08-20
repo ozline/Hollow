@@ -2,32 +2,34 @@ package auth
 
 import (
 	"context"
-	"errors"
-	"strings"
+	v1 "hollow/api/hollow/v1"
 	"time"
 
+	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/metadata"
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/golang-jwt/jwt"
 )
 
-type contextKey string
+var currentUserKey struct{}
 
-func (c contextKey) String() string {
-	return string(c)
+type CurrentUser struct {
+	ID       int64  //用户ID
+	Username string //用户名
+	Status   int64  //用户状态
 }
 
 var (
-	ctxKey_Username = contextKey("username")
-	ctxKey_id       = contextKey("id")
-	ctxKey_status   = contextKey("status")
+	ErrorCode       = 500
+	ErrMissingToken = errors.New(ErrorCode, v1.ErrorReason_PARAMS_ILLEGAL.String(), "Token Missing")
+	ErrInvaildToken = errors.New(ErrorCode, v1.ErrorReason_PARAMS_ILLEGAL.String(), "Token Invalid")
 )
 
 type JWTClaims struct {
-	Id       string `json:"id"`
+	Id       int64  `json:"id" example:"-1"`
 	Username string `json:"username"`
-	Status   int    `json:"status" example:"0"`
+	Status   int64  `json:"status" example:"0"`
 	jwt.StandardClaims
 }
 
@@ -39,31 +41,38 @@ func JWTAuth(secret string) middleware.Middleware {
 			if md, ok := metadata.FromServerContext(ctx); ok {
 				JWTToken = md.Get("x-md-global-token")
 			} else if tr, ok := transport.FromServerContext(ctx); ok {
-				JWTToken = strings.SplitN(tr.RequestHeader().Get("Authorization"), " ", 2)[1]
+				AuthToken := tr.RequestHeader().Get("Authorization")
+				if len(AuthToken) == 0 {
+					return nil, ErrMissingToken
+				}
+				// JWTToken = strings.SplitN(AuthToken, " ", 2)[1]
+				JWTToken = AuthToken
 			} else {
-				return nil, errors.New("missing token")
+				return nil, ErrMissingToken
 			}
 
 			claims, err := JWTParse(JWTToken, secret)
 
 			if err != nil {
-				return nil, err
+				return nil, errors.New(ErrorCode, v1.ErrorReason_PARAMS_ILLEGAL.String(), err.Error())
 			}
 
 			if claims.ExpiresAt < time.Now().Unix() {
-				return nil, errors.New("invaild token")
+				return nil, ErrInvaildToken
 			}
 
-			ctx = context.WithValue(ctx, ctxKey_Username, claims.Username)
-			ctx = context.WithValue(ctx, ctxKey_id, claims.Id)
-			ctx = context.WithValue(ctx, ctxKey_status, claims.Status)
+			ctx = WithContext(ctx, &CurrentUser{
+				ID:       claims.Id,
+				Username: claims.Username,
+				Status:   claims.Status,
+			})
 
 			return handler(ctx, req)
 		}
 	}
 }
 
-func JWTParse(token string, secret string) (*JWTClaims, error) { //解析JWT
+func JWTParse(token string, secret string) (*JWTClaims, error) {
 	tmp, err := jwt.ParseWithClaims(token, &JWTClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(secret), nil
 	})
@@ -77,12 +86,12 @@ func JWTParse(token string, secret string) (*JWTClaims, error) { //解析JWT
 	return nil, err
 }
 
-func JWTGenerate(claims JWTClaims, secret string) (string, error) { //生成JWT
+func JWTGenerate(claims JWTClaims, secret string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(secret))
 }
 
-func GetAuthToken(id string, username string, status int, secret string) (string, error) {
+func GetAuthToken(id int64, username string, status int64, secret string) (string, error) {
 	claims := JWTClaims{
 		Id:       id,
 		Username: username,
@@ -94,4 +103,14 @@ func GetAuthToken(id string, username string, status int, secret string) (string
 	}
 	token, err := JWTGenerate(claims, secret)
 	return token, err
+}
+
+// 从Context提取用户信息
+func FromContext(ctx context.Context) *CurrentUser {
+	return ctx.Value(currentUserKey).(*CurrentUser)
+}
+
+// 给Context附带用户信息
+func WithContext(ctx context.Context, user *CurrentUser) context.Context {
+	return context.WithValue(ctx, currentUserKey, user)
 }

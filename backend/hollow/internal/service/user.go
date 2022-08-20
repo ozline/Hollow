@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"strconv"
 
 	v1 "hollow/api/hollow/v1"
 	"hollow/internal/biz"
@@ -33,7 +32,7 @@ func (s *UserService) Login(ctx context.Context, req *v1.LoginUserRequest) (repl
 		return nil, err
 	}
 
-	token, _ := auth.GetAuthToken(strconv.FormatInt(data.ID, 10), data.Username, int(data.Status), "MTAxNTkwMTg1Mw==")
+	token, _ := auth.GetAuthToken(data.ID, data.Username, data.Status, "MTAxNTkwMTg1Mw==")
 	return &v1.LoginUserReply{
 		Code:  200,
 		Msg:   "ok",

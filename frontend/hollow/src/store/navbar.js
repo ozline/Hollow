@@ -1,3 +1,6 @@
+/**
+ * Navbar 导航条与侧边栏变化
+ */
 import { defineStore } from "pinia";
 
 export const navbarStore = defineStore('navbar', {

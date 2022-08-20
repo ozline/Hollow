@@ -8,5 +8,5 @@ import (
 
 var (
 	ErrMissingParams = errors.New(422, v1.ErrorReason_PARAMS_ILLEGAL.String(), "missing params data")
-	ErrParamsIllegal = errors.New(422, v1.ErrorReason_PARAMS_ILLEGAL.String(), "params invalid")
+	ErrParamsIllegal = errors.New(int(v1.ErrorReason_PARAMS_ILLEGAL.Number()), v1.ErrorReason_PARAMS_ILLEGAL.String(), "params invalid")
 )

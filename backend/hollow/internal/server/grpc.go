@@ -15,27 +15,12 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 )
 
-func NewSkipRoutersMatcher() selector.MatchFunc {
-
-	skipRouters := map[string]struct{}{
-		"/user.v1.Users/Login":    {}, //用户登录
-		"/user.v1.Users/Register": {}, //用户注册
-	}
-
-	return func(ctx context.Context, operation string) bool {
-		if _, ok := skipRouters[operation]; ok {
-			return false
-		}
-		return true
-	}
-}
-
 // NewGRPCServer new a gRPC server.
 func NewGRPCServer(c *conf.Server, jwtc *conf.Auth, users *service.UserService, forests *service.ForestService, logger log.Logger) *grpc.Server {
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			mmd.Server(),
-			selector.Server(auth.JWTAuth(jwtc.Secret)).Match(NewSkipRoutersMatcher()).Build(),
+			selector.Server(auth.JWTAuth(jwtc.Secret)).Match(SkipRoutersMatcher()).Build(),
 			recovery.Recovery(
 				recovery.WithLogger(log.DefaultLogger),
 				recovery.WithHandler(func(ctx context.Context, req, err interface{}) error {

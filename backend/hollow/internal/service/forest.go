@@ -20,7 +20,7 @@ func NewForestService(uc *biz.ForestUsecase) *ForestService {
 
 //推送叶子
 func (s *ForestService) Push(ctx context.Context, req *v1.PushLeafRequest) (reply *v1.PushLeafReply, err error) {
-	if len(req.Message) > 140 || len(req.Message) == 0 || req.Userid == 0 {
+	if len(req.Message) > 140 || len(req.Message) == 0 || req.Status == 0 {
 		return nil, ErrParamsIllegal
 	}
 

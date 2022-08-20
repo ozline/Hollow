@@ -137,7 +137,7 @@ components:
         forest.v1.PushLeafRequest:
             type: object
             properties:
-                userid:
+                status:
                     type: integer
                     format: int64
                 message:

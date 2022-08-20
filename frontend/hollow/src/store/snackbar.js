@@ -1,3 +1,7 @@
+/**
+ * Snackbar 底部消息框提示
+ */
+
 import { defineStore } from "pinia";
 
 export const snackbarStore = defineStore('snackbar', {

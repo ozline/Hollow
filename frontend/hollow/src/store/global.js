@@ -1,3 +1,6 @@
+/**
+ * Global 全局变量与全局函数
+ */
 import { defineStore } from "pinia";
 
 export const globalStore = defineStore('global', {

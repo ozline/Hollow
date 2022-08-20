@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"fmt"
 	v1 "hollow/api/hollow/v1"
 	"hollow/internal/conf"
 	"hollow/internal/pkg/middleware/auth"
@@ -16,28 +15,11 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/http"
 )
 
-func SkipRoutersMatcherHTTP() selector.MatchFunc {
-
-	skipRouters := map[string]struct{}{
-		"/user.v1.Users/Login":    {}, //用户登录
-		"/user.v1.Users/Register": {}, //用户注册
-	}
-
-	return func(ctx context.Context, operation string) bool {
-		if _, ok := skipRouters[operation]; ok {
-			// return false
-			return false
-		}
-		fmt.Println(operation)
-		return false
-	}
-}
-
 // NewHTTPServer new a HTTP server.
 func NewHTTPServer(c *conf.Server, jwtc *conf.Auth, users *service.UserService, forests *service.ForestService, logger log.Logger) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
-			selector.Server(auth.JWTAuth(jwtc.Secret)).Match(SkipRoutersMatcherHTTP()).Build(),
+			selector.Server(auth.JWTAuth(jwtc.Secret)).Match(SkipRoutersMatcher()).Build(),
 			//异常恢复
 			recovery.Recovery(
 				recovery.WithLogger(log.DefaultLogger),

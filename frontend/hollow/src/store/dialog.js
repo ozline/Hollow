@@ -1,3 +1,7 @@
+/**
+ * Dialog 对话框封装
+ */
+
 import { defineStore } from "pinia";
 
 export const dialogStore = defineStore('dialog', {

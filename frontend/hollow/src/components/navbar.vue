@@ -8,7 +8,7 @@
     </v-toolbar-items>
 </v-app-bar>
 
-<v-navigation-drawer v-model="drawer">
+<v-navigation-drawer v-model="drawer" id="nav-drawer">
     <v-list>
     <v-list-item
         v-for="(item, index) in storeNavbar.items"
@@ -63,6 +63,7 @@ export default {
         logout(){
             this.global.logout()
             this.changePage('/user/login')
+            this.snackbar.show("已退出登录,自动进入登录页面")
         }
     }
 }

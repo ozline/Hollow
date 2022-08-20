@@ -1,22 +1,37 @@
-
 <template>
+
 <v-app>
   <v-layout>
     <navbar></navbar>
-
-    <!-- <div style="overflow: auto">
-      <router-view></router-view>
-    </div> -->
-
-    <router-view></router-view>
-
-    <!-- 全局组件 -->
-    <dialog-view></dialog-view>
-    <snackbar></snackbar>
+    <router-view id="router-view"></router-view>
 
   </v-layout>
+
+  <dialog-view></dialog-view>
+  <snackbar></snackbar>
 </v-app>
+
 </template>
+
+<style>
+
+#app {
+  overflow-y: hidden;
+  height:70%;
+}
+
+#router-view:hover {
+  overflow-y: overlay;
+}
+
+#router-view {
+  /* height: 70%; */
+  width: 100%;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+</style>
 
 <script>
 import ComponentNavbar from './components/navbar.vue'
