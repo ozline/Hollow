@@ -6,6 +6,8 @@ import (
 	"hollow/internal/biz"
 
 	"github.com/go-kratos/kratos/v2/log"
+
+	errors "hollow/internal/errors"
 )
 
 type ForestService struct {
@@ -21,7 +23,7 @@ func NewForestService(uc *biz.ForestUsecase) *ForestService {
 //推送叶子
 func (s *ForestService) Push(ctx context.Context, req *v1.PushLeafRequest) (reply *v1.PushLeafReply, err error) {
 	if len(req.Message) > 140 || len(req.Message) == 0 {
-		return nil, ErrParamsIllegal
+		return nil, errors.ErrParamsIllegal
 	}
 
 	err = s.uc.PushLeaf(ctx, req)
@@ -39,7 +41,7 @@ func (s *ForestService) Push(ctx context.Context, req *v1.PushLeafRequest) (repl
 //获取叶子
 func (s *ForestService) Get(ctx context.Context, req *v1.GetLeafsRequest) (reply *v1.GetLeafsReply, err error) {
 	if req.Page == 0 || req.Pagesize == 0 {
-		return nil, ErrParamsIllegal
+		return nil, errors.ErrParamsIllegal
 	}
 
 	forest, count, err := s.uc.GetForest(ctx, req)

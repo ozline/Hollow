@@ -7,6 +7,9 @@ import (
 	"hollow/internal/biz"
 	"hollow/internal/pkg/utils"
 
+	errors "hollow/internal/errors"
+	types "hollow/internal/types"
+
 	"github.com/go-kratos/kratos/v2/log"
 )
 
@@ -36,8 +39,8 @@ func (r *userRepo) CheckIsUserExistByID(ctx context.Context, userid int64) bool 
 	return count != 0
 }
 
-func (r *userRepo) GetUserByUsername(ctx context.Context, username string) (user *biz.User, err error) {
-	u := new(biz.User)
+func (r *userRepo) GetUserByUsername(ctx context.Context, username string) (user *types.User, err error) {
+	u := new(types.User)
 	var count int64
 	res := r.data.db.Table(TABLE_USERS).Where("username = ?", username).Count(&count)
 	if res.Error != nil {
@@ -45,7 +48,7 @@ func (r *userRepo) GetUserByUsername(ctx context.Context, username string) (user
 	}
 
 	if count == 0 {
-		return nil, ErrUserNotExisted
+		return nil, errors.ErrUserNotExisted
 	}
 
 	_ = res.First(&u)
@@ -56,7 +59,7 @@ func (r *userRepo) GetUserByUsername(ctx context.Context, username string) (user
 func (r *userRepo) CreateUser(ctx context.Context, g *v1.RegisterUserRequest) error {
 
 	timeStamp := utils.GetTimestamp13()
-	u := biz.User{
+	u := types.User{
 		Username:   g.Username,
 		Password:   utils.GenerateTokenSHA256(g.Password),
 		Phone:      g.Phone,

@@ -7,6 +7,8 @@ import (
 	"hollow/internal/biz"
 	"hollow/internal/pkg/middleware/auth"
 
+	errors "hollow/internal/errors"
+
 	"github.com/go-kratos/kratos/v2/log"
 )
 
@@ -23,7 +25,7 @@ func NewUserService(uc *biz.UserUsecase) *UserService {
 //用户登录
 func (s *UserService) Login(ctx context.Context, req *v1.LoginUserRequest) (reply *v1.LoginUserReply, err error) {
 	if len(req.Username) == 0 || len(req.Password) == 0 {
-		return nil, ErrMissingParams
+		return nil, errors.ErrMissingParams
 	}
 
 	data, err := s.uc.LoginUser(ctx, req)
@@ -52,7 +54,7 @@ func (s *UserService) Login(ctx context.Context, req *v1.LoginUserRequest) (repl
 //用户注册
 func (s *UserService) Register(ctx context.Context, req *v1.RegisterUserRequest) (reply *v1.RegisterUserReply, err error) {
 	if len(req.Username) == 0 || len(req.Password) == 0 || req.Phone == 0 || len(req.Email) == 0 {
-		return nil, ErrMissingParams
+		return nil, errors.ErrMissingParams
 	}
 
 	data, err := s.uc.RegisterUser(ctx, req)

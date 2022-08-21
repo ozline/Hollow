@@ -4,13 +4,15 @@ import (
 	"context"
 
 	v1 "hollow/api/hollow/v1"
-	"hollow/internal/pkg/utils"
+	errors "hollow/internal/errors"
+	utils "hollow/internal/pkg/utils"
+	types "hollow/internal/types"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
 
 type UserRepo interface {
-	GetUserByUsername(ctx context.Context, username string) (*User, error)
+	GetUserByUsername(ctx context.Context, username string) (*types.User, error)
 	CreateUser(ctx context.Context, req *v1.RegisterUserRequest) error
 	CheckIsUserExistByUsername(ctx context.Context, username string) bool
 	CheckIsUserExistByID(ctx context.Context, userid int64) bool
@@ -25,23 +27,23 @@ func NewUserUsecase(repo UserRepo, logger log.Logger) *UserUsecase {
 	return &UserUsecase{ur: repo, log: log.NewHelper(logger)}
 }
 
-func (uc *UserUsecase) LoginUser(ctx context.Context, u *v1.LoginUserRequest) (*User, error) {
+func (uc *UserUsecase) LoginUser(ctx context.Context, u *v1.LoginUserRequest) (*types.User, error) {
 
 	data, err := uc.ur.GetUserByUsername(ctx, u.Username)
 	if err != nil {
 		return nil, err
 	}
 	if utils.GenerateTokenSHA256(u.Password) != data.Password {
-		return nil, ErrUserCheckFailed
+		return nil, errors.ErrUserCheckFailed
 	}
 
 	return data, err
 }
 
-func (uc *UserUsecase) RegisterUser(ctx context.Context, u *v1.RegisterUserRequest) (*User, error) {
+func (uc *UserUsecase) RegisterUser(ctx context.Context, u *v1.RegisterUserRequest) (*types.User, error) {
 	//检查用户名是否重复
 	if uc.ur.CheckIsUserExistByUsername(ctx, u.Username) {
-		return nil, ErrUserExisted
+		return nil, errors.ErrUserExisted
 	}
 
 	//创建用户

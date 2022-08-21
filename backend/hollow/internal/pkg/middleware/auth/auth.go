@@ -114,3 +114,8 @@ func FromContext(ctx context.Context) *CurrentUser {
 func WithContext(ctx context.Context, user *CurrentUser) context.Context {
 	return context.WithValue(ctx, currentUserKey, user)
 }
+
+func GetUserInfo(ctx context.Context) *CurrentUser {
+	currentUser := FromContext(ctx)
+	return currentUser
+}

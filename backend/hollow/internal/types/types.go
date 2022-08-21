@@ -1,21 +1,5 @@
-package biz
+package tpyes
 
-import (
-	v1 "hollow/api/hollow/v1"
-
-	"github.com/go-kratos/kratos/v2/errors"
-)
-
-//ERRORS
-var (
-
-	//USERS
-	ErrUserCheckFailed = errors.New(422, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "user check failed")
-	ErrUserNotFound    = errors.New(422, v1.ErrorReason_INFOMATION_NOT_FOUND.String(), "user not found")
-	ErrUserExisted     = errors.New(422, v1.ErrorReason_PARAMS_ILLEGAL.String(), "user existed")
-)
-
-//TYPES
 type User struct {
 	ID         int64  //用户ID
 	Status     int64  //用户状态

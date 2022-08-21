@@ -5,13 +5,15 @@ import (
 
 	v1 "hollow/api/hollow/v1"
 
+	types "hollow/internal/types"
+
 	"github.com/go-kratos/kratos/v2/log"
 )
 
 type ForestRepo interface {
 	PushLeaf(ctx context.Context, g *v1.PushLeafRequest) error
 	CommentLeaf(ctx context.Context, g *v1.CommentLeafRequest) error
-	GetForest(ctx context.Context, g *v1.GetLeafsRequest) (list []*Leaf, total int64, err error)
+	GetForest(ctx context.Context, g *v1.GetLeafsRequest) (list []*types.Leaf, total int64, err error)
 }
 
 type ForestUsecase struct {
@@ -19,7 +21,7 @@ type ForestUsecase struct {
 	log *log.Helper
 }
 
-func converttoReply(forest *Leaf) *v1.Leaf {
+func converttoReply(forest *types.Leaf) *v1.Leaf {
 	return &v1.Leaf{
 		Id:       forest.ID,
 		Owner:    forest.Owner,
