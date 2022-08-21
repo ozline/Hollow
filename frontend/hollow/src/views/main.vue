@@ -9,7 +9,7 @@
         v-for="(item, index) in datas"
         v-bind:key="index"
         :title="'作者:' + item.owner"
-        :subtitle=" '发表时间:' + item.createAt"
+        :subtitle="utils.timestampConvert(item.createAt)"
         :text=" item.message"
         style="margin-bottom: 26px;"
         @click="cardClickEvent(item.id)"
@@ -47,7 +47,7 @@ export default {
                 pagesize: this.pagesize,
             }
 
-            this.http.get('/forest/all', data).then(res => {
+            this.HTTP.get('/forest/all', data).then(res => {
                 this.datas = res.data.list
                 this.total = res.data.total
             })

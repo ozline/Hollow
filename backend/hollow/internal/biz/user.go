@@ -4,6 +4,7 @@ import (
 	"context"
 
 	v1 "hollow/api/hollow/v1"
+	"hollow/internal/pkg/utils"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
@@ -11,7 +12,8 @@ import (
 type UserRepo interface {
 	GetUserByUsername(ctx context.Context, username string) (*User, error)
 	CreateUser(ctx context.Context, req *v1.RegisterUserRequest) error
-	CheckIsUserExist(ctx context.Context, username string) bool
+	CheckIsUserExistByUsername(ctx context.Context, username string) bool
+	CheckIsUserExistByID(ctx context.Context, userid int64) bool
 }
 
 type UserUsecase struct {
@@ -29,7 +31,7 @@ func (uc *UserUsecase) LoginUser(ctx context.Context, u *v1.LoginUserRequest) (*
 	if err != nil {
 		return nil, err
 	}
-	if GenerateTokenSHA256(u.Password) != data.Password {
+	if utils.GenerateTokenSHA256(u.Password) != data.Password {
 		return nil, ErrUserCheckFailed
 	}
 
@@ -38,7 +40,7 @@ func (uc *UserUsecase) LoginUser(ctx context.Context, u *v1.LoginUserRequest) (*
 
 func (uc *UserUsecase) RegisterUser(ctx context.Context, u *v1.RegisterUserRequest) (*User, error) {
 	//检查用户名是否重复
-	if uc.ur.CheckIsUserExist(ctx, u.Username) {
+	if uc.ur.CheckIsUserExistByUsername(ctx, u.Username) {
 		return nil, ErrUserExisted
 	}
 

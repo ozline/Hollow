@@ -3,6 +3,7 @@ syntax = "proto3";
 package forest.v1;
 
 import "google/api/annotations.proto";
+import "validate/validate.proto";
 
 option go_package = "hollow/api/forest/v1;v1";
 option java_multiple_files = true;
@@ -15,7 +16,7 @@ service Forests {
     // Push a Leaf
     rpc Push (PushLeafRequest) returns (PushLeafReply) {
         option (google.api.http) = {
-            post: "/api/forest/push",
+            post: "/api/forest",
             body: "*",
         };
     }
@@ -26,22 +27,32 @@ service Forests {
             get: "/api/forest/all",
         };
     }
+
+    // Comment Leaf
+    rpc Comment (CommentLeafRequest) returns (CommentLeafRePly) {
+        option (google.api.http) = {
+            post: "/api/forest/{root}",
+            body: "*",
+        };
+    }
 }
 //Request Messages
 
 message PushLeafRequest{
-    int64 status = 1;   //0=匿名 1=实名
-    string message = 2;
+    int64 status = 1 [(validate.rules).int64 = {in: [0,1]}];   //0=匿名 1=实名
+    string message = 2 [(validate.rules).string = {min_len: 1, max_len: 140}];
 }
 
 message GetLeafsRequest{
-    int64 page = 1;
-    int64 pagesize = 2;
+    int64 page = 1 [(validate.rules).int64 = {gte: 1}];
+    int64 pagesize = 2 [(validate.rules).int64 = {gte: 1}];
 }
 
 message CommentLeafRequest{
-    int64 leafid = 1;
-    string message = 2;
+    int64 root = 1 [(validate.rules).int64 = {gte: 0}];
+    int64 status = 2 [(validate.rules).int64 = {in: [0,1]}];   //0=匿名 1=实名
+    string message = 3 [(validate.rules).string = {min_len: 1, max_len: 140}];
+    int64 father = 4 [(validate.rules).int64 = {gte: 0}];
 }
 
 //Reply Messages
@@ -62,11 +73,15 @@ message MultipleTodoReply{
 message PushLeafReply{
     int64 code = 1;
     string msg = 2;
-    // Leaf data = 3;
 }
 
 message GetLeafsReply{
     int64 code = 1;
     string msg = 2;
     MultipleTodoReply data = 3;
+}
+
+message CommentLeafRePly{
+    int64 code = 1;
+    string msg = 2;
 }

@@ -10,6 +10,7 @@ import (
 
 type ForestRepo interface {
 	PushLeaf(ctx context.Context, g *v1.PushLeafRequest) error
+	CommentLeaf(ctx context.Context, g *v1.CommentLeafRequest) error
 	GetForest(ctx context.Context, g *v1.GetLeafsRequest) (list []*Leaf, total int64, err error)
 }
 
@@ -33,7 +34,6 @@ func NewForestUsecase(repo ForestRepo, logger log.Logger) *ForestUsecase {
 }
 
 func (uc *ForestUsecase) PushLeaf(ctx context.Context, u *v1.PushLeafRequest) error {
-
 	return uc.ur.PushLeaf(ctx, u)
 }
 
@@ -52,5 +52,8 @@ func (uc *ForestUsecase) GetForest(ctx context.Context, u *v1.GetLeafsRequest) (
 	}
 
 	return forest, count, nil
+}
 
+func (uc *ForestUsecase) CommentLeaf(ctx context.Context, u *v1.CommentLeafRequest) error {
+	return uc.ur.CommentLeaf(ctx, u)
 }

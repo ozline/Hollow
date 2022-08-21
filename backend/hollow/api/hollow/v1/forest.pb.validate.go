@@ -57,9 +57,27 @@ func (m *PushLeafRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Status
+	if _, ok := _PushLeafRequest_Status_InLookup[m.GetStatus()]; !ok {
+		err := PushLeafRequestValidationError{
+			field:  "Status",
+			reason: "value must be in list [0 1]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
-	// no validation rules for Message
+	if l := utf8.RuneCountInString(m.GetMessage()); l < 1 || l > 140 {
+		err := PushLeafRequestValidationError{
+			field:  "Message",
+			reason: "value length must be between 1 and 140 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return PushLeafRequestMultiError(errors)
@@ -139,6 +157,11 @@ var _ interface {
 	ErrorName() string
 } = PushLeafRequestValidationError{}
 
+var _PushLeafRequest_Status_InLookup = map[int64]struct{}{
+	0: {},
+	1: {},
+}
+
 // Validate checks the field values on GetLeafsRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
@@ -161,9 +184,27 @@ func (m *GetLeafsRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Page
+	if m.GetPage() < 1 {
+		err := GetLeafsRequestValidationError{
+			field:  "Page",
+			reason: "value must be greater than or equal to 1",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
-	// no validation rules for Pagesize
+	if m.GetPagesize() < 1 {
+		err := GetLeafsRequestValidationError{
+			field:  "Pagesize",
+			reason: "value must be greater than or equal to 1",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return GetLeafsRequestMultiError(errors)
@@ -265,9 +306,49 @@ func (m *CommentLeafRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Leafid
+	if m.GetRoot() < 0 {
+		err := CommentLeafRequestValidationError{
+			field:  "Root",
+			reason: "value must be greater than or equal to 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
-	// no validation rules for Message
+	if _, ok := _CommentLeafRequest_Status_InLookup[m.GetStatus()]; !ok {
+		err := CommentLeafRequestValidationError{
+			field:  "Status",
+			reason: "value must be in list [0 1]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetMessage()); l < 1 || l > 140 {
+		err := CommentLeafRequestValidationError{
+			field:  "Message",
+			reason: "value length must be between 1 and 140 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.GetFather() < 0 {
+		err := CommentLeafRequestValidationError{
+			field:  "Father",
+			reason: "value must be greater than or equal to 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return CommentLeafRequestMultiError(errors)
@@ -348,6 +429,11 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CommentLeafRequestValidationError{}
+
+var _CommentLeafRequest_Status_InLookup = map[int64]struct{}{
+	0: {},
+	1: {},
+}
 
 // Validate checks the field values on Leaf with the rules defined in the proto
 // definition for this message. If any rules are violated, the first error
@@ -831,3 +917,107 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetLeafsReplyValidationError{}
+
+// Validate checks the field values on CommentLeafRePly with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *CommentLeafRePly) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on CommentLeafRePly with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// CommentLeafRePlyMultiError, or nil if none found.
+func (m *CommentLeafRePly) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *CommentLeafRePly) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Code
+
+	// no validation rules for Msg
+
+	if len(errors) > 0 {
+		return CommentLeafRePlyMultiError(errors)
+	}
+
+	return nil
+}
+
+// CommentLeafRePlyMultiError is an error wrapping multiple validation errors
+// returned by CommentLeafRePly.ValidateAll() if the designated constraints
+// aren't met.
+type CommentLeafRePlyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m CommentLeafRePlyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m CommentLeafRePlyMultiError) AllErrors() []error { return m }
+
+// CommentLeafRePlyValidationError is the validation error returned by
+// CommentLeafRePly.Validate if the designated constraints aren't met.
+type CommentLeafRePlyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CommentLeafRePlyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CommentLeafRePlyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CommentLeafRePlyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CommentLeafRePlyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CommentLeafRePlyValidationError) ErrorName() string { return "CommentLeafRePlyValidationError" }
+
+// Error satisfies the builtin error interface
+func (e CommentLeafRePlyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCommentLeafRePly.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CommentLeafRePlyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CommentLeafRePlyValidationError{}

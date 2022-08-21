@@ -2,16 +2,17 @@
  * HTTP请求封装，在Axios的基础上二度封装请求
  */
 
+import axios from 'axios'
 import { defineStore } from "pinia";
 import { dialogStore } from "./dialog";
-import axios from 'axios'
+import { globalStore } from "./global";
 
 const dialog = dialogStore()
+const global = globalStore()
 
 export const httpStore = defineStore('http', {
     state: () => {
         return {
-            token: "null",
             prefix: "/apis/"
         }
     },
@@ -48,10 +49,9 @@ export const httpStore = defineStore('http', {
         generateHeaders(auth){
             if(auth == true){
                 return {
-                    'Authorization': this.token
+                    'Authorization': global.token
                 }
             }
-
             return { }
         },
         // GET

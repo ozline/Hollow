@@ -5,6 +5,7 @@ import (
 
 	v1 "hollow/api/hollow/v1"
 	"hollow/internal/biz"
+	"hollow/internal/pkg/utils"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
@@ -14,7 +15,6 @@ type userRepo struct {
 	log  *log.Helper
 }
 
-// NewGreeterRepo .
 func NewUserRepo(data *Data, logger log.Logger) biz.UserRepo {
 	return &userRepo{
 		data: data,
@@ -22,10 +22,17 @@ func NewUserRepo(data *Data, logger log.Logger) biz.UserRepo {
 	}
 }
 
-func (r *userRepo) CheckIsUserExist(ctx context.Context, username string) bool {
+func (r *userRepo) CheckIsUserExistByUsername(ctx context.Context, username string) bool {
 
 	var count int64
-	_ = r.data.db.Table(TABLE_USERS).Where("username = ?", username).Count(&count)
+	_ = r.data.db.Table(TABLE_USERS).Where("username = ?", username).Limit(1).Count(&count)
+	return count != 0
+}
+
+func (r *userRepo) CheckIsUserExistByID(ctx context.Context, userid int64) bool {
+
+	var count int64
+	_ = r.data.db.Table(TABLE_USERS).Where("id = ?", userid).Limit(1).Count(&count)
 	return count != 0
 }
 
@@ -48,10 +55,10 @@ func (r *userRepo) GetUserByUsername(ctx context.Context, username string) (user
 
 func (r *userRepo) CreateUser(ctx context.Context, g *v1.RegisterUserRequest) error {
 
-	timeStamp := biz.GetTimestamp13()
+	timeStamp := utils.GetTimestamp13()
 	u := biz.User{
 		Username:   g.Username,
-		Password:   biz.GenerateTokenSHA256(g.Password),
+		Password:   utils.GenerateTokenSHA256(g.Password),
 		Phone:      g.Phone,
 		Email:      g.Email,
 		Created_at: timeStamp,

@@ -26,6 +26,8 @@ type ForestsClient interface {
 	Push(ctx context.Context, in *PushLeafRequest, opts ...grpc.CallOption) (*PushLeafReply, error)
 	// Get Leafs
 	Get(ctx context.Context, in *GetLeafsRequest, opts ...grpc.CallOption) (*GetLeafsReply, error)
+	// Comment Leaf
+	Comment(ctx context.Context, in *CommentLeafRequest, opts ...grpc.CallOption) (*CommentLeafRePly, error)
 }
 
 type forestsClient struct {
@@ -54,6 +56,15 @@ func (c *forestsClient) Get(ctx context.Context, in *GetLeafsRequest, opts ...gr
 	return out, nil
 }
 
+func (c *forestsClient) Comment(ctx context.Context, in *CommentLeafRequest, opts ...grpc.CallOption) (*CommentLeafRePly, error) {
+	out := new(CommentLeafRePly)
+	err := c.cc.Invoke(ctx, "/forest.v1.Forests/Comment", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ForestsServer is the server API for Forests service.
 // All implementations must embed UnimplementedForestsServer
 // for forward compatibility
@@ -62,6 +73,8 @@ type ForestsServer interface {
 	Push(context.Context, *PushLeafRequest) (*PushLeafReply, error)
 	// Get Leafs
 	Get(context.Context, *GetLeafsRequest) (*GetLeafsReply, error)
+	// Comment Leaf
+	Comment(context.Context, *CommentLeafRequest) (*CommentLeafRePly, error)
 	mustEmbedUnimplementedForestsServer()
 }
 
@@ -74,6 +87,9 @@ func (UnimplementedForestsServer) Push(context.Context, *PushLeafRequest) (*Push
 }
 func (UnimplementedForestsServer) Get(context.Context, *GetLeafsRequest) (*GetLeafsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedForestsServer) Comment(context.Context, *CommentLeafRequest) (*CommentLeafRePly, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Comment not implemented")
 }
 func (UnimplementedForestsServer) mustEmbedUnimplementedForestsServer() {}
 
@@ -124,6 +140,24 @@ func _Forests_Get_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Forests_Comment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CommentLeafRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ForestsServer).Comment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/forest.v1.Forests/Comment",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ForestsServer).Comment(ctx, req.(*CommentLeafRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Forests_ServiceDesc is the grpc.ServiceDesc for Forests service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -138,6 +172,10 @@ var Forests_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Get",
 			Handler:    _Forests_Get_Handler,
+		},
+		{
+			MethodName: "Comment",
+			Handler:    _Forests_Comment_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

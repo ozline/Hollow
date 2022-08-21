@@ -6,6 +6,25 @@ info:
     title: ""
     version: 0.0.1
 paths:
+    /api/forest:
+        post:
+            tags:
+                - Forests
+            description: Push a Leaf
+            operationId: Forests_Push
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/forest.v1.PushLeafRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/forest.v1.PushLeafReply'
     /api/forest/all:
         get:
             tags:
@@ -30,17 +49,24 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/forest.v1.GetLeafsReply'
-    /api/forest/push:
+    /api/forest/{root}:
         post:
             tags:
                 - Forests
-            description: Push a Leaf
-            operationId: Forests_Push
+            description: Comment Leaf
+            operationId: Forests_Comment
+            parameters:
+                - name: root
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int64
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/forest.v1.PushLeafRequest'
+                            $ref: '#/components/schemas/forest.v1.CommentLeafRequest'
                 required: true
             responses:
                 "200":
@@ -48,7 +74,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/forest.v1.PushLeafReply'
+                                $ref: '#/components/schemas/forest.v1.CommentLeafRePly'
     /api/user/login:
         post:
             tags:
@@ -89,6 +115,28 @@ paths:
                                 $ref: '#/components/schemas/user.v1.RegisterUserReply'
 components:
     schemas:
+        forest.v1.CommentLeafRePly:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int64
+                msg:
+                    type: string
+        forest.v1.CommentLeafRequest:
+            type: object
+            properties:
+                root:
+                    type: integer
+                    format: int64
+                status:
+                    type: integer
+                    format: int64
+                message:
+                    type: string
+                father:
+                    type: integer
+                    format: int64
         forest.v1.GetLeafsReply:
             type: object
             properties:

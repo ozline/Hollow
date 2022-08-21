@@ -13,26 +13,6 @@
 
 </template>
 
-<style>
-
-#app {
-  overflow-y: hidden;
-  height:70%;
-}
-
-#router-view:hover {
-  overflow-y: overlay;
-}
-
-#router-view {
-  /* height: 70%; */
-  width: 100%;
-  overflow-y: hidden;
-  overflow-x: hidden;
-}
-
-</style>
-
 <script>
 import ComponentNavbar from './components/navbar.vue'
 import ComponentRouterView from './components/view.vue'

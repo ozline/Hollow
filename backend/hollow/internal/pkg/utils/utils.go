@@ -1,4 +1,4 @@
-package biz
+package utils
 
 import (
 	"crypto/sha256"

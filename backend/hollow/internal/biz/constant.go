@@ -36,3 +36,13 @@ type Leaf struct {
 	Status    int64  //消息状态 0=匿名 1=实名 2=封禁
 	Message   string //消息
 }
+
+type Comment struct {
+	ID         int64  //评论ID
+	Owner      int64  //用户
+	Root       int64  //归属帖子id
+	Father     int64  //父楼id 0=顶级 其他数字则为上一层id
+	Created_at int64  //创建时间
+	Status     int64  //状态 0=匿名 1=实名 2=封禁（删除）
+	Message    string //评论内容
+}

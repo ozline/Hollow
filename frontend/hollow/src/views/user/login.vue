@@ -90,7 +90,7 @@ export default {
                 password: this.password,
             }
 
-            this.http.post('/user/login', data).then(res => {
+            this.HTTP.post('/user/login', data).then(res => {
                 this.global.setUser(true, res.data,res.token)
                 this.snackbar.show("登录成功")
                 this.$router.push('/')

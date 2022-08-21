@@ -20,7 +20,7 @@ func NewForestService(uc *biz.ForestUsecase) *ForestService {
 
 //推送叶子
 func (s *ForestService) Push(ctx context.Context, req *v1.PushLeafRequest) (reply *v1.PushLeafReply, err error) {
-	if len(req.Message) > 140 || len(req.Message) == 0 || req.Status == 0 {
+	if len(req.Message) > 140 || len(req.Message) == 0 {
 		return nil, ErrParamsIllegal
 	}
 
@@ -55,5 +55,20 @@ func (s *ForestService) Get(ctx context.Context, req *v1.GetLeafsRequest) (reply
 			List:  forest,
 			Total: count,
 		},
+	}, nil
+}
+
+//评论
+func (s *ForestService) Comment(ctx context.Context, req *v1.CommentLeafRequest) (reply *v1.CommentLeafRePly, err error) {
+
+	err = s.uc.CommentLeaf(ctx, req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.CommentLeafRePly{
+		Code: 200,
+		Msg:  "ok",
 	}, nil
 }

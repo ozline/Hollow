@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/go-kratos/kratos/v2/middleware/selector"
 )
@@ -20,7 +19,6 @@ func SkipRoutersMatcher() selector.MatchFunc {
 			// return false
 			return false
 		}
-		fmt.Println(operation)
 		return true
 	}
 }
