@@ -3,6 +3,7 @@ module hollow
 go 1.17
 
 require (
+	github.com/bwmarrin/snowflake v0.3.0
 	github.com/envoyproxy/protoc-gen-validate v0.6.7
 	github.com/go-kratos/kratos/v2 v2.5.0
 	github.com/golang-jwt/jwt v3.2.2+incompatible

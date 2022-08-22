@@ -33,7 +33,6 @@ func (r *userRepo) CheckIsUserExistByUsername(ctx context.Context, username stri
 }
 
 func (r *userRepo) CheckIsUserExistByID(ctx context.Context, userid int64) bool {
-
 	var count int64
 	_ = r.data.db.Table(TABLE_USERS).Where("id = ?", userid).Limit(1).Count(&count)
 	return count != 0
@@ -60,6 +59,7 @@ func (r *userRepo) CreateUser(ctx context.Context, g *v1.RegisterUserRequest) er
 
 	timeStamp := utils.GetTimestamp13()
 	u := types.User{
+		ID:         GetSnowflakeID(r.data.node),
 		Username:   g.Username,
 		Password:   utils.GenerateTokenSHA256(g.Password),
 		Phone:      g.Phone,

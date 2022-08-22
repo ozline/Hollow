@@ -20,8 +20,8 @@ func NewForestService(uc *biz.ForestUsecase) *ForestService {
 	return &ForestService{uc: uc}
 }
 
-//推送叶子
-func (s *ForestService) Push(ctx context.Context, req *v1.PushLeafRequest) (reply *v1.PushLeafReply, err error) {
+// 推送叶子
+func (s *ForestService) PushLeaf(ctx context.Context, req *v1.PushLeafRequest) (reply *v1.PushLeafReply, err error) {
 	if len(req.Message) > 140 || len(req.Message) == 0 {
 		return nil, errors.ErrParamsIllegal
 	}
@@ -38,8 +38,23 @@ func (s *ForestService) Push(ctx context.Context, req *v1.PushLeafRequest) (repl
 	}, nil
 }
 
-//获取叶子
-func (s *ForestService) Get(ctx context.Context, req *v1.GetLeafsRequest) (reply *v1.GetLeafsReply, err error) {
+// 删除叶子
+func (s *ForestService) DeleteLeaf(ctx context.Context, req *v1.DeleteLeafRequest) (reply *v1.DeleteLeafReply, err error) {
+
+	err = s.uc.DeleteLeaf(ctx, req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.DeleteLeafReply{
+		Code: 200,
+		Msg:  "ok",
+	}, nil
+}
+
+// 获取叶子
+func (s *ForestService) GetForest(ctx context.Context, req *v1.GetLeafsRequest) (reply *v1.GetLeafsReply, err error) {
 	if req.Page == 0 || req.Pagesize == 0 {
 		return nil, errors.ErrParamsIllegal
 	}
@@ -53,14 +68,37 @@ func (s *ForestService) Get(ctx context.Context, req *v1.GetLeafsRequest) (reply
 	return &v1.GetLeafsReply{
 		Code: 200,
 		Msg:  "ok",
-		Data: &v1.MultipleTodoReply{
+		Data: &v1.MultipleLeafReply{
 			List:  forest,
 			Total: count,
 		},
 	}, nil
 }
 
-//评论
+// 获取叶子信息
+func (s *ForestService) GetLeafDetail(ctx context.Context, req *v1.GetLeafDetailRequest) (reply *v1.GetLeafDetailReply, err error) {
+
+	leaf, err := s.uc.GetLeafDetail(ctx, req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.GetLeafDetailReply{
+		Code: 200,
+		Msg:  "ok",
+		Data: &v1.Leaf{
+			Id:        leaf.ID,
+			Owner:     leaf.Owner,
+			Message:   leaf.Message,
+			CreatedAt: leaf.Created_at,
+			Status:    leaf.Status,
+			Liked:     leaf.Liked,
+		},
+	}, nil
+}
+
+// 评论
 func (s *ForestService) Comment(ctx context.Context, req *v1.CommentLeafRequest) (reply *v1.CommentLeafRePly, err error) {
 
 	err = s.uc.CommentLeaf(ctx, req)
@@ -70,6 +108,39 @@ func (s *ForestService) Comment(ctx context.Context, req *v1.CommentLeafRequest)
 	}
 
 	return &v1.CommentLeafRePly{
+		Code: 200,
+		Msg:  "ok",
+	}, nil
+}
+
+// 获取评论
+func (s *ForestService) GetComments(ctx context.Context, req *v1.GetCommentsRequest) (reply *v1.GetCommentsReply, err error) {
+
+	comments, count, err := s.uc.GetComments(ctx, req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.GetCommentsReply{
+		Code: 200,
+		Msg:  "ok",
+		Data: &v1.MultipleCommentReply{
+			List:  comments,
+			Total: count,
+		},
+	}, nil
+}
+
+// 删除评论
+func (s *ForestService) DeleteComment(ctx context.Context, req *v1.DeleteCommentRequest) (reply *v1.DeleteCommentReply, err error) {
+	err = s.uc.DeleteComment(ctx, req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.DeleteCommentReply{
 		Code: 200,
 		Msg:  "ok",
 	}, nil

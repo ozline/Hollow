@@ -21,7 +21,8 @@ import (
 // wireApp init kratos application.
 func wireApp(confServer *conf.Server, confData *conf.Data, auth *conf.Auth, logger log.Logger) (*kratos.App, func(), error) {
 	db := data.NewDB(confData)
-	dataData, cleanup, err := data.NewData(confData, logger, db)
+	node := data.NewSnowflake(confData)
+	dataData, cleanup, err := data.NewData(confData, logger, db, node)
 	if err != nil {
 		return nil, nil, err
 	}

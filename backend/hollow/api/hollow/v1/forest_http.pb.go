@@ -20,31 +20,43 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 
 const OperationForestsComment = "/forest.v1.Forests/Comment"
-const OperationForestsGet = "/forest.v1.Forests/Get"
-const OperationForestsPush = "/forest.v1.Forests/Push"
+const OperationForestsDeleteComment = "/forest.v1.Forests/DeleteComment"
+const OperationForestsDeleteLeaf = "/forest.v1.Forests/DeleteLeaf"
+const OperationForestsGetComments = "/forest.v1.Forests/GetComments"
+const OperationForestsGetForest = "/forest.v1.Forests/GetForest"
+const OperationForestsGetLeafDetail = "/forest.v1.Forests/GetLeafDetail"
+const OperationForestsPushLeaf = "/forest.v1.Forests/PushLeaf"
 
 type ForestsHTTPServer interface {
 	Comment(context.Context, *CommentLeafRequest) (*CommentLeafRePly, error)
-	Get(context.Context, *GetLeafsRequest) (*GetLeafsReply, error)
-	Push(context.Context, *PushLeafRequest) (*PushLeafReply, error)
+	DeleteComment(context.Context, *DeleteCommentRequest) (*DeleteCommentReply, error)
+	DeleteLeaf(context.Context, *DeleteLeafRequest) (*DeleteLeafReply, error)
+	GetComments(context.Context, *GetCommentsRequest) (*GetCommentsReply, error)
+	GetForest(context.Context, *GetLeafsRequest) (*GetLeafsReply, error)
+	GetLeafDetail(context.Context, *GetLeafDetailRequest) (*GetLeafDetailReply, error)
+	PushLeaf(context.Context, *PushLeafRequest) (*PushLeafReply, error)
 }
 
 func RegisterForestsHTTPServer(s *http.Server, srv ForestsHTTPServer) {
 	r := s.Route("/")
-	r.POST("/api/forest", _Forests_Push0_HTTP_Handler(srv))
-	r.GET("/api/forest/all", _Forests_Get0_HTTP_Handler(srv))
-	r.POST("/api/forest/{root}", _Forests_Comment0_HTTP_Handler(srv))
+	r.POST("/api/forest", _Forests_PushLeaf0_HTTP_Handler(srv))
+	r.DELETE("/api/forest/{id}", _Forests_DeleteLeaf0_HTTP_Handler(srv))
+	r.GET("/api/forest/all", _Forests_GetForest0_HTTP_Handler(srv))
+	r.GET("/api/forest/{id}", _Forests_GetLeafDetail0_HTTP_Handler(srv))
+	r.POST("/api/forest/comments/{root}", _Forests_Comment0_HTTP_Handler(srv))
+	r.GET("/api/forest/comments/{root}", _Forests_GetComments0_HTTP_Handler(srv))
+	r.DELETE("/api/forest/comments/{id}", _Forests_DeleteComment0_HTTP_Handler(srv))
 }
 
-func _Forests_Push0_HTTP_Handler(srv ForestsHTTPServer) func(ctx http.Context) error {
+func _Forests_PushLeaf0_HTTP_Handler(srv ForestsHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in PushLeafRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationForestsPush)
+		http.SetOperation(ctx, OperationForestsPushLeaf)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.Push(ctx, req.(*PushLeafRequest))
+			return srv.PushLeaf(ctx, req.(*PushLeafRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -55,21 +67,65 @@ func _Forests_Push0_HTTP_Handler(srv ForestsHTTPServer) func(ctx http.Context) e
 	}
 }
 
-func _Forests_Get0_HTTP_Handler(srv ForestsHTTPServer) func(ctx http.Context) error {
+func _Forests_DeleteLeaf0_HTTP_Handler(srv ForestsHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteLeafRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationForestsDeleteLeaf)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteLeaf(ctx, req.(*DeleteLeafRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DeleteLeafReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Forests_GetForest0_HTTP_Handler(srv ForestsHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in GetLeafsRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationForestsGet)
+		http.SetOperation(ctx, OperationForestsGetForest)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
-			return srv.Get(ctx, req.(*GetLeafsRequest))
+			return srv.GetForest(ctx, req.(*GetLeafsRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
 		reply := out.(*GetLeafsReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Forests_GetLeafDetail0_HTTP_Handler(srv ForestsHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetLeafDetailRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationForestsGetLeafDetail)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetLeafDetail(ctx, req.(*GetLeafDetailRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetLeafDetailReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -96,10 +152,58 @@ func _Forests_Comment0_HTTP_Handler(srv ForestsHTTPServer) func(ctx http.Context
 	}
 }
 
+func _Forests_GetComments0_HTTP_Handler(srv ForestsHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetCommentsRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationForestsGetComments)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetComments(ctx, req.(*GetCommentsRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetCommentsReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Forests_DeleteComment0_HTTP_Handler(srv ForestsHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteCommentRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationForestsDeleteComment)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.DeleteComment(ctx, req.(*DeleteCommentRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DeleteCommentReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type ForestsHTTPClient interface {
 	Comment(ctx context.Context, req *CommentLeafRequest, opts ...http.CallOption) (rsp *CommentLeafRePly, err error)
-	Get(ctx context.Context, req *GetLeafsRequest, opts ...http.CallOption) (rsp *GetLeafsReply, err error)
-	Push(ctx context.Context, req *PushLeafRequest, opts ...http.CallOption) (rsp *PushLeafReply, err error)
+	DeleteComment(ctx context.Context, req *DeleteCommentRequest, opts ...http.CallOption) (rsp *DeleteCommentReply, err error)
+	DeleteLeaf(ctx context.Context, req *DeleteLeafRequest, opts ...http.CallOption) (rsp *DeleteLeafReply, err error)
+	GetComments(ctx context.Context, req *GetCommentsRequest, opts ...http.CallOption) (rsp *GetCommentsReply, err error)
+	GetForest(ctx context.Context, req *GetLeafsRequest, opts ...http.CallOption) (rsp *GetLeafsReply, err error)
+	GetLeafDetail(ctx context.Context, req *GetLeafDetailRequest, opts ...http.CallOption) (rsp *GetLeafDetailReply, err error)
+	PushLeaf(ctx context.Context, req *PushLeafRequest, opts ...http.CallOption) (rsp *PushLeafReply, err error)
 }
 
 type ForestsHTTPClientImpl struct {
@@ -112,7 +216,7 @@ func NewForestsHTTPClient(client *http.Client) ForestsHTTPClient {
 
 func (c *ForestsHTTPClientImpl) Comment(ctx context.Context, in *CommentLeafRequest, opts ...http.CallOption) (*CommentLeafRePly, error) {
 	var out CommentLeafRePly
-	pattern := "/api/forest/{root}"
+	pattern := "/api/forest/comments/{root}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationForestsComment))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -123,11 +227,37 @@ func (c *ForestsHTTPClientImpl) Comment(ctx context.Context, in *CommentLeafRequ
 	return &out, err
 }
 
-func (c *ForestsHTTPClientImpl) Get(ctx context.Context, in *GetLeafsRequest, opts ...http.CallOption) (*GetLeafsReply, error) {
-	var out GetLeafsReply
-	pattern := "/api/forest/all"
+func (c *ForestsHTTPClientImpl) DeleteComment(ctx context.Context, in *DeleteCommentRequest, opts ...http.CallOption) (*DeleteCommentReply, error) {
+	var out DeleteCommentReply
+	pattern := "/api/forest/comments/{id}"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationForestsGet))
+	opts = append(opts, http.Operation(OperationForestsDeleteComment))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ForestsHTTPClientImpl) DeleteLeaf(ctx context.Context, in *DeleteLeafRequest, opts ...http.CallOption) (*DeleteLeafReply, error) {
+	var out DeleteLeafReply
+	pattern := "/api/forest/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationForestsDeleteLeaf))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ForestsHTTPClientImpl) GetComments(ctx context.Context, in *GetCommentsRequest, opts ...http.CallOption) (*GetCommentsReply, error) {
+	var out GetCommentsReply
+	pattern := "/api/forest/comments/{root}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationForestsGetComments))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -136,11 +266,37 @@ func (c *ForestsHTTPClientImpl) Get(ctx context.Context, in *GetLeafsRequest, op
 	return &out, err
 }
 
-func (c *ForestsHTTPClientImpl) Push(ctx context.Context, in *PushLeafRequest, opts ...http.CallOption) (*PushLeafReply, error) {
+func (c *ForestsHTTPClientImpl) GetForest(ctx context.Context, in *GetLeafsRequest, opts ...http.CallOption) (*GetLeafsReply, error) {
+	var out GetLeafsReply
+	pattern := "/api/forest/all"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationForestsGetForest))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ForestsHTTPClientImpl) GetLeafDetail(ctx context.Context, in *GetLeafDetailRequest, opts ...http.CallOption) (*GetLeafDetailReply, error) {
+	var out GetLeafDetailReply
+	pattern := "/api/forest/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationForestsGetLeafDetail))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ForestsHTTPClientImpl) PushLeaf(ctx context.Context, in *PushLeafRequest, opts ...http.CallOption) (*PushLeafReply, error) {
 	var out PushLeafReply
 	pattern := "/api/forest"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationForestsPush))
+	opts = append(opts, http.Operation(OperationForestsPushLeaf))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {

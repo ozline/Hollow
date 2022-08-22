@@ -6,22 +6,43 @@ import (
 	"github.com/go-kratos/kratos/v2/errors"
 )
 
+type Error struct {
+	Code    int
+	Reason  string
+	Message string
+}
+
 var (
+	ErrCodeNormal              = 422
+	ErrCodeInternalServerError = 500
+
 	//SERVICE
-	ErrMissingParams = errors.New(422, v1.ErrorReason_PARAMS_ILLEGAL.String(), "Missing Params Data")
-	ErrParamsIllegal = errors.New(422, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "params invalid")
+	ErrMissingParams = errors.New(ErrCodeNormal, v1.ErrorReason_PARAMS_ILLEGAL.String(), "Missing Params Data")
+	ErrParamsIllegal = errors.New(ErrCodeNormal, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "params invalid")
 
 	//BIZ
-	ErrUserCheckFailed = errors.New(422, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "User Invalid")
-	ErrUserNotFound    = errors.New(422, v1.ErrorReason_INFOMATION_NOT_FOUND.String(), "User Not Found")
-	ErrUserExisted     = errors.New(422, v1.ErrorReason_PARAMS_ILLEGAL.String(), "User Existed")
+	ErrUserCheckFailed = errors.New(ErrCodeNormal, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "User Invalid")
+	ErrUserNotFound    = errors.New(ErrCodeNormal, v1.ErrorReason_INFOMATION_NOT_FOUND.String(), "User Not Found")
+	ErrUserExisted     = errors.New(ErrCodeNormal, v1.ErrorReason_PARAMS_ILLEGAL.String(), "User Existed")
 
 	//DATA
-	ErrCode   = 422
 	ErrNormal = errors.New(500, v1.ErrorReason_NORMAL_ERROR.String(), "Unknown Error")
 
-	ErrUserNotExisted  = errors.New(ErrCode, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "User Not Existed")
-	ErrFatherNotExistd = errors.New(ErrCode, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "Father Not Existed")
+	ErrUserNotExisted   = errors.New(ErrCodeNormal, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "User Not Existed")
+	ErrFatherNotExisted = errors.New(ErrCodeNormal, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "Father Not Existed")
+	ErrLeafNotExisted   = errors.New(ErrCodeNormal, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "Leaf Not Existed")
 
-	ErrUserInvalid = errors.New(422, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "User Invalid")
+	ErrUserInvalid    = errors.New(ErrCodeNormal, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "User Invalid")
+	ErrUserNotMatched = errors.New(ErrCodeNormal, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "User Not Matched")
+
+	ErrCommentNotFound = errors.New(ErrCodeNormal, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "Comment Not Found")
 )
+
+func GenerateError(err Error) *errors.Error {
+	return errors.New(err.Code, err.Reason, err.Message)
+}
+
+// 产生默认错误信息
+func GenerateErrorNormal(err error) *errors.Error {
+	return errors.New(ErrCodeInternalServerError, v1.ErrorReason_NORMAL_ERROR.String(), err.Error())
+}

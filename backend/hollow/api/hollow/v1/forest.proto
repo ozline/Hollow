@@ -14,25 +14,53 @@ option java_outer_classname = "ForestProtoV1";
 service Forests {
 
     // Push a Leaf
-    rpc Push (PushLeafRequest) returns (PushLeafReply) {
+    rpc PushLeaf (PushLeafRequest) returns (PushLeafReply) {
         option (google.api.http) = {
             post: "/api/forest",
             body: "*",
         };
     }
 
+    // Delete a Leaf
+    rpc DeleteLeaf (DeleteLeafRequest) returns (DeleteLeafReply) {
+        option (google.api.http) = {
+            delete: "/api/forest/{id}",
+        };
+    }
+
     // Get Leafs
-    rpc Get (GetLeafsRequest) returns (GetLeafsReply) {
+    rpc GetForest (GetLeafsRequest) returns (GetLeafsReply) {
         option (google.api.http) = {
             get: "/api/forest/all",
+        };
+    }
+
+    // Get Leaf Detail
+    rpc GetLeafDetail (GetLeafDetailRequest) returns (GetLeafDetailReply) {
+        option (google.api.http) = {
+            get: "/api/forest/{id}",
         };
     }
 
     // Comment Leaf
     rpc Comment (CommentLeafRequest) returns (CommentLeafRePly) {
         option (google.api.http) = {
-            post: "/api/forest/{root}",
+            post: "/api/forest/comments/{root}",
             body: "*",
+        };
+    }
+
+    // Get Comments
+    rpc GetComments (GetCommentsRequest) returns (GetCommentsReply) {
+        option (google.api.http) = {
+            get: "/api/forest/comments/{root}",
+        };
+    }
+
+    // Delete Comment
+    rpc DeleteComment (DeleteCommentRequest) returns (DeleteCommentReply) {
+        option (google.api.http) = {
+            delete: "/api/forest/comments/{id}",
         };
     }
 }
@@ -43,16 +71,35 @@ message PushLeafRequest{
     string message = 2 [(validate.rules).string = {min_len: 1, max_len: 140}];
 }
 
+message DeleteLeafRequest{
+    int64 id = 1 [(validate.rules).int64 = {gt: 1}];
+}
+
 message GetLeafsRequest{
     int64 page = 1 [(validate.rules).int64 = {gte: 1}];
     int64 pagesize = 2 [(validate.rules).int64 = {gte: 1}];
 }
 
+message GetLeafDetailRequest{
+    int64 id = 1 [(validate.rules).int64 = {gt: 1}];
+}
+
 message CommentLeafRequest{
     int64 root = 1 [(validate.rules).int64 = {gte: 0}];
-    int64 status = 2 [(validate.rules).int64 = {in: [0,1]}];   //0=匿名 1=实名
+    int64 status = 2 [(validate.rules).int64 = {in: [0,1]}];    //0=匿名 1=实名
     string message = 3 [(validate.rules).string = {min_len: 1, max_len: 140}];
-    int64 father = 4 [(validate.rules).int64 = {gte: 0}];
+    int64 father = 4 [(validate.rules).int64 = {gte: 0}];       //可空
+}
+
+message GetCommentsRequest{
+    int64 root = 1 [(validate.rules).int64 = {gte: 0}];
+    int64 page = 2 [(validate.rules).int64 = {gte: 1}];
+    int64 pagesize = 3 [(validate.rules).int64 = {gte: 1}];
+    int64 father = 4 [(validate.rules).int64 = {gte: 0}]; //可空
+}
+
+message DeleteCommentRequest{
+    int64 id = 2 [(validate.rules).int64 = {gte: 0}];
 }
 
 //Reply Messages
@@ -61,12 +108,28 @@ message Leaf{
     int64 id = 1;
     int64 owner = 2;
     string message = 3;
-    int64 create_at = 4;
+    int64 created_at = 4;
     int64 status = 5;
+    int64 liked = 6;
 }
 
-message MultipleTodoReply{
+message Comment{
+    int64 id = 1;
+    int64 owner = 2;
+    int64 root = 3;
+    int64 father = 4;
+    int64 created_at = 5;
+    int64 status = 6;
+    string message = 7;
+}
+
+message MultipleLeafReply{
     repeated Leaf list = 1;
+    int64 total = 2;
+}
+
+message MultipleCommentReply{
+    repeated Comment list = 1;
     int64 total = 2;
 }
 
@@ -75,13 +138,35 @@ message PushLeafReply{
     string msg = 2;
 }
 
+message DeleteLeafReply{
+    int64 code = 1;
+    string msg = 2;
+}
+
 message GetLeafsReply{
     int64 code = 1;
     string msg = 2;
-    MultipleTodoReply data = 3;
+    MultipleLeafReply data = 3;
+}
+
+message GetLeafDetailReply{
+    int64 code = 1;
+    string msg = 2;
+    Leaf data = 3;
 }
 
 message CommentLeafRePly{
+    int64 code = 1;
+    string msg = 2;
+}
+
+message GetCommentsReply{
+    int64 code = 1;
+    string msg = 2;
+    MultipleCommentReply data = 3;
+}
+
+message DeleteCommentReply{
     int64 code = 1;
     string msg = 2;
 }

@@ -162,6 +162,119 @@ var _PushLeafRequest_Status_InLookup = map[int64]struct{}{
 	1: {},
 }
 
+// Validate checks the field values on DeleteLeafRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *DeleteLeafRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on DeleteLeafRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// DeleteLeafRequestMultiError, or nil if none found.
+func (m *DeleteLeafRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *DeleteLeafRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 1 {
+		err := DeleteLeafRequestValidationError{
+			field:  "Id",
+			reason: "value must be greater than 1",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return DeleteLeafRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// DeleteLeafRequestMultiError is an error wrapping multiple validation errors
+// returned by DeleteLeafRequest.ValidateAll() if the designated constraints
+// aren't met.
+type DeleteLeafRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m DeleteLeafRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m DeleteLeafRequestMultiError) AllErrors() []error { return m }
+
+// DeleteLeafRequestValidationError is the validation error returned by
+// DeleteLeafRequest.Validate if the designated constraints aren't met.
+type DeleteLeafRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e DeleteLeafRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e DeleteLeafRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e DeleteLeafRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e DeleteLeafRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e DeleteLeafRequestValidationError) ErrorName() string {
+	return "DeleteLeafRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e DeleteLeafRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sDeleteLeafRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = DeleteLeafRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = DeleteLeafRequestValidationError{}
+
 // Validate checks the field values on GetLeafsRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
@@ -283,6 +396,119 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetLeafsRequestValidationError{}
+
+// Validate checks the field values on GetLeafDetailRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetLeafDetailRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetLeafDetailRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetLeafDetailRequestMultiError, or nil if none found.
+func (m *GetLeafDetailRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetLeafDetailRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 1 {
+		err := GetLeafDetailRequestValidationError{
+			field:  "Id",
+			reason: "value must be greater than 1",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return GetLeafDetailRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetLeafDetailRequestMultiError is an error wrapping multiple validation
+// errors returned by GetLeafDetailRequest.ValidateAll() if the designated
+// constraints aren't met.
+type GetLeafDetailRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetLeafDetailRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetLeafDetailRequestMultiError) AllErrors() []error { return m }
+
+// GetLeafDetailRequestValidationError is the validation error returned by
+// GetLeafDetailRequest.Validate if the designated constraints aren't met.
+type GetLeafDetailRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetLeafDetailRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetLeafDetailRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetLeafDetailRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetLeafDetailRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetLeafDetailRequestValidationError) ErrorName() string {
+	return "GetLeafDetailRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetLeafDetailRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetLeafDetailRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetLeafDetailRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetLeafDetailRequestValidationError{}
 
 // Validate checks the field values on CommentLeafRequest with the rules
 // defined in the proto definition for this message. If any rules are
@@ -435,6 +661,265 @@ var _CommentLeafRequest_Status_InLookup = map[int64]struct{}{
 	1: {},
 }
 
+// Validate checks the field values on GetCommentsRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetCommentsRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetCommentsRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetCommentsRequestMultiError, or nil if none found.
+func (m *GetCommentsRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetCommentsRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetRoot() < 0 {
+		err := GetCommentsRequestValidationError{
+			field:  "Root",
+			reason: "value must be greater than or equal to 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.GetPage() < 1 {
+		err := GetCommentsRequestValidationError{
+			field:  "Page",
+			reason: "value must be greater than or equal to 1",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.GetPagesize() < 1 {
+		err := GetCommentsRequestValidationError{
+			field:  "Pagesize",
+			reason: "value must be greater than or equal to 1",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.GetFather() < 0 {
+		err := GetCommentsRequestValidationError{
+			field:  "Father",
+			reason: "value must be greater than or equal to 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return GetCommentsRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetCommentsRequestMultiError is an error wrapping multiple validation errors
+// returned by GetCommentsRequest.ValidateAll() if the designated constraints
+// aren't met.
+type GetCommentsRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetCommentsRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetCommentsRequestMultiError) AllErrors() []error { return m }
+
+// GetCommentsRequestValidationError is the validation error returned by
+// GetCommentsRequest.Validate if the designated constraints aren't met.
+type GetCommentsRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetCommentsRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetCommentsRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetCommentsRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetCommentsRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetCommentsRequestValidationError) ErrorName() string {
+	return "GetCommentsRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetCommentsRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetCommentsRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetCommentsRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetCommentsRequestValidationError{}
+
+// Validate checks the field values on DeleteCommentRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *DeleteCommentRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on DeleteCommentRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// DeleteCommentRequestMultiError, or nil if none found.
+func (m *DeleteCommentRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *DeleteCommentRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() < 0 {
+		err := DeleteCommentRequestValidationError{
+			field:  "Id",
+			reason: "value must be greater than or equal to 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return DeleteCommentRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// DeleteCommentRequestMultiError is an error wrapping multiple validation
+// errors returned by DeleteCommentRequest.ValidateAll() if the designated
+// constraints aren't met.
+type DeleteCommentRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m DeleteCommentRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m DeleteCommentRequestMultiError) AllErrors() []error { return m }
+
+// DeleteCommentRequestValidationError is the validation error returned by
+// DeleteCommentRequest.Validate if the designated constraints aren't met.
+type DeleteCommentRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e DeleteCommentRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e DeleteCommentRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e DeleteCommentRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e DeleteCommentRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e DeleteCommentRequestValidationError) ErrorName() string {
+	return "DeleteCommentRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e DeleteCommentRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sDeleteCommentRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = DeleteCommentRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = DeleteCommentRequestValidationError{}
+
 // Validate checks the field values on Leaf with the rules defined in the proto
 // definition for this message. If any rules are violated, the first error
 // encountered is returned, or nil if there are no violations.
@@ -462,9 +947,11 @@ func (m *Leaf) validate(all bool) error {
 
 	// no validation rules for Message
 
-	// no validation rules for CreateAt
+	// no validation rules for CreatedAt
 
 	// no validation rules for Status
+
+	// no validation rules for Liked
 
 	if len(errors) > 0 {
 		return LeafMultiError(errors)
@@ -543,22 +1030,134 @@ var _ interface {
 	ErrorName() string
 } = LeafValidationError{}
 
-// Validate checks the field values on MultipleTodoReply with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *MultipleTodoReply) Validate() error {
+// Validate checks the field values on Comment with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *Comment) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on MultipleTodoReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// MultipleTodoReplyMultiError, or nil if none found.
-func (m *MultipleTodoReply) ValidateAll() error {
+// ValidateAll checks the field values on Comment with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in CommentMultiError, or nil if none found.
+func (m *Comment) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *MultipleTodoReply) validate(all bool) error {
+func (m *Comment) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Owner
+
+	// no validation rules for Root
+
+	// no validation rules for Father
+
+	// no validation rules for CreatedAt
+
+	// no validation rules for Status
+
+	// no validation rules for Message
+
+	if len(errors) > 0 {
+		return CommentMultiError(errors)
+	}
+
+	return nil
+}
+
+// CommentMultiError is an error wrapping multiple validation errors returned
+// by Comment.ValidateAll() if the designated constraints aren't met.
+type CommentMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m CommentMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m CommentMultiError) AllErrors() []error { return m }
+
+// CommentValidationError is the validation error returned by Comment.Validate
+// if the designated constraints aren't met.
+type CommentValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e CommentValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e CommentValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e CommentValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e CommentValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e CommentValidationError) ErrorName() string { return "CommentValidationError" }
+
+// Error satisfies the builtin error interface
+func (e CommentValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sComment.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = CommentValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = CommentValidationError{}
+
+// Validate checks the field values on MultipleLeafReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *MultipleLeafReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on MultipleLeafReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// MultipleLeafReplyMultiError, or nil if none found.
+func (m *MultipleLeafReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *MultipleLeafReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -572,7 +1171,7 @@ func (m *MultipleTodoReply) validate(all bool) error {
 			switch v := interface{}(item).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, MultipleTodoReplyValidationError{
+					errors = append(errors, MultipleLeafReplyValidationError{
 						field:  fmt.Sprintf("List[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -580,7 +1179,7 @@ func (m *MultipleTodoReply) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, MultipleTodoReplyValidationError{
+					errors = append(errors, MultipleLeafReplyValidationError{
 						field:  fmt.Sprintf("List[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -589,7 +1188,7 @@ func (m *MultipleTodoReply) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return MultipleTodoReplyValidationError{
+				return MultipleLeafReplyValidationError{
 					field:  fmt.Sprintf("List[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -602,19 +1201,19 @@ func (m *MultipleTodoReply) validate(all bool) error {
 	// no validation rules for Total
 
 	if len(errors) > 0 {
-		return MultipleTodoReplyMultiError(errors)
+		return MultipleLeafReplyMultiError(errors)
 	}
 
 	return nil
 }
 
-// MultipleTodoReplyMultiError is an error wrapping multiple validation errors
-// returned by MultipleTodoReply.ValidateAll() if the designated constraints
+// MultipleLeafReplyMultiError is an error wrapping multiple validation errors
+// returned by MultipleLeafReply.ValidateAll() if the designated constraints
 // aren't met.
-type MultipleTodoReplyMultiError []error
+type MultipleLeafReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m MultipleTodoReplyMultiError) Error() string {
+func (m MultipleLeafReplyMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -623,11 +1222,11 @@ func (m MultipleTodoReplyMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m MultipleTodoReplyMultiError) AllErrors() []error { return m }
+func (m MultipleLeafReplyMultiError) AllErrors() []error { return m }
 
-// MultipleTodoReplyValidationError is the validation error returned by
-// MultipleTodoReply.Validate if the designated constraints aren't met.
-type MultipleTodoReplyValidationError struct {
+// MultipleLeafReplyValidationError is the validation error returned by
+// MultipleLeafReply.Validate if the designated constraints aren't met.
+type MultipleLeafReplyValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -635,24 +1234,24 @@ type MultipleTodoReplyValidationError struct {
 }
 
 // Field function returns field value.
-func (e MultipleTodoReplyValidationError) Field() string { return e.field }
+func (e MultipleLeafReplyValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e MultipleTodoReplyValidationError) Reason() string { return e.reason }
+func (e MultipleLeafReplyValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e MultipleTodoReplyValidationError) Cause() error { return e.cause }
+func (e MultipleLeafReplyValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e MultipleTodoReplyValidationError) Key() bool { return e.key }
+func (e MultipleLeafReplyValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e MultipleTodoReplyValidationError) ErrorName() string {
-	return "MultipleTodoReplyValidationError"
+func (e MultipleLeafReplyValidationError) ErrorName() string {
+	return "MultipleLeafReplyValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e MultipleTodoReplyValidationError) Error() string {
+func (e MultipleLeafReplyValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -664,14 +1263,14 @@ func (e MultipleTodoReplyValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sMultipleTodoReply.%s: %s%s",
+		"invalid %sMultipleLeafReply.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = MultipleTodoReplyValidationError{}
+var _ error = MultipleLeafReplyValidationError{}
 
 var _ interface {
 	Field() string
@@ -679,7 +1278,145 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = MultipleTodoReplyValidationError{}
+} = MultipleLeafReplyValidationError{}
+
+// Validate checks the field values on MultipleCommentReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *MultipleCommentReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on MultipleCommentReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// MultipleCommentReplyMultiError, or nil if none found.
+func (m *MultipleCommentReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *MultipleCommentReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetList() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, MultipleCommentReplyValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, MultipleCommentReplyValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return MultipleCommentReplyValidationError{
+					field:  fmt.Sprintf("List[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	// no validation rules for Total
+
+	if len(errors) > 0 {
+		return MultipleCommentReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// MultipleCommentReplyMultiError is an error wrapping multiple validation
+// errors returned by MultipleCommentReply.ValidateAll() if the designated
+// constraints aren't met.
+type MultipleCommentReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m MultipleCommentReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m MultipleCommentReplyMultiError) AllErrors() []error { return m }
+
+// MultipleCommentReplyValidationError is the validation error returned by
+// MultipleCommentReply.Validate if the designated constraints aren't met.
+type MultipleCommentReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e MultipleCommentReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e MultipleCommentReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e MultipleCommentReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e MultipleCommentReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e MultipleCommentReplyValidationError) ErrorName() string {
+	return "MultipleCommentReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e MultipleCommentReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sMultipleCommentReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = MultipleCommentReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = MultipleCommentReplyValidationError{}
 
 // Validate checks the field values on PushLeafReply with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
@@ -784,6 +1521,110 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = PushLeafReplyValidationError{}
+
+// Validate checks the field values on DeleteLeafReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *DeleteLeafReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on DeleteLeafReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// DeleteLeafReplyMultiError, or nil if none found.
+func (m *DeleteLeafReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *DeleteLeafReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Code
+
+	// no validation rules for Msg
+
+	if len(errors) > 0 {
+		return DeleteLeafReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// DeleteLeafReplyMultiError is an error wrapping multiple validation errors
+// returned by DeleteLeafReply.ValidateAll() if the designated constraints
+// aren't met.
+type DeleteLeafReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m DeleteLeafReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m DeleteLeafReplyMultiError) AllErrors() []error { return m }
+
+// DeleteLeafReplyValidationError is the validation error returned by
+// DeleteLeafReply.Validate if the designated constraints aren't met.
+type DeleteLeafReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e DeleteLeafReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e DeleteLeafReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e DeleteLeafReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e DeleteLeafReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e DeleteLeafReplyValidationError) ErrorName() string { return "DeleteLeafReplyValidationError" }
+
+// Error satisfies the builtin error interface
+func (e DeleteLeafReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sDeleteLeafReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = DeleteLeafReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = DeleteLeafReplyValidationError{}
 
 // Validate checks the field values on GetLeafsReply with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
@@ -918,6 +1759,141 @@ var _ interface {
 	ErrorName() string
 } = GetLeafsReplyValidationError{}
 
+// Validate checks the field values on GetLeafDetailReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetLeafDetailReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetLeafDetailReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetLeafDetailReplyMultiError, or nil if none found.
+func (m *GetLeafDetailReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetLeafDetailReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Code
+
+	// no validation rules for Msg
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, GetLeafDetailReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, GetLeafDetailReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return GetLeafDetailReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return GetLeafDetailReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetLeafDetailReplyMultiError is an error wrapping multiple validation errors
+// returned by GetLeafDetailReply.ValidateAll() if the designated constraints
+// aren't met.
+type GetLeafDetailReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetLeafDetailReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetLeafDetailReplyMultiError) AllErrors() []error { return m }
+
+// GetLeafDetailReplyValidationError is the validation error returned by
+// GetLeafDetailReply.Validate if the designated constraints aren't met.
+type GetLeafDetailReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetLeafDetailReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetLeafDetailReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetLeafDetailReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetLeafDetailReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetLeafDetailReplyValidationError) ErrorName() string {
+	return "GetLeafDetailReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetLeafDetailReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetLeafDetailReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetLeafDetailReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetLeafDetailReplyValidationError{}
+
 // Validate checks the field values on CommentLeafRePly with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
@@ -1021,3 +1997,242 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CommentLeafRePlyValidationError{}
+
+// Validate checks the field values on GetCommentsReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *GetCommentsReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetCommentsReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetCommentsReplyMultiError, or nil if none found.
+func (m *GetCommentsReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetCommentsReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Code
+
+	// no validation rules for Msg
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, GetCommentsReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, GetCommentsReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return GetCommentsReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return GetCommentsReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetCommentsReplyMultiError is an error wrapping multiple validation errors
+// returned by GetCommentsReply.ValidateAll() if the designated constraints
+// aren't met.
+type GetCommentsReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetCommentsReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetCommentsReplyMultiError) AllErrors() []error { return m }
+
+// GetCommentsReplyValidationError is the validation error returned by
+// GetCommentsReply.Validate if the designated constraints aren't met.
+type GetCommentsReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetCommentsReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetCommentsReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetCommentsReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetCommentsReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetCommentsReplyValidationError) ErrorName() string { return "GetCommentsReplyValidationError" }
+
+// Error satisfies the builtin error interface
+func (e GetCommentsReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetCommentsReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetCommentsReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetCommentsReplyValidationError{}
+
+// Validate checks the field values on DeleteCommentReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *DeleteCommentReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on DeleteCommentReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// DeleteCommentReplyMultiError, or nil if none found.
+func (m *DeleteCommentReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *DeleteCommentReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Code
+
+	// no validation rules for Msg
+
+	if len(errors) > 0 {
+		return DeleteCommentReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// DeleteCommentReplyMultiError is an error wrapping multiple validation errors
+// returned by DeleteCommentReply.ValidateAll() if the designated constraints
+// aren't met.
+type DeleteCommentReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m DeleteCommentReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m DeleteCommentReplyMultiError) AllErrors() []error { return m }
+
+// DeleteCommentReplyValidationError is the validation error returned by
+// DeleteCommentReply.Validate if the designated constraints aren't met.
+type DeleteCommentReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e DeleteCommentReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e DeleteCommentReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e DeleteCommentReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e DeleteCommentReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e DeleteCommentReplyValidationError) ErrorName() string {
+	return "DeleteCommentReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e DeleteCommentReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sDeleteCommentReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = DeleteCommentReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = DeleteCommentReplyValidationError{}

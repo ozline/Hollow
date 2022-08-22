@@ -23,11 +23,19 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ForestsClient interface {
 	// Push a Leaf
-	Push(ctx context.Context, in *PushLeafRequest, opts ...grpc.CallOption) (*PushLeafReply, error)
+	PushLeaf(ctx context.Context, in *PushLeafRequest, opts ...grpc.CallOption) (*PushLeafReply, error)
+	// Delete a Leaf
+	DeleteLeaf(ctx context.Context, in *DeleteLeafRequest, opts ...grpc.CallOption) (*DeleteLeafReply, error)
 	// Get Leafs
-	Get(ctx context.Context, in *GetLeafsRequest, opts ...grpc.CallOption) (*GetLeafsReply, error)
+	GetForest(ctx context.Context, in *GetLeafsRequest, opts ...grpc.CallOption) (*GetLeafsReply, error)
+	// Get Leaf Detail
+	GetLeafDetail(ctx context.Context, in *GetLeafDetailRequest, opts ...grpc.CallOption) (*GetLeafDetailReply, error)
 	// Comment Leaf
 	Comment(ctx context.Context, in *CommentLeafRequest, opts ...grpc.CallOption) (*CommentLeafRePly, error)
+	// Get Comments
+	GetComments(ctx context.Context, in *GetCommentsRequest, opts ...grpc.CallOption) (*GetCommentsReply, error)
+	// Delete Comment
+	DeleteComment(ctx context.Context, in *DeleteCommentRequest, opts ...grpc.CallOption) (*DeleteCommentReply, error)
 }
 
 type forestsClient struct {
@@ -38,18 +46,36 @@ func NewForestsClient(cc grpc.ClientConnInterface) ForestsClient {
 	return &forestsClient{cc}
 }
 
-func (c *forestsClient) Push(ctx context.Context, in *PushLeafRequest, opts ...grpc.CallOption) (*PushLeafReply, error) {
+func (c *forestsClient) PushLeaf(ctx context.Context, in *PushLeafRequest, opts ...grpc.CallOption) (*PushLeafReply, error) {
 	out := new(PushLeafReply)
-	err := c.cc.Invoke(ctx, "/forest.v1.Forests/Push", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/forest.v1.Forests/PushLeaf", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *forestsClient) Get(ctx context.Context, in *GetLeafsRequest, opts ...grpc.CallOption) (*GetLeafsReply, error) {
+func (c *forestsClient) DeleteLeaf(ctx context.Context, in *DeleteLeafRequest, opts ...grpc.CallOption) (*DeleteLeafReply, error) {
+	out := new(DeleteLeafReply)
+	err := c.cc.Invoke(ctx, "/forest.v1.Forests/DeleteLeaf", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *forestsClient) GetForest(ctx context.Context, in *GetLeafsRequest, opts ...grpc.CallOption) (*GetLeafsReply, error) {
 	out := new(GetLeafsReply)
-	err := c.cc.Invoke(ctx, "/forest.v1.Forests/Get", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/forest.v1.Forests/GetForest", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *forestsClient) GetLeafDetail(ctx context.Context, in *GetLeafDetailRequest, opts ...grpc.CallOption) (*GetLeafDetailReply, error) {
+	out := new(GetLeafDetailReply)
+	err := c.cc.Invoke(ctx, "/forest.v1.Forests/GetLeafDetail", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -65,16 +91,42 @@ func (c *forestsClient) Comment(ctx context.Context, in *CommentLeafRequest, opt
 	return out, nil
 }
 
+func (c *forestsClient) GetComments(ctx context.Context, in *GetCommentsRequest, opts ...grpc.CallOption) (*GetCommentsReply, error) {
+	out := new(GetCommentsReply)
+	err := c.cc.Invoke(ctx, "/forest.v1.Forests/GetComments", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *forestsClient) DeleteComment(ctx context.Context, in *DeleteCommentRequest, opts ...grpc.CallOption) (*DeleteCommentReply, error) {
+	out := new(DeleteCommentReply)
+	err := c.cc.Invoke(ctx, "/forest.v1.Forests/DeleteComment", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ForestsServer is the server API for Forests service.
 // All implementations must embed UnimplementedForestsServer
 // for forward compatibility
 type ForestsServer interface {
 	// Push a Leaf
-	Push(context.Context, *PushLeafRequest) (*PushLeafReply, error)
+	PushLeaf(context.Context, *PushLeafRequest) (*PushLeafReply, error)
+	// Delete a Leaf
+	DeleteLeaf(context.Context, *DeleteLeafRequest) (*DeleteLeafReply, error)
 	// Get Leafs
-	Get(context.Context, *GetLeafsRequest) (*GetLeafsReply, error)
+	GetForest(context.Context, *GetLeafsRequest) (*GetLeafsReply, error)
+	// Get Leaf Detail
+	GetLeafDetail(context.Context, *GetLeafDetailRequest) (*GetLeafDetailReply, error)
 	// Comment Leaf
 	Comment(context.Context, *CommentLeafRequest) (*CommentLeafRePly, error)
+	// Get Comments
+	GetComments(context.Context, *GetCommentsRequest) (*GetCommentsReply, error)
+	// Delete Comment
+	DeleteComment(context.Context, *DeleteCommentRequest) (*DeleteCommentReply, error)
 	mustEmbedUnimplementedForestsServer()
 }
 
@@ -82,14 +134,26 @@ type ForestsServer interface {
 type UnimplementedForestsServer struct {
 }
 
-func (UnimplementedForestsServer) Push(context.Context, *PushLeafRequest) (*PushLeafReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Push not implemented")
+func (UnimplementedForestsServer) PushLeaf(context.Context, *PushLeafRequest) (*PushLeafReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PushLeaf not implemented")
 }
-func (UnimplementedForestsServer) Get(context.Context, *GetLeafsRequest) (*GetLeafsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
+func (UnimplementedForestsServer) DeleteLeaf(context.Context, *DeleteLeafRequest) (*DeleteLeafReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteLeaf not implemented")
+}
+func (UnimplementedForestsServer) GetForest(context.Context, *GetLeafsRequest) (*GetLeafsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetForest not implemented")
+}
+func (UnimplementedForestsServer) GetLeafDetail(context.Context, *GetLeafDetailRequest) (*GetLeafDetailReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetLeafDetail not implemented")
 }
 func (UnimplementedForestsServer) Comment(context.Context, *CommentLeafRequest) (*CommentLeafRePly, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Comment not implemented")
+}
+func (UnimplementedForestsServer) GetComments(context.Context, *GetCommentsRequest) (*GetCommentsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetComments not implemented")
+}
+func (UnimplementedForestsServer) DeleteComment(context.Context, *DeleteCommentRequest) (*DeleteCommentReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteComment not implemented")
 }
 func (UnimplementedForestsServer) mustEmbedUnimplementedForestsServer() {}
 
@@ -104,38 +168,74 @@ func RegisterForestsServer(s grpc.ServiceRegistrar, srv ForestsServer) {
 	s.RegisterService(&Forests_ServiceDesc, srv)
 }
 
-func _Forests_Push_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Forests_PushLeaf_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PushLeafRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ForestsServer).Push(ctx, in)
+		return srv.(ForestsServer).PushLeaf(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/forest.v1.Forests/Push",
+		FullMethod: "/forest.v1.Forests/PushLeaf",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ForestsServer).Push(ctx, req.(*PushLeafRequest))
+		return srv.(ForestsServer).PushLeaf(ctx, req.(*PushLeafRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Forests_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Forests_DeleteLeaf_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteLeafRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ForestsServer).DeleteLeaf(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/forest.v1.Forests/DeleteLeaf",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ForestsServer).DeleteLeaf(ctx, req.(*DeleteLeafRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Forests_GetForest_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetLeafsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ForestsServer).Get(ctx, in)
+		return srv.(ForestsServer).GetForest(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/forest.v1.Forests/Get",
+		FullMethod: "/forest.v1.Forests/GetForest",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ForestsServer).Get(ctx, req.(*GetLeafsRequest))
+		return srv.(ForestsServer).GetForest(ctx, req.(*GetLeafsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Forests_GetLeafDetail_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetLeafDetailRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ForestsServer).GetLeafDetail(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/forest.v1.Forests/GetLeafDetail",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ForestsServer).GetLeafDetail(ctx, req.(*GetLeafDetailRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -158,6 +258,42 @@ func _Forests_Comment_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Forests_GetComments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetCommentsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ForestsServer).GetComments(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/forest.v1.Forests/GetComments",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ForestsServer).GetComments(ctx, req.(*GetCommentsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Forests_DeleteComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteCommentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ForestsServer).DeleteComment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/forest.v1.Forests/DeleteComment",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ForestsServer).DeleteComment(ctx, req.(*DeleteCommentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Forests_ServiceDesc is the grpc.ServiceDesc for Forests service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -166,16 +302,32 @@ var Forests_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ForestsServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Push",
-			Handler:    _Forests_Push_Handler,
+			MethodName: "PushLeaf",
+			Handler:    _Forests_PushLeaf_Handler,
 		},
 		{
-			MethodName: "Get",
-			Handler:    _Forests_Get_Handler,
+			MethodName: "DeleteLeaf",
+			Handler:    _Forests_DeleteLeaf_Handler,
+		},
+		{
+			MethodName: "GetForest",
+			Handler:    _Forests_GetForest_Handler,
+		},
+		{
+			MethodName: "GetLeafDetail",
+			Handler:    _Forests_GetLeafDetail_Handler,
 		},
 		{
 			MethodName: "Comment",
 			Handler:    _Forests_Comment_Handler,
+		},
+		{
+			MethodName: "GetComments",
+			Handler:    _Forests_GetComments_Handler,
+		},
+		{
+			MethodName: "DeleteComment",
+			Handler:    _Forests_DeleteComment_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

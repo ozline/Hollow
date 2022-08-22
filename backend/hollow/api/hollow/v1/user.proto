@@ -28,6 +28,13 @@ service Users {
             body: "*",
         };
     }
+
+    rpc Update (UpdateUserRequest) returns (UpdateUserReply) {
+        option (google.api.http) = {
+            put: "/api/user/update",
+            body: "*",
+        };
+    }
 }
 //Request Messages
 

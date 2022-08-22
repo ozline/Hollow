@@ -3,6 +3,8 @@ package data
 import (
 	"context"
 	"hollow/internal/pkg/middleware/auth"
+
+	snowflake "github.com/bwmarrin/snowflake"
 )
 
 //TABLES
@@ -12,7 +14,13 @@ const (
 	TABLE_COMMENT = "comment"
 )
 
+//获取用户信息
 func GetUserInfo(ctx context.Context) *auth.CurrentUser {
 	currentUser := auth.FromContext(ctx)
 	return currentUser
+}
+
+//获取雪花ID
+func GetSnowflakeID(node *snowflake.Node) int64 {
+	return node.Generate().Int64()
 }

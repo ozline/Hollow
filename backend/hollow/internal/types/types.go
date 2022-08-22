@@ -14,11 +14,12 @@ type User struct {
 }
 
 type Leaf struct {
-	ID        int64  //消息ID
-	Owner     int64  //所述对象
-	Create_at int64  //创建时间
-	Status    int64  //消息状态 0=匿名 1=实名 2=封禁
-	Message   string //消息
+	ID         int64  //消息ID
+	Owner      int64  //所述对象
+	Created_at int64  //创建时间
+	Status     int64  //消息状态 0=匿名 1=实名 2=封禁
+	Message    string //消息
+	Liked      int64  //点赞数
 }
 
 type Comment struct {
