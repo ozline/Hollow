@@ -2,14 +2,16 @@
     <v-snackbar
         v-model="message.show"
         :timeout="message.timeout"
+        location="top"
+        style="text-align: center;"
     >
-        {{ message.content }}
-
+        <div style="text-align: center;">{{ message.content }}</div>
         <template v-slot:actions>
             <v-btn
                 :color="message.color"
                 variant="text"
                 @click="message.show = false"
+                v-show="message.btnshow"
             >关闭</v-btn>
         </template>
     </v-snackbar>

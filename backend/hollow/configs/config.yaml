@@ -19,5 +19,11 @@ data:
   snowflake:
     start_time: "2021-09-07"
     machine_id: 1
+  OSS:
+    endpoint: files.ozline.icu #默认启用自定义域名
+    accessKeyID: LTAI5tEHEZVCNhGVUFPDQ72w
+    accessKeySecret: r2AMvWTgaokelvgUtnnfyeoqCxQK1Q
+    bucket: ozliinex
+    maindir: bilibili
 auth:
   secret: MTAxNTkwMTg1Mw==

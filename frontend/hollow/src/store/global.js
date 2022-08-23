@@ -9,6 +9,7 @@ export const globalStore = defineStore('global', {
             isLogin: false,
             user: [],
             token: '',
+            anonymous: ['Alice','Bob','Carol','Dave','Eve','Francis','Grace','Hans','Isabella','Jason','Kate','Louis','Margaret','Olivia','Paul','Queen','Richard','Susan','Thomas','Uma','Vivian','Winner','Xander','Yasmine','Zach']
         }
     },
 

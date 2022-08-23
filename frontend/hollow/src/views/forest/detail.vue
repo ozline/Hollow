@@ -1,6 +1,47 @@
 <template>
     <v-container>
-        <h1> 详情 </h1>
+        <h1 style="margin-bottom: 26px;"> 详情 - {{ id }}
+        <v-btn color="warning" style="float:right;margin-top:6px" @click="goback">返回</v-btn>
+        </h1>
+        <v-card
+            title="楼主"
+            :subtitle="utils.timestampConvert(data.createdAt)"
+            :text="data.message"
+            v-bind:key="0"
+            style="margin-bottom: 26px;"
+        ></v-card>
+
+        <v-card
+            v-for="(item,index) in comments.datas"
+            v-bind:key="item.id"
+            :title="'#' + (index + 1) + ' - ' + this.global.anonymous[index % 26]"
+            :subtitle="utils.timestampConvert(item.createdAt)"
+            :text="item.message"
+            style="margin-bottom: 26px;"
+            variant="outlined"
+        >
+            <v-card-actions>
+                <v-btn variant="outlined" color="error">
+                    违规投诉
+                </v-btn>
+                <v-btn variant="outlined" v-show="item.status == 1">
+                    查看层主(ID: {{ item.owner }})
+                </v-btn>
+            </v-card-actions>
+
+            <template v-slot:append>
+                <v-badge
+                color="info"
+                content="喜欢: 6"
+                inline
+                ></v-badge>
+            </template>
+        </v-card>
+        <v-pagination
+            v-model="page.index"
+            :length="page.length"
+            :total-visible="5"
+        ></v-pagination>
     </v-container>
 </template>
 
@@ -8,5 +49,50 @@
 <script>
 export default {
     name: 'forestDetail',
+    data() {
+        return {
+            data: [],
+            id: 0,
+            comments:{
+                datas: [],
+                total: 0,
+            },
+            page:{
+                index: 1,
+                size: 10,
+            }
+        }
+    },
+    created(){
+        this.refresh()
+    },
+    watch:{
+        page:{
+            deep: true,
+            handler(){
+                this.refresh()
+                this.snackbar.show("加载第" + this.page.index + "页成功")
+            }
+        }
+    },
+    methods:{
+        refresh(){
+            this.id = this.$route.params.id
+
+            this.HTTP.get("/forest/"+this.id,{ },true).then(res =>{
+                this.data = res.data
+            })
+
+            var data = {
+                page: this.page.index,
+                pagesize: this.page.size,
+            }
+
+            this.HTTP.get("/forest/comments/"+ this.id,data,true).then(res => {
+                this.comments.datas = res.data.list
+                this.comments.total = res.data.total
+            })
+        },
+    }
 }
 </script>

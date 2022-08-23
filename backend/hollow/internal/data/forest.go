@@ -82,8 +82,8 @@ func (r *forestRepo) GetForest(ctx context.Context, g *v1.GetLeafsRequest) (list
 	var count int64
 	var res *gorm.DB
 
-	res = r.data.db.Table(TABLE_FOREST).Order("id desc")
-	res = res.Offset(int((g.Page - 1) * g.Pagesize)).Limit(int(g.Pagesize)).Find(&leafs).Count(&count)
+	res = r.data.db.Table(TABLE_FOREST).Order("id desc").Count(&count)
+	res = res.Offset(int((g.Page - 1) * g.Pagesize)).Limit(int(g.Pagesize)).Find(&leafs)
 
 	if res.Error != nil {
 		return nil, 0, res.Error
@@ -158,8 +158,8 @@ func (r *forestRepo) GetComments(ctx context.Context, g *v1.GetCommentsRequest) 
 	var count int64
 	var res *gorm.DB
 
-	res = r.data.db.Table(TABLE_COMMENT).Where("root = ? AND father = ?", g.Root, g.Father).Order("id desc")
-	res = res.Offset(int((g.Page - 1) * g.Pagesize)).Limit(int(g.Pagesize)).Find(&comments).Count(&count)
+	res = r.data.db.Table(TABLE_COMMENT).Where("root = ? AND father = ?", g.Root, g.Father).Count(&count)
+	res = res.Offset(int((g.Page - 1) * g.Pagesize)).Limit(int(g.Pagesize)).Find(&comments)
 
 	if res.Error != nil {
 		return nil, 0, res.Error

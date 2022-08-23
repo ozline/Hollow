@@ -2,9 +2,10 @@ import { createWebHistory,createRouter } from 'vue-router'
 import Main from '../views/main.vue'
 import Login from '../views/user/login.vue'
 import Register from '../views/user/register.vue'
-import Detail from '../views/user/space.vue'
+import UserDetail from '../views/user/space.vue'
 import NotFound from '../views/404.vue'
 import Upload from '../views/forest/push.vue'
+import LeafDetail from '../views/forest/detail.vue'
 import pinia from '../store/store'
 import { globalStore } from '../store/global'
 import { snackbarStore } from '../store/snackbar'
@@ -37,13 +38,18 @@ const routes=[
     },
     {
         path:'/user/detail',
-        component:Detail,
+        component:UserDetail,
         meta:{ title: '账号信息', auth: true }
     },
     {
         path:'/forest/upload',
         component:Upload,
         meta:{ title: '发表想法', auth: true }
+    },
+    {
+        path:'/forest/:id',
+        component:LeafDetail,
+        meta:{ title: '详情', auth: true }
     },
     {
         path:'/404',
@@ -73,7 +79,7 @@ const router = createRouter({
 const global = globalStore(pinia);
 const snackbar = snackbarStore();
 
-router.beforeEach((to,from,next)=>{
+router.beforeEach((to,from,next) => {
     // console.log('组件跳转 从 '+from.meta.title+" 至 "+to.meta.title)
     const authCheck = to.meta.auth;
 
@@ -89,6 +95,11 @@ router.beforeEach((to,from,next)=>{
         document.title = 'Hollow - ' + to.meta.title
     }
     next()
+})
+
+router.afterEach(() => {
+
+    window.scrollTo(0,0);
 })
 
 export default router

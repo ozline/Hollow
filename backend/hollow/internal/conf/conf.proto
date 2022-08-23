@@ -44,9 +44,17 @@ message Data {
     string start_time = 1;
     int64 machine_id = 2;
   }
+  message Oss {
+    string endpoint = 1;
+    string accessKeyID = 2;
+    string accessKeySecret = 3;
+    string bucket = 4;
+    string maindir = 5;
+  }
   Database database = 1;
   Redis redis = 2;
   Snowflake snowflake = 3;
+  Oss OSS = 4;
 }
 
 message Auth{

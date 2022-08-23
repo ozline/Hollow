@@ -1,11 +1,13 @@
 package data
 
 import (
+	"fmt"
 	"hollow/internal/conf"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/google/wire"
 	"gorm.io/driver/mysql"
@@ -15,7 +17,7 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewDB, NewSnowflake, NewUserRepo, NewForestRepo)
+var ProviderSet = wire.NewSet(NewData, NewDB, NewSnowflake, NewOSS, NewUserRepo, NewForestRepo)
 
 // Data .
 type Data struct {
@@ -23,10 +25,11 @@ type Data struct {
 
 	db   *gorm.DB
 	node *snowflake.Node
+	oss  *oss.Bucket
 }
 
 // NewData .
-func NewData(c *conf.Data, logger log.Logger, db *gorm.DB, node *snowflake.Node) (*Data, func(), error) {
+func NewData(c *conf.Data, logger log.Logger, db *gorm.DB, oss *oss.Bucket, node *snowflake.Node) (*Data, func(), error) {
 	cleanup := func() {
 		log.NewHelper(logger).Info("closing the data resources")
 	}
@@ -34,6 +37,7 @@ func NewData(c *conf.Data, logger log.Logger, db *gorm.DB, node *snowflake.Node)
 	return &Data{
 		db:   db,
 		node: node,
+		oss:  oss,
 	}, cleanup, nil
 }
 
@@ -48,7 +52,7 @@ func NewDB(c *conf.Data) *gorm.DB {
 	if err := db.AutoMigrate(); err != nil {
 		panic(err)
 	}
-
+	fmt.Println("DATABASE CONNECTED")
 	return db
 }
 
@@ -64,4 +68,17 @@ func NewSnowflake(c *conf.Data) *snowflake.Node {
 		panic(err)
 	}
 	return node
+}
+
+func NewOSS(c *conf.Data) *oss.Bucket {
+	Client, err := oss.New(c.OSS.Endpoint, c.OSS.AccessKeyID, c.OSS.AccessKeySecret, oss.UseCname(true))
+	if err != nil {
+		panic(err)
+	}
+	Bucket, err := Client.Bucket(c.OSS.Bucket)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("OSS CONNECTED, SDK VERSION:", oss.Version)
+	return Bucket
 }

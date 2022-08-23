@@ -12,6 +12,7 @@ export const snackbarStore = defineStore('snackbar', {
                 content: "null",
                 color: "blue",
                 timeout: "2000",
+                btnshow: false,
             }
         }
     },
@@ -22,11 +23,8 @@ export const snackbarStore = defineStore('snackbar', {
             this.data.show = false
         },
         show(content,timeout){
-            if(typeof timeout == "undefined"){
-                this.data.timeout = "2000"
-            }
+            this.data.timeout = (timeout == undefined) ? 1000 : timeout,
             this.data.content = content
-            this.data.timeout = timeout
             this.data.show = true
         },
         update(data){
