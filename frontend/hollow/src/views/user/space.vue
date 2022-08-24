@@ -1,6 +1,6 @@
 <template>
 <v-container>
-    <h1> 账号信息 </h1>
+    <h1> 账号信息 -  #{{ id }}</h1>
 
 </v-container>
 </template>
@@ -9,6 +9,20 @@
 
 export default {
     name: 'userDetail',
+    data(){
+        return {
+            id: 0,
+        }
+    },
+    created(){
+        this.id = this.$route.params.id
+        this.refresh()
+    },
+    methods:{
+        refresh(){
+
+        }
+    },
 }
 
 </script>

@@ -63,6 +63,13 @@ service Forests {
             delete: "/api/forest/comments/{id}",
         };
     }
+
+    // // Like Comment
+    // rpc LikeComment (LikeCommentRequest) returns (LikeCommentReply) {
+    //     option (google.api.http) = {
+    //         put: "/api/forest/comments/{id}",
+    //     };
+    // }
 }
 //Request Messages
 
@@ -121,6 +128,7 @@ message Comment{
     int64 created_at = 5;
     int64 status = 6;
     string message = 7;
+    int64 liked = 8;
 }
 
 message MultipleLeafReply{

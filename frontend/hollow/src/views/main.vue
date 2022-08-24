@@ -1,7 +1,7 @@
 <template>
 
 <v-container>
-    <h1> 最新树洞 <v-btn @click="upload" color="success" style="float:right;margin-top:6px;"> 发表想法 </v-btn> </h1>
+    <h1> 最新树洞 <v-btn @click="upload" color="success" style="float:right;margin-top:6px;" prepend-icon="mdi-cloud-upload"> 发表想法 </v-btn> </h1>
 
     <div style="height:26px"></div>
 

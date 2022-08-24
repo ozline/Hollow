@@ -1065,6 +1065,8 @@ func (m *Comment) validate(all bool) error {
 
 	// no validation rules for Message
 
+	// no validation rules for Liked
+
 	if len(errors) > 0 {
 		return CommentMultiError(errors)
 	}

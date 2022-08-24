@@ -231,6 +231,9 @@ components:
                     format: int64
                 message:
                     type: string
+                liked:
+                    type: integer
+                    format: int64
         forest.v1.CommentLeafRePly:
             type: object
             properties:

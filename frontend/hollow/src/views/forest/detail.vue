@@ -1,7 +1,13 @@
 <template>
     <v-container>
         <h1 style="margin-bottom: 26px;"> 详情 - {{ id }}
-        <v-btn color="warning" style="float:right;margin-top:6px" @click="goback">返回</v-btn>
+        <v-btn color="primary" style="float:right;margin-top:6px" @click="submit" prepend-icon="mdi-cloud-upload">发表评论</v-btn>
+        <v-btn color="warning" style="float:right;margin-top:6px" class="mr-4" @click="goback">
+            <v-icon
+            start
+            icon="mdi-arrow-left"
+            ></v-icon>返回
+        </v-btn>
         </h1>
         <v-card
             title="楼主"
@@ -17,6 +23,7 @@
             :title="'#' + (index + 1) + ' - ' + this.global.anonymous[index % 26]"
             :subtitle="utils.timestampConvert(item.createdAt)"
             :text="item.message"
+            v-show="item.status != 2"
             style="margin-bottom: 26px;"
             variant="outlined"
         >
@@ -30,9 +37,16 @@
             </v-card-actions>
 
             <template v-slot:append>
+                <v-btn color="error" @click="delComment(item.id)" v-show="item.owner == global.user.userid" icon="mdi-minus-circle" size="x-small"></v-btn>
+                <v-btn
+                    icon="mdi-thumb-up"
+                    color="success"
+                    size="x-small"
+                    @click="like"
+                ></v-btn>
                 <v-badge
                 color="info"
-                content="喜欢: 6"
+                :content="'喜欢: ' + item.liked"
                 inline
                 ></v-badge>
             </template>
@@ -47,6 +61,7 @@
 
 
 <script>
+import { mdiDelete } from '@mdi/js'
 export default {
     name: 'forestDetail',
     data() {
@@ -60,11 +75,13 @@ export default {
             page:{
                 index: 1,
                 size: 10,
-            }
+            },
+            icons: { mdiDelete },
         }
     },
     created(){
         this.refresh()
+        console.log(this.global.user.userid)
     },
     watch:{
         page:{
@@ -93,6 +110,18 @@ export default {
                 this.comments.total = res.data.total
             })
         },
+        submit(){
+            this.$router.push("/forest/upload/" + this.id)
+        },
+        like(){
+            //喜欢
+        },
+        report(){
+            //举报
+        },
+        delComment(id){
+            console.log(id)
+        }
     }
 }
 </script>

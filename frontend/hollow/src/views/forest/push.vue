@@ -1,9 +1,14 @@
 <template>
 
 <v-container>
-    <h1 style="margin-bottom: 26px;"> 发表想法
-    <v-btn color="primary" style="float:right;margin-top:6px" @click="submit">发表</v-btn>
-    <v-btn color="warning" style="float:right;margin-top:6px" class="mr-4" @click="goback">返回</v-btn>
+    <h1 style="margin-bottom: 26px;"> {{ title }}
+    <v-btn color="primary" style="float:right;margin-top:6px" @click="submit" prepend-icon="mdi-cloud-upload">发表</v-btn>
+    <v-btn color="warning" style="float:right;margin-top:6px" class="mr-4" @click="goback">
+            <v-icon
+            start
+            icon="mdi-arrow-left"
+            ></v-icon>返回
+        </v-btn>
     </h1>
     <v-form
         ref="form"
@@ -48,6 +53,8 @@ export default {
     name: 'forestUpload',
 
     data: () => ({
+        commentID: -1,
+        title: '发表想法',
         valid: false,
         isReal: false,
         message: '',
@@ -56,6 +63,13 @@ export default {
             v => (v && v.length <= 140) || '内容长度不能超过140个字符',
         ],
     }),
+
+    created(){
+        if(this.$route.params.id != undefined){
+            this.commentID = this.$route.params.id;
+            this.title = '发表评论 - ' + this.commentID;
+        }
+    },
 
     methods:{
         submit(){
@@ -71,7 +85,9 @@ export default {
                 message: this.message,
             }
 
-            this.HTTP.post('/forest/push', data, true).then( () => {
+            const url = (this.commentID == -1) ? '/forest' : ('/forest/comments/' + this.commentID)
+
+            this.HTTP.post(url, data, true).then( () => {
                 this.snackbar.show("发表成功")
             })
         }

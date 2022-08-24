@@ -54,11 +54,16 @@ export default {
         model(){
             this.$vuetify.theme.global.name = (this.model == true) ? "darkTheme" : "lightTheme";
             this.navColor = (this.model == true) ? '' : 'primary';
+            this.global.darkTheme = this.model
         }
     },
     methods: {
         changePage(page){
-            this.$router.push(page)
+            if(page == "myAccount"){
+                this.$router.push("/user/detail/" + this.global.user.userid)
+            }else{
+                this.$router.push(page)
+            }
         },
         logout(){
             this.global.logout()

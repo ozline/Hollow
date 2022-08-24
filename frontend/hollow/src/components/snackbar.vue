@@ -2,7 +2,7 @@
     <v-snackbar
         v-model="message.show"
         :timeout="message.timeout"
-        location="top"
+        location="bottom"
         style="text-align: center;"
     >
         <div style="text-align: center;">{{ message.content }}</div>

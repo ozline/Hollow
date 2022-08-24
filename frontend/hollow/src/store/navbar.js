@@ -18,7 +18,7 @@ export const navbarStore = defineStore('navbar', {
                 },
                 {
                     title: '我的',
-                    value: '/user/detail',
+                    value: 'myAccount',
                     props: {
                         prependIcon: 'mdi-account',
                     },

@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"fmt"
 
 	v1 "hollow/api/hollow/v1"
 	"hollow/internal/biz"
@@ -26,7 +27,7 @@ func NewForestRepo(data *Data, logger log.Logger) biz.ForestRepo {
 	}
 }
 
-//查询某一个东西是否存在
+// 查询某一个东西是否存在
 func (r *forestRepo) isExist(table string, query interface{}, args ...interface{}) bool {
 	var count int64 = 0
 	_ = r.data.db.Table(table).Where(query, args).Limit(1).Count(&count)
@@ -165,10 +166,12 @@ func (r *forestRepo) GetComments(ctx context.Context, g *v1.GetCommentsRequest) 
 		return nil, 0, res.Error
 	}
 
+	user := GetUserInfo(ctx)
+
 	list = make([]*types.Comment, 0)
 
 	for _, v := range comments {
-		if v.Status != 1 { //匿名
+		if v.Status != 1 && v.Owner != user.ID { //匿名 且 与自身ID不等
 			v.Owner = 0
 		}
 		list = append(list, &types.Comment{
@@ -179,6 +182,7 @@ func (r *forestRepo) GetComments(ctx context.Context, g *v1.GetCommentsRequest) 
 			Created_at: v.Created_at,
 			Status:     v.Status,
 			Message:    v.Message,
+			Liked:      v.Liked,
 		})
 	}
 
@@ -188,7 +192,7 @@ func (r *forestRepo) GetComments(ctx context.Context, g *v1.GetCommentsRequest) 
 func (r *forestRepo) DeleteComment(ctx context.Context, g *v1.DeleteCommentRequest) error {
 	comment := new(types.Comment)
 	var count int64
-	res := r.data.db.Table(TABLE_COMMENT).Where("id = ?", g.Id).Limit(1).Find(&comment).Count(&count)
+	res := r.data.db.Table(TABLE_COMMENT).Where("id = ?", g.Id).Limit(1).Count(&count)
 
 	if res.Error != nil {
 		return res.Error
@@ -197,6 +201,10 @@ func (r *forestRepo) DeleteComment(ctx context.Context, g *v1.DeleteCommentReque
 	if count == 0 {
 		return errors.ErrCommentNotFound
 	}
+
+	res = res.First(&comment)
+
+	fmt.Println(comment)
 
 	user := GetUserInfo(ctx)
 	if user.ID == -1 {
@@ -207,7 +215,11 @@ func (r *forestRepo) DeleteComment(ctx context.Context, g *v1.DeleteCommentReque
 		return errors.ErrUserNotMatched
 	}
 
-	res = res.Unscoped().Delete(&comment)
+	// res = res.Unscoped().Delete(&comment)
+
+	comment.Status = 2 //标记为删除
+
+	res = res.Save(&comment)
 
 	return res.Error
 }

@@ -30,4 +30,5 @@ type Comment struct {
 	Created_at int64  //创建时间
 	Status     int64  //状态 0=匿名 1=实名 2=封禁（删除）
 	Message    string //评论内容
+	Liked      int64  //点赞数
 }

@@ -37,7 +37,7 @@ const routes=[
         meta:{ title: '注册账号', auth: false }
     },
     {
-        path:'/user/detail',
+        path:'/user/detail/:id',
         component:UserDetail,
         meta:{ title: '账号信息', auth: true }
     },
@@ -45,6 +45,11 @@ const routes=[
         path:'/forest/upload',
         component:Upload,
         meta:{ title: '发表想法', auth: true }
+    },
+    {
+        path:'/forest/upload/:id',
+        component:Upload,
+        meta:{ title: '发表评论', auth: true }
     },
     {
         path:'/forest/:id',
