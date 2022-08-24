@@ -13,6 +13,7 @@ import (
 	"github.com/go-kratos/kratos/v2/middleware/selector"
 	"github.com/go-kratos/kratos/v2/middleware/validate"
 	"github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/go-kratos/swagger-api/openapiv2"
 )
 
 // NewHTTPServer new a HTTP server.
@@ -44,7 +45,13 @@ func NewHTTPServer(c *conf.Server, jwtc *conf.Auth, users *service.UserService, 
 	if c.Http.Timeout != nil {
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
 	}
+
 	srv := http.NewServer(opts...)
+
+	//OpenAPI Swagger使用
+	openAPIHandler := openapiv2.NewHandler()
+	srv.HandlePrefix("/q/", openAPIHandler)
+
 	v1.RegisterUsersHTTPServer(srv, users)
 	v1.RegisterForestsHTTPServer(srv, forests)
 	return srv

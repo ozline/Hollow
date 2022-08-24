@@ -29,6 +29,13 @@ service Users {
         };
     }
 
+    // Get User Info
+    rpc GetUser (GetUserRequest) returns (GetUserReply) {
+        option (google.api.http) = {
+            get: "/api/user/{id}"
+        };
+    }
+
     // rpc Update (UpdateUserRequest) returns (UpdateUserReply) {
     //     option (google.api.http) = {
     //         put: "/api/user/update",
@@ -48,6 +55,10 @@ message RegisterUserRequest{
     string password = 2 [(validate.rules).string = {min_len: 6, max_len: 16}];
     string email = 3 [(validate.rules).string.email = true];
     int64 phone = 4;
+}
+
+message GetUserRequest{
+    int64 id = 1 [(validate.rules).int64 = {gte: 1}];
 }
 
 //Reply Messages
@@ -74,4 +85,10 @@ message LoginUserReply{
     string msg = 2;
     string token = 3;
     User data = 4;
+}
+
+message GetUserReply{
+    int64 code = 1;
+    string msg = 2;
+    User data = 3;
 }

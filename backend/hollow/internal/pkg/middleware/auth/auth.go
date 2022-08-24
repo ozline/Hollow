@@ -36,13 +36,11 @@ type JWTClaims struct {
 func JWTAuth(secret string) middleware.Middleware {
 	return func(handler middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req interface{}) (reply interface{}, err error) {
-
 			var JWTToken string
 			if md, ok := metadata.FromServerContext(ctx); ok {
 				JWTToken = md.Get("x-md-global-token")
 			} else if tr, ok := transport.FromServerContext(ctx); ok {
 				JWTToken = tr.RequestHeader().Get("Authorization")
-				// JWTToken = strings.SplitN(AuthToken, " ", 2)[1]
 			} else {
 				return nil, ErrMissingToken
 			}
@@ -66,6 +64,21 @@ func JWTAuth(secret string) middleware.Middleware {
 				Username: claims.Username,
 				Status:   claims.Status,
 			})
+
+			tr, ok := transport.FromServerContext(ctx)
+
+			if !ok {
+				return nil, ErrInvaildToken
+			}
+
+			// Token持久化
+			newToken, err := GetAuthToken(claims.Id, claims.Username, claims.Status, secret)
+
+			if err != nil {
+				return nil, ErrInvaildToken
+			}
+
+			tr.ReplyHeader().Set("Authorization", newToken)
 
 			return handler(ctx, req)
 		}

@@ -32,3 +32,9 @@ type Comment struct {
 	Message    string //评论内容
 	Liked      int64  //点赞数
 }
+
+type Like struct {
+	Timestamp int64 //评论时间(充当点赞ID)
+	User      int64 //用户
+	Comment   int64 //评论ID
+}

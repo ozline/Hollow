@@ -7,20 +7,21 @@ import (
 	snowflake "github.com/bwmarrin/snowflake"
 )
 
-//TABLES
+// TABLES
 const (
 	TABLE_USERS   = "users"
 	TABLE_FOREST  = "forest"
 	TABLE_COMMENT = "comment"
+	TABLE_LIKE    = "likes"
 )
 
-//获取用户信息
+// 获取用户信息
 func GetUserInfo(ctx context.Context) *auth.CurrentUser {
 	currentUser := auth.FromContext(ctx)
 	return currentUser
 }
 
-//获取雪花ID
+// 获取雪花ID
 func GetSnowflakeID(node *snowflake.Node) int64 {
 	return node.Generate().Int64()
 }

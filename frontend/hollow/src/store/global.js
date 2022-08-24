@@ -27,6 +27,9 @@ export const globalStore = defineStore('global', {
             this.isLogin = false
             this.user = []
             this.token = ''
+        },
+        updateToken(newToken){
+            this.token = newToken
         }
     }
 })

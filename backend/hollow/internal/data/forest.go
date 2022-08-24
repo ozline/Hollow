@@ -223,3 +223,50 @@ func (r *forestRepo) DeleteComment(ctx context.Context, g *v1.DeleteCommentReque
 
 	return res.Error
 }
+
+func (r *forestRepo) LikeComment(ctx context.Context, g *v1.LikeCommentRequest) error {
+	var count int64
+	res := r.data.db.Table(TABLE_COMMENT).Where("id = ?", g.Id).Limit(1).Count(&count)
+
+	if res.Error != nil {
+		return res.Error
+	}
+
+	if count == 0 {
+		return errors.ErrCommentNotFound
+	}
+
+	user := GetUserInfo(ctx)
+
+	if user.ID == -1 {
+		return errors.ErrUserInvalid
+	}
+
+	res = r.data.db.Table(TABLE_LIKE).Where("comment = ? AND user = ?", g.Id, user.ID).Limit(1).Count(&count)
+
+	if count != 0 {
+		return errors.ErrHaveLiked
+	}
+
+	like := types.Like{
+		Timestamp: utils.GetTimestamp13(),
+		User:      user.ID,
+		Comment:   g.Id,
+	}
+
+	res = res.Create(&like)
+
+	if res.Error != nil {
+		return errors.GenerateErrorNormal(res.Error)
+	}
+
+	comment := new(types.Comment)
+
+	res = r.data.db.Table(TABLE_COMMENT).Where("id = ?", g.Id).First(&comment)
+
+	comment.Liked = comment.Liked + 1
+
+	res = res.Save(&comment)
+
+	return res.Error
+}

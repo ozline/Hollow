@@ -145,3 +145,17 @@ func (s *ForestService) DeleteComment(ctx context.Context, req *v1.DeleteComment
 		Msg:  "ok",
 	}, nil
 }
+
+// 点赞评论
+func (s *ForestService) LikeComment(ctx context.Context, req *v1.LikeCommentRequest) (reply *v1.LikeCommentReply, err error) {
+	err = s.uc.LikeComment(ctx, req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.LikeCommentReply{
+		Code: 200,
+		Msg:  "ok",
+	}, nil
+}

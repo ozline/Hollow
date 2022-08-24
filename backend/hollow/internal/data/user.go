@@ -55,6 +55,23 @@ func (r *userRepo) GetUserByUsername(ctx context.Context, username string) (user
 	return u, nil
 }
 
+func (r *userRepo) GetUserByID(ctx context.Context, userid int64) (user *types.User, err error) {
+	u := new(types.User)
+	var count int64
+	res := r.data.db.Table(TABLE_USERS).Where("id = ?", userid).Count(&count)
+	if res.Error != nil {
+		return nil, err
+	}
+
+	if count == 0 {
+		return nil, errors.ErrUserNotExisted
+	}
+
+	_ = res.First(&u)
+
+	return u, nil
+}
+
 func (r *userRepo) CreateUser(ctx context.Context, g *v1.RegisterUserRequest) error {
 
 	timeStamp := utils.GetTimestamp13()

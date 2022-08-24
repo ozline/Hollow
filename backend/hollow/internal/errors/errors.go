@@ -13,7 +13,7 @@ type Error struct {
 }
 
 var (
-	ErrCodeNormal              = 422
+	ErrCodeNormal              = 400
 	ErrCodeInternalServerError = 500
 
 	//SERVICE
@@ -36,6 +36,7 @@ var (
 	ErrUserNotMatched = errors.New(ErrCodeNormal, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "User Not Matched")
 
 	ErrCommentNotFound = errors.New(ErrCodeNormal, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "Comment Not Found")
+	ErrHaveLiked       = errors.New(ErrCodeNormal, v1.ErrorReason_REPEATED_OPERATION.String(), "You have liked this comment")
 )
 
 func GenerateError(err Error) *errors.Error {

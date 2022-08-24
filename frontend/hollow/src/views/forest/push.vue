@@ -67,7 +67,8 @@ export default {
     created(){
         if(this.$route.params.id != undefined){
             this.commentID = this.$route.params.id;
-            this.title = '发表评论 - ' + this.commentID;
+            // this.title = '发表评论 - ' + this.commentID;
+            this.title = '发表评论'
         }
     },
 
@@ -89,6 +90,7 @@ export default {
 
             this.HTTP.post(url, data, true).then( () => {
                 this.snackbar.show("发表成功")
+                this.goback()
             })
         }
     }

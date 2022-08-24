@@ -19,6 +19,7 @@ type ForestRepo interface {
 	CommentLeaf(ctx context.Context, g *v1.CommentLeafRequest) error
 	GetComments(ctx context.Context, g *v1.GetCommentsRequest) (list []*types.Comment, total int64, err error)
 	DeleteComment(ctx context.Context, g *v1.DeleteCommentRequest) error
+	LikeComment(ctx context.Context, u *v1.LikeCommentRequest) error
 }
 
 type ForestUsecase struct {
@@ -33,6 +34,7 @@ func convertLeafToReply(forest *types.Leaf) *v1.Leaf {
 		CreatedAt: forest.Created_at,
 		Status:    forest.Status,
 		Message:   forest.Message,
+		Liked:     forest.Liked,
 	}
 }
 
@@ -45,6 +47,7 @@ func convertCommentToReply(comment *types.Comment) *v1.Comment {
 		CreatedAt: comment.Created_at,
 		Status:    comment.Status,
 		Message:   comment.Message,
+		Liked:     comment.Liked,
 	}
 }
 
@@ -103,4 +106,8 @@ func (uc *ForestUsecase) GetComments(ctx context.Context, u *v1.GetCommentsReque
 
 func (uc *ForestUsecase) DeleteComment(ctx context.Context, u *v1.DeleteCommentRequest) error {
 	return uc.ur.DeleteComment(ctx, u)
+}
+
+func (uc *ForestUsecase) LikeComment(ctx context.Context, u *v1.LikeCommentRequest) error {
+	return uc.ur.LikeComment(ctx, u)
 }

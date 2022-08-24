@@ -13,6 +13,7 @@ import (
 
 type UserRepo interface {
 	GetUserByUsername(ctx context.Context, username string) (*types.User, error)
+	GetUserByID(ctx context.Context, userid int64) (*types.User, error)
 	CreateUser(ctx context.Context, req *v1.RegisterUserRequest) error
 	CheckIsUserExistByUsername(ctx context.Context, username string) bool
 	CheckIsUserExistByID(ctx context.Context, userid int64) bool
@@ -60,4 +61,14 @@ func (uc *UserUsecase) RegisterUser(ctx context.Context, u *v1.RegisterUserReque
 	}
 
 	return data, nil
+}
+
+func (uc *UserUsecase) GetUserInfo(ctx context.Context, u *v1.GetUserRequest) (*types.User, error) {
+
+	data, err := uc.ur.GetUserByID(ctx, u.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, err
 }

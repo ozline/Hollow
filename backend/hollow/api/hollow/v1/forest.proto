@@ -64,12 +64,13 @@ service Forests {
         };
     }
 
-    // // Like Comment
-    // rpc LikeComment (LikeCommentRequest) returns (LikeCommentReply) {
-    //     option (google.api.http) = {
-    //         put: "/api/forest/comments/{id}",
-    //     };
-    // }
+    // Like Comment
+    rpc LikeComment (LikeCommentRequest) returns (LikeCommentReply) {
+        option (google.api.http) = {
+            put: "/api/forest/comments/{id}",
+            body: "*"
+        };
+    }
 }
 //Request Messages
 
@@ -79,7 +80,7 @@ message PushLeafRequest{
 }
 
 message DeleteLeafRequest{
-    int64 id = 1 [(validate.rules).int64 = {gt: 1}];
+    int64 id = 1 [(validate.rules).int64 = {gte: 1}];
 }
 
 message GetLeafsRequest{
@@ -106,7 +107,11 @@ message GetCommentsRequest{
 }
 
 message DeleteCommentRequest{
-    int64 id = 2 [(validate.rules).int64 = {gte: 0}];
+    int64 id = 1 [(validate.rules).int64 = {gte: 0}];
+}
+
+message LikeCommentRequest{
+    int64 id = 1 [(validate.rules).int64 = {gte: 0}];
 }
 
 //Reply Messages
@@ -175,6 +180,11 @@ message GetCommentsReply{
 }
 
 message DeleteCommentReply{
+    int64 code = 1;
+    string msg = 2;
+}
+
+message LikeCommentReply{
     int64 code = 1;
     string msg = 2;
 }

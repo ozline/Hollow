@@ -36,6 +36,8 @@ type ForestsClient interface {
 	GetComments(ctx context.Context, in *GetCommentsRequest, opts ...grpc.CallOption) (*GetCommentsReply, error)
 	// Delete Comment
 	DeleteComment(ctx context.Context, in *DeleteCommentRequest, opts ...grpc.CallOption) (*DeleteCommentReply, error)
+	// Like Comment
+	LikeComment(ctx context.Context, in *LikeCommentRequest, opts ...grpc.CallOption) (*LikeCommentReply, error)
 }
 
 type forestsClient struct {
@@ -109,6 +111,15 @@ func (c *forestsClient) DeleteComment(ctx context.Context, in *DeleteCommentRequ
 	return out, nil
 }
 
+func (c *forestsClient) LikeComment(ctx context.Context, in *LikeCommentRequest, opts ...grpc.CallOption) (*LikeCommentReply, error) {
+	out := new(LikeCommentReply)
+	err := c.cc.Invoke(ctx, "/forest.v1.Forests/LikeComment", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ForestsServer is the server API for Forests service.
 // All implementations must embed UnimplementedForestsServer
 // for forward compatibility
@@ -127,6 +138,8 @@ type ForestsServer interface {
 	GetComments(context.Context, *GetCommentsRequest) (*GetCommentsReply, error)
 	// Delete Comment
 	DeleteComment(context.Context, *DeleteCommentRequest) (*DeleteCommentReply, error)
+	// Like Comment
+	LikeComment(context.Context, *LikeCommentRequest) (*LikeCommentReply, error)
 	mustEmbedUnimplementedForestsServer()
 }
 
@@ -154,6 +167,9 @@ func (UnimplementedForestsServer) GetComments(context.Context, *GetCommentsReque
 }
 func (UnimplementedForestsServer) DeleteComment(context.Context, *DeleteCommentRequest) (*DeleteCommentReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteComment not implemented")
+}
+func (UnimplementedForestsServer) LikeComment(context.Context, *LikeCommentRequest) (*LikeCommentReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LikeComment not implemented")
 }
 func (UnimplementedForestsServer) mustEmbedUnimplementedForestsServer() {}
 
@@ -294,6 +310,24 @@ func _Forests_DeleteComment_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Forests_LikeComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LikeCommentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ForestsServer).LikeComment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/forest.v1.Forests/LikeComment",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ForestsServer).LikeComment(ctx, req.(*LikeCommentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Forests_ServiceDesc is the grpc.ServiceDesc for Forests service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -328,6 +362,10 @@ var Forests_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteComment",
 			Handler:    _Forests_DeleteComment_Handler,
+		},
+		{
+			MethodName: "LikeComment",
+			Handler:    _Forests_LikeComment_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

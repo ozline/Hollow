@@ -19,10 +19,12 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
+const OperationUsersGetUser = "/user.v1.Users/GetUser"
 const OperationUsersLogin = "/user.v1.Users/Login"
 const OperationUsersRegister = "/user.v1.Users/Register"
 
 type UsersHTTPServer interface {
+	GetUser(context.Context, *GetUserRequest) (*GetUserReply, error)
 	Login(context.Context, *LoginUserRequest) (*LoginUserReply, error)
 	Register(context.Context, *RegisterUserRequest) (*RegisterUserReply, error)
 }
@@ -31,6 +33,7 @@ func RegisterUsersHTTPServer(s *http.Server, srv UsersHTTPServer) {
 	r := s.Route("/")
 	r.POST("/api/user/register", _Users_Register0_HTTP_Handler(srv))
 	r.POST("/api/user/login", _Users_Login0_HTTP_Handler(srv))
+	r.GET("/api/user/{id}", _Users_GetUser0_HTTP_Handler(srv))
 }
 
 func _Users_Register0_HTTP_Handler(srv UsersHTTPServer) func(ctx http.Context) error {
@@ -71,7 +74,30 @@ func _Users_Login0_HTTP_Handler(srv UsersHTTPServer) func(ctx http.Context) erro
 	}
 }
 
+func _Users_GetUser0_HTTP_Handler(srv UsersHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetUserRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUsersGetUser)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetUser(ctx, req.(*GetUserRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetUserReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type UsersHTTPClient interface {
+	GetUser(ctx context.Context, req *GetUserRequest, opts ...http.CallOption) (rsp *GetUserReply, err error)
 	Login(ctx context.Context, req *LoginUserRequest, opts ...http.CallOption) (rsp *LoginUserReply, err error)
 	Register(ctx context.Context, req *RegisterUserRequest, opts ...http.CallOption) (rsp *RegisterUserReply, err error)
 }
@@ -82,6 +108,19 @@ type UsersHTTPClientImpl struct {
 
 func NewUsersHTTPClient(client *http.Client) UsersHTTPClient {
 	return &UsersHTTPClientImpl{client}
+}
+
+func (c *UsersHTTPClientImpl) GetUser(ctx context.Context, in *GetUserRequest, opts ...http.CallOption) (*GetUserReply, error) {
+	var out GetUserReply
+	pattern := "/api/user/{id}"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationUsersGetUser))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
 }
 
 func (c *UsersHTTPClientImpl) Login(ctx context.Context, in *LoginUserRequest, opts ...http.CallOption) (*LoginUserReply, error) {

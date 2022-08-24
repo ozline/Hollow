@@ -15,6 +15,5 @@ enum ErrorReason {
   PARAMS_ILLEGAL = 1; //参数不合法
   INFORMATION_ILLEGAL = 2; //数据不合法
   INFOMATION_NOT_FOUND = 3; //数据未找到
+  REPEATED_OPERATION = 4; //重复操作
 }
-
-//[(errors.code) = 422]
