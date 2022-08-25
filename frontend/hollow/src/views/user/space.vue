@@ -51,7 +51,7 @@ export default {
     },
     methods:{
         refresh(){
-            this.HTTP.get("/user/" + this.id,{},true).then( res => {
+            this.HTTP.get("/user/info/" + this.id,{},true).then( res => {
                 this.data = res.data //更新用户信息
             })
         }

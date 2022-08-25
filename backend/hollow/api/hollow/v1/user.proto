@@ -3,6 +3,7 @@ syntax = "proto3";
 package user.v1;
 
 import "google/api/annotations.proto";
+// import "google/protobuf/empty.proto";
 import "validate/validate.proto";
 
 option go_package = "hollow/api/user/v1;v1";
@@ -13,7 +14,7 @@ option java_outer_classname = "UserProtoV1";
 // The greeting service definition.
 service Users {
 
-    // Register a user
+    // 注册
     rpc Register (RegisterUserRequest) returns (RegisterUserReply) {
         option (google.api.http) = {
             post: "/api/user/register",
@@ -21,7 +22,7 @@ service Users {
         };
     }
 
-    // Login a user
+    // 登录
     rpc Login (LoginUserRequest) returns (LoginUserReply) {
         option (google.api.http) = {
             post: "/api/user/login",
@@ -29,10 +30,32 @@ service Users {
         };
     }
 
-    // Get User Info
+    // 获取用户资料
     rpc GetUser (GetUserRequest) returns (GetUserReply) {
         option (google.api.http) = {
-            get: "/api/user/{id}"
+            get: "/api/user/info/{id}"
+        };
+    }
+
+    // MFA获取秘钥二维码
+    rpc MFAGetQRCode (NullRequest) returns (MFAGetQRCodeReply) {
+        option (google.api.http) = {
+            get: "/api/user/mfa"
+        };
+    }
+
+    // MFA激活
+    rpc MFAActivate (MFAActivateRequest) returns (MFAActivateReply) {
+        option (google.api.http) = {
+            post: "/api/user/mfa",
+            body: "*"
+        };
+    }
+
+    // MFA解绑
+    rpc MFACancel (MFACancelRequest) returns (MFACancelReply) {
+        option (google.api.http) = {
+            delete: "/api/user/mfa",
         };
     }
 
@@ -48,6 +71,7 @@ service Users {
 message LoginUserRequest{
     string username = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
     string password = 2 [(validate.rules).string = {min_len: 6, max_len: 16}];
+    string code = 3 [(validate.rules).string = {ignore_empty: true, len: 6}];  //MFA
 }
 
 message RegisterUserRequest{
@@ -61,6 +85,19 @@ message GetUserRequest{
     int64 id = 1 [(validate.rules).int64 = {gte: 1}];
 }
 
+message NullRequest{
+
+}
+
+message MFAActivateRequest {
+    string code = 1 [(validate.rules).string = {len: 6}];
+    string secret = 2;
+}
+
+message MFACancelRequest {
+    string code = 1 [(validate.rules).string = {len: 6}];
+}
+
 //Reply Messages
 
 message User{
@@ -71,6 +108,12 @@ message User{
     string nickname = 5;
     int64 created_at = 6;
     int64 phone = 7;
+    bool mfa_enabled = 8;
+}
+
+message MFA{
+    string qrlink = 1;
+    string secret = 2;
 }
 
 message RegisterUserReply{
@@ -91,4 +134,20 @@ message GetUserReply{
     int64 code = 1;
     string msg = 2;
     User data = 3;
+}
+
+message MFAGetQRCodeReply{
+    int64 code = 1;
+    string msg = 2;
+    MFA data = 3;
+}
+
+message MFAActivateReply{
+    int64 code = 1;
+    string msg = 2;
+}
+
+message MFACancelReply{
+    int64 code = 1;
+    string msg = 2;
 }

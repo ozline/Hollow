@@ -4,7 +4,7 @@
     <v-btn
         variant="outlined"
         color="primary"
-        @click="back"
+        @click="goback"
     >返回上一页
     </v-btn>
 </v-container>
@@ -13,18 +13,7 @@
 <script>
 
 export default{
-    name: 'NotFound',
-    methods:{
-        back(){
-            if(window.history.length >1){
-                this.$router.go(-1)
-            }else{
-                this.$router.push({
-                path: '/'
-                })
-            }
-        },
-    }
+    name: 'NotFound'
 }
 
 </script>

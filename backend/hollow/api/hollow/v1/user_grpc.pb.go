@@ -22,12 +22,18 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UsersClient interface {
-	// Register a user
+	// 注册
 	Register(ctx context.Context, in *RegisterUserRequest, opts ...grpc.CallOption) (*RegisterUserReply, error)
-	// Login a user
+	// 登录
 	Login(ctx context.Context, in *LoginUserRequest, opts ...grpc.CallOption) (*LoginUserReply, error)
-	// Get User Info
+	// 获取用户资料
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*GetUserReply, error)
+	// MFA获取秘钥二维码
+	MFAGetQRCode(ctx context.Context, in *NullRequest, opts ...grpc.CallOption) (*MFAGetQRCodeReply, error)
+	// MFA激活
+	MFAActivate(ctx context.Context, in *MFAActivateRequest, opts ...grpc.CallOption) (*MFAActivateReply, error)
+	// MFA解绑
+	MFACancel(ctx context.Context, in *MFACancelRequest, opts ...grpc.CallOption) (*MFACancelReply, error)
 }
 
 type usersClient struct {
@@ -65,16 +71,49 @@ func (c *usersClient) GetUser(ctx context.Context, in *GetUserRequest, opts ...g
 	return out, nil
 }
 
+func (c *usersClient) MFAGetQRCode(ctx context.Context, in *NullRequest, opts ...grpc.CallOption) (*MFAGetQRCodeReply, error) {
+	out := new(MFAGetQRCodeReply)
+	err := c.cc.Invoke(ctx, "/user.v1.Users/MFAGetQRCode", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usersClient) MFAActivate(ctx context.Context, in *MFAActivateRequest, opts ...grpc.CallOption) (*MFAActivateReply, error) {
+	out := new(MFAActivateReply)
+	err := c.cc.Invoke(ctx, "/user.v1.Users/MFAActivate", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usersClient) MFACancel(ctx context.Context, in *MFACancelRequest, opts ...grpc.CallOption) (*MFACancelReply, error) {
+	out := new(MFACancelReply)
+	err := c.cc.Invoke(ctx, "/user.v1.Users/MFACancel", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UsersServer is the server API for Users service.
 // All implementations must embed UnimplementedUsersServer
 // for forward compatibility
 type UsersServer interface {
-	// Register a user
+	// 注册
 	Register(context.Context, *RegisterUserRequest) (*RegisterUserReply, error)
-	// Login a user
+	// 登录
 	Login(context.Context, *LoginUserRequest) (*LoginUserReply, error)
-	// Get User Info
+	// 获取用户资料
 	GetUser(context.Context, *GetUserRequest) (*GetUserReply, error)
+	// MFA获取秘钥二维码
+	MFAGetQRCode(context.Context, *NullRequest) (*MFAGetQRCodeReply, error)
+	// MFA激活
+	MFAActivate(context.Context, *MFAActivateRequest) (*MFAActivateReply, error)
+	// MFA解绑
+	MFACancel(context.Context, *MFACancelRequest) (*MFACancelReply, error)
 	mustEmbedUnimplementedUsersServer()
 }
 
@@ -90,6 +129,15 @@ func (UnimplementedUsersServer) Login(context.Context, *LoginUserRequest) (*Logi
 }
 func (UnimplementedUsersServer) GetUser(context.Context, *GetUserRequest) (*GetUserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
+}
+func (UnimplementedUsersServer) MFAGetQRCode(context.Context, *NullRequest) (*MFAGetQRCodeReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MFAGetQRCode not implemented")
+}
+func (UnimplementedUsersServer) MFAActivate(context.Context, *MFAActivateRequest) (*MFAActivateReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MFAActivate not implemented")
+}
+func (UnimplementedUsersServer) MFACancel(context.Context, *MFACancelRequest) (*MFACancelReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MFACancel not implemented")
 }
 func (UnimplementedUsersServer) mustEmbedUnimplementedUsersServer() {}
 
@@ -158,6 +206,60 @@ func _Users_GetUser_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Users_MFAGetQRCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NullRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServer).MFAGetQRCode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.v1.Users/MFAGetQRCode",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServer).MFAGetQRCode(ctx, req.(*NullRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Users_MFAActivate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MFAActivateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServer).MFAActivate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.v1.Users/MFAActivate",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServer).MFAActivate(ctx, req.(*MFAActivateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Users_MFACancel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MFACancelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServer).MFACancel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.v1.Users/MFACancel",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServer).MFACancel(ctx, req.(*MFACancelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Users_ServiceDesc is the grpc.ServiceDesc for Users service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -176,6 +278,18 @@ var Users_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUser",
 			Handler:    _Users_GetUser_Handler,
+		},
+		{
+			MethodName: "MFAGetQRCode",
+			Handler:    _Users_MFAGetQRCode_Handler,
+		},
+		{
+			MethodName: "MFAActivate",
+			Handler:    _Users_MFAActivate_Handler,
+		},
+		{
+			MethodName: "MFACancel",
+			Handler:    _Users_MFACancel_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -2,7 +2,6 @@ package data
 
 import (
 	"context"
-	"fmt"
 
 	v1 "hollow/api/hollow/v1"
 	"hollow/internal/biz"
@@ -93,7 +92,7 @@ func (r *forestRepo) GetForest(ctx context.Context, g *v1.GetLeafsRequest) (list
 	list = make([]*types.Leaf, 0)
 
 	for _, v := range leafs {
-		if v.Status != 1 { //匿名
+		if v.Status != 1 { //匿名 且 与自身ID不等
 			v.Owner = 0
 		}
 		list = append(list, &types.Leaf{
@@ -203,8 +202,6 @@ func (r *forestRepo) DeleteComment(ctx context.Context, g *v1.DeleteCommentReque
 	}
 
 	res = res.First(&comment)
-
-	fmt.Println(comment)
 
 	user := GetUserInfo(ctx)
 	if user.ID == -1 {

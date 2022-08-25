@@ -1,16 +1,18 @@
 package tpyes
 
 type User struct {
-	ID         int64  //用户ID
-	Status     int64  //用户状态
-	Username   string //用户名
-	Email      string //邮箱
-	Phone      int64  //手机号
-	Created_at int64  //创建时间
-	Deleted_at int64  //删除时间
-	Updated_at int64  //更新时间
-	Password   string //密码
-	Nickname   string //昵称
+	ID          int64  //用户ID
+	Status      int64  //用户状态
+	Username    string //用户名
+	Email       string //邮箱
+	Phone       int64  //手机号
+	Created_at  int64  //创建时间
+	Deleted_at  int64  //删除时间
+	Updated_at  int64  //更新时间
+	Password    string //密码
+	Nickname    string //昵称
+	Mfa_enabled bool   //是否启用MFA
+	Mfa_secret  string //MFA秘钥
 }
 
 type Leaf struct {

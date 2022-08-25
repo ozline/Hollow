@@ -193,49 +193,11 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/forest.v1.DeleteLeafReply'
-    /api/user/login:
-        post:
-            tags:
-                - Users
-            description: Login a user
-            operationId: Users_Login
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/user.v1.LoginUserRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/user.v1.LoginUserReply'
-    /api/user/register:
-        post:
-            tags:
-                - Users
-            description: Register a user
-            operationId: Users_Register
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/user.v1.RegisterUserRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/user.v1.RegisterUserReply'
-    /api/user/{id}:
+    /api/user/info/{id}:
         get:
             tags:
                 - Users
-            description: Get User Info
+            description: 获取用户资料
             operationId: Users_GetUser
             parameters:
                 - name: id
@@ -251,6 +213,92 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/user.v1.GetUserReply'
+    /api/user/login:
+        post:
+            tags:
+                - Users
+            description: 登录
+            operationId: Users_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/user.v1.LoginUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/user.v1.LoginUserReply'
+    /api/user/mfa:
+        get:
+            tags:
+                - Users
+            description: MFA获取秘钥二维码
+            operationId: Users_MFAGetQRCode
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/user.v1.MFAGetQRCodeReply'
+        post:
+            tags:
+                - Users
+            description: MFA激活
+            operationId: Users_MFAActivate
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/user.v1.MFAActivateRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/user.v1.MFAActivateReply'
+        delete:
+            tags:
+                - Users
+            description: MFA解绑
+            operationId: Users_MFACancel
+            parameters:
+                - name: code
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/user.v1.MFACancelReply'
+    /api/user/register:
+        post:
+            tags:
+                - Users
+            description: 注册
+            operationId: Users_Register
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/user.v1.RegisterUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/user.v1.RegisterUserReply'
 components:
     schemas:
         forest.v1.Comment:
@@ -446,6 +494,48 @@ components:
                     type: string
                 password:
                     type: string
+                code:
+                    type: string
+        user.v1.MFA:
+            type: object
+            properties:
+                qrlink:
+                    type: string
+                secret:
+                    type: string
+        user.v1.MFAActivateReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int64
+                msg:
+                    type: string
+        user.v1.MFAActivateRequest:
+            type: object
+            properties:
+                code:
+                    type: string
+                secret:
+                    type: string
+        user.v1.MFACancelReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int64
+                msg:
+                    type: string
+        user.v1.MFAGetQRCodeReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int64
+                msg:
+                    type: string
+                data:
+                    $ref: '#/components/schemas/user.v1.MFA'
         user.v1.RegisterUserReply:
             type: object
             properties:
@@ -489,6 +579,8 @@ components:
                 phone:
                     type: integer
                     format: int64
+                mfaEnabled:
+                    type: boolean
 tags:
     - name: Forests
       description: The greeting service definition.

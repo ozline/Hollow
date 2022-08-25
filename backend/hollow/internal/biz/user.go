@@ -5,6 +5,7 @@ import (
 
 	v1 "hollow/api/hollow/v1"
 	errors "hollow/internal/errors"
+	mfa "hollow/internal/pkg/middleware/MFA"
 	utils "hollow/internal/pkg/utils"
 	types "hollow/internal/types"
 
@@ -17,6 +18,9 @@ type UserRepo interface {
 	CreateUser(ctx context.Context, req *v1.RegisterUserRequest) error
 	CheckIsUserExistByUsername(ctx context.Context, username string) bool
 	CheckIsUserExistByID(ctx context.Context, userid int64) bool
+	MFAGetQrCode(ctx context.Context) (string, string, error)
+	MFAActivate(ctx context.Context, g *v1.MFAActivateRequest) error
+	MFACancel(ctx context.Context, code string) error
 }
 
 type UserUsecase struct {
@@ -31,9 +35,30 @@ func NewUserUsecase(repo UserRepo, logger log.Logger) *UserUsecase {
 func (uc *UserUsecase) LoginUser(ctx context.Context, u *v1.LoginUserRequest) (*types.User, error) {
 
 	data, err := uc.ur.GetUserByUsername(ctx, u.Username)
+
 	if err != nil {
 		return nil, err
 	}
+
+	// MFA验证
+	if data.Mfa_enabled {
+		if len(u.Code) != 6 {
+			return nil, errors.ErrNeedMFA
+		}
+
+		auth := mfa.NewGoogleAuth()
+		ans, err := auth.VerifyCode(data.Mfa_secret, u.Code)
+
+		if err != nil {
+			return nil, err
+		}
+
+		if !ans {
+			return nil, errors.ErrMFAVerifyFailed
+		}
+	}
+
+	// 密码验证
 	if utils.GenerateTokenSHA256(u.Password) != data.Password {
 		return nil, errors.ErrUserCheckFailed
 	}
@@ -64,11 +89,17 @@ func (uc *UserUsecase) RegisterUser(ctx context.Context, u *v1.RegisterUserReque
 }
 
 func (uc *UserUsecase) GetUserInfo(ctx context.Context, u *v1.GetUserRequest) (*types.User, error) {
+	return uc.ur.GetUserByID(ctx, u.Id)
+}
 
-	data, err := uc.ur.GetUserByID(ctx, u.Id)
-	if err != nil {
-		return nil, err
-	}
+func (uc *UserUsecase) MFAGetQRCode(ctx context.Context) (string, string, error) {
+	return uc.ur.MFAGetQrCode(ctx)
+}
 
-	return data, err
+func (uc *UserUsecase) MFAActivate(ctx context.Context, u *v1.MFAActivateRequest) error {
+	return uc.ur.MFAActivate(ctx, u)
+}
+
+func (uc *UserUsecase) MFACancel(ctx context.Context, u *v1.MFACancelRequest) error {
+	return uc.ur.MFACancel(ctx, u.Code)
 }

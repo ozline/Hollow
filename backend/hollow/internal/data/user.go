@@ -8,6 +8,7 @@ import (
 	"hollow/internal/pkg/utils"
 
 	errors "hollow/internal/errors"
+	mfa "hollow/internal/pkg/middleware/MFA"
 	types "hollow/internal/types"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -89,4 +90,96 @@ func (r *userRepo) CreateUser(ctx context.Context, g *v1.RegisterUserRequest) er
 	res := r.data.db.Table(TABLE_USERS).Create(&u)
 
 	return res.Error
+}
+
+func (r *userRepo) MFAGetQrCode(ctx context.Context) (string, string, error) {
+	user := GetUserInfo(ctx)
+
+	u := new(types.User)
+
+	res := r.data.db.Table(TABLE_USERS).Where("id = ?", user.ID).First(&u)
+
+	if res.Error != nil {
+		return "", "", res.Error
+	}
+
+	if u.Mfa_enabled {
+		return "", "", errors.ErrHaveActivatedMFA
+	}
+
+	// 获取秘钥
+	auth := mfa.NewGoogleAuth()
+	secret := auth.GetSecret()
+
+	return auth.GetQrcodeUrl(u.Email, secret), secret, nil
+}
+
+// 激活MFA
+func (r *userRepo) MFAActivate(ctx context.Context, g *v1.MFAActivateRequest) error {
+	user := GetUserInfo(ctx)
+
+	u := new(types.User)
+
+	res := r.data.db.Table(TABLE_USERS).Where("id = ?", user.ID).First(&u)
+
+	if res.Error != nil {
+		return res.Error
+	}
+
+	if u.Mfa_enabled {
+		return errors.ErrHaveActivatedMFA
+	}
+
+	// 启用MFA
+	auth := mfa.NewGoogleAuth()
+	ans, err := auth.VerifyCode(g.Secret, g.Code)
+
+	if err != nil {
+		return err
+	}
+
+	if !ans {
+		return errors.ErrMFAVerifyFailed
+	}
+
+	u.Mfa_enabled = true
+	u.Mfa_secret = g.Secret
+
+	res.Save(&u)
+
+	return nil
+}
+
+// 解绑MFA
+func (r *userRepo) MFACancel(ctx context.Context, code string) error {
+	user := GetUserInfo(ctx)
+
+	u := new(types.User)
+
+	res := r.data.db.Table(TABLE_USERS).Where("id = ?", user.ID).First(&u)
+
+	if res.Error != nil {
+		return res.Error
+	}
+
+	if !u.Mfa_enabled {
+		return errors.ErrNotEnabledMFA
+	}
+
+	auth := mfa.NewGoogleAuth()
+	ans, err := auth.VerifyCode(u.Mfa_secret, code)
+
+	if err != nil {
+		return err
+	}
+
+	if !ans {
+		return errors.ErrMFAVerifyFailed
+	}
+
+	u.Mfa_enabled = false
+	u.Mfa_secret = ""
+	res.Save(&u)
+
+	return nil
 }

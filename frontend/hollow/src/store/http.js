@@ -13,7 +13,7 @@ const global = globalStore()
 export const httpStore = defineStore('http', {
     state: () => {
         return {
-            prefix: "/apis/"
+            prefix: "/apis"
         }
     },
     actions: {
@@ -26,7 +26,7 @@ export const httpStore = defineStore('http', {
                 var reason = (error.data.reason == undefined ? 'NULL' : error.data.reason)
                 var code = (error.data.code == undefined ? 'NULL' : error.data.code)
                 var message = (error.data.message == undefined ? 'NULL' : error.data.message)
-                dialog.show("出现错误","代码:"+code+"\n原因:"+reason+"\n信息:"+message)
+                dialog.show("出现错误","["+code+" "+reason+"] "+message)
             }
         },
         // 统一请求结构
@@ -52,7 +52,12 @@ export const httpStore = defineStore('http', {
                     }
                 })
                 .catch(error => {
-                    this.handleError(error.response)
+                    // console.log("status",error.response.status)
+                    if(error.response.status == 417){
+                        resolve("NEEDMFA")
+                    }else{
+                        this.handleError(error.response)
+                    }
                 })
             })
         },
@@ -69,8 +74,9 @@ export const httpStore = defineStore('http', {
             })
         },
         // DELETE
-        delete(url,auth){
+        delete(url,params,auth){
             return this.unifiedQuery("delete",url,auth,{
+                params: params
             })
         },
         // PUT

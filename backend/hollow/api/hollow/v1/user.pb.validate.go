@@ -79,6 +79,22 @@ func (m *LoginUserRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if m.GetCode() != "" {
+
+		if utf8.RuneCountInString(m.GetCode()) != 6 {
+			err := LoginUserRequestValidationError{
+				field:  "Code",
+				reason: "value length must be 6 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+
+		}
+
+	}
+
 	if len(errors) > 0 {
 		return LoginUserRequestMultiError(errors)
 	}
@@ -456,6 +472,333 @@ var _ interface {
 	ErrorName() string
 } = GetUserRequestValidationError{}
 
+// Validate checks the field values on NullRequest with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *NullRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on NullRequest with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in NullRequestMultiError, or
+// nil if none found.
+func (m *NullRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *NullRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return NullRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// NullRequestMultiError is an error wrapping multiple validation errors
+// returned by NullRequest.ValidateAll() if the designated constraints aren't met.
+type NullRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m NullRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m NullRequestMultiError) AllErrors() []error { return m }
+
+// NullRequestValidationError is the validation error returned by
+// NullRequest.Validate if the designated constraints aren't met.
+type NullRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e NullRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e NullRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e NullRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e NullRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e NullRequestValidationError) ErrorName() string { return "NullRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e NullRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sNullRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = NullRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = NullRequestValidationError{}
+
+// Validate checks the field values on MFAActivateRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *MFAActivateRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on MFAActivateRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// MFAActivateRequestMultiError, or nil if none found.
+func (m *MFAActivateRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *MFAActivateRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetCode()) != 6 {
+		err := MFAActivateRequestValidationError{
+			field:  "Code",
+			reason: "value length must be 6 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+
+	}
+
+	// no validation rules for Secret
+
+	if len(errors) > 0 {
+		return MFAActivateRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// MFAActivateRequestMultiError is an error wrapping multiple validation errors
+// returned by MFAActivateRequest.ValidateAll() if the designated constraints
+// aren't met.
+type MFAActivateRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m MFAActivateRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m MFAActivateRequestMultiError) AllErrors() []error { return m }
+
+// MFAActivateRequestValidationError is the validation error returned by
+// MFAActivateRequest.Validate if the designated constraints aren't met.
+type MFAActivateRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e MFAActivateRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e MFAActivateRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e MFAActivateRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e MFAActivateRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e MFAActivateRequestValidationError) ErrorName() string {
+	return "MFAActivateRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e MFAActivateRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sMFAActivateRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = MFAActivateRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = MFAActivateRequestValidationError{}
+
+// Validate checks the field values on MFACancelRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *MFACancelRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on MFACancelRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// MFACancelRequestMultiError, or nil if none found.
+func (m *MFACancelRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *MFACancelRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetCode()) != 6 {
+		err := MFACancelRequestValidationError{
+			field:  "Code",
+			reason: "value length must be 6 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+
+	}
+
+	if len(errors) > 0 {
+		return MFACancelRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// MFACancelRequestMultiError is an error wrapping multiple validation errors
+// returned by MFACancelRequest.ValidateAll() if the designated constraints
+// aren't met.
+type MFACancelRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m MFACancelRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m MFACancelRequestMultiError) AllErrors() []error { return m }
+
+// MFACancelRequestValidationError is the validation error returned by
+// MFACancelRequest.Validate if the designated constraints aren't met.
+type MFACancelRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e MFACancelRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e MFACancelRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e MFACancelRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e MFACancelRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e MFACancelRequestValidationError) ErrorName() string { return "MFACancelRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e MFACancelRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sMFACancelRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = MFACancelRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = MFACancelRequestValidationError{}
+
 // Validate checks the field values on User with the rules defined in the proto
 // definition for this message. If any rules are violated, the first error
 // encountered is returned, or nil if there are no violations.
@@ -490,6 +833,8 @@ func (m *User) validate(all bool) error {
 	// no validation rules for CreatedAt
 
 	// no validation rules for Phone
+
+	// no validation rules for MfaEnabled
 
 	if len(errors) > 0 {
 		return UserMultiError(errors)
@@ -567,6 +912,108 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = UserValidationError{}
+
+// Validate checks the field values on MFA with the rules defined in the proto
+// definition for this message. If any rules are violated, the first error
+// encountered is returned, or nil if there are no violations.
+func (m *MFA) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on MFA with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in MFAMultiError, or nil if none found.
+func (m *MFA) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *MFA) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Qrlink
+
+	// no validation rules for Secret
+
+	if len(errors) > 0 {
+		return MFAMultiError(errors)
+	}
+
+	return nil
+}
+
+// MFAMultiError is an error wrapping multiple validation errors returned by
+// MFA.ValidateAll() if the designated constraints aren't met.
+type MFAMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m MFAMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m MFAMultiError) AllErrors() []error { return m }
+
+// MFAValidationError is the validation error returned by MFA.Validate if the
+// designated constraints aren't met.
+type MFAValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e MFAValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e MFAValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e MFAValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e MFAValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e MFAValidationError) ErrorName() string { return "MFAValidationError" }
+
+// Error satisfies the builtin error interface
+func (e MFAValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sMFA.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = MFAValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = MFAValidationError{}
 
 // Validate checks the field values on RegisterUserReply with the rules defined
 // in the proto definition for this message. If any rules are violated, the
@@ -969,3 +1416,346 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetUserReplyValidationError{}
+
+// Validate checks the field values on MFAGetQRCodeReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *MFAGetQRCodeReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on MFAGetQRCodeReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// MFAGetQRCodeReplyMultiError, or nil if none found.
+func (m *MFAGetQRCodeReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *MFAGetQRCodeReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Code
+
+	// no validation rules for Msg
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, MFAGetQRCodeReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, MFAGetQRCodeReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return MFAGetQRCodeReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return MFAGetQRCodeReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// MFAGetQRCodeReplyMultiError is an error wrapping multiple validation errors
+// returned by MFAGetQRCodeReply.ValidateAll() if the designated constraints
+// aren't met.
+type MFAGetQRCodeReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m MFAGetQRCodeReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m MFAGetQRCodeReplyMultiError) AllErrors() []error { return m }
+
+// MFAGetQRCodeReplyValidationError is the validation error returned by
+// MFAGetQRCodeReply.Validate if the designated constraints aren't met.
+type MFAGetQRCodeReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e MFAGetQRCodeReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e MFAGetQRCodeReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e MFAGetQRCodeReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e MFAGetQRCodeReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e MFAGetQRCodeReplyValidationError) ErrorName() string {
+	return "MFAGetQRCodeReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e MFAGetQRCodeReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sMFAGetQRCodeReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = MFAGetQRCodeReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = MFAGetQRCodeReplyValidationError{}
+
+// Validate checks the field values on MFAActivateReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *MFAActivateReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on MFAActivateReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// MFAActivateReplyMultiError, or nil if none found.
+func (m *MFAActivateReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *MFAActivateReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Code
+
+	// no validation rules for Msg
+
+	if len(errors) > 0 {
+		return MFAActivateReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// MFAActivateReplyMultiError is an error wrapping multiple validation errors
+// returned by MFAActivateReply.ValidateAll() if the designated constraints
+// aren't met.
+type MFAActivateReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m MFAActivateReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m MFAActivateReplyMultiError) AllErrors() []error { return m }
+
+// MFAActivateReplyValidationError is the validation error returned by
+// MFAActivateReply.Validate if the designated constraints aren't met.
+type MFAActivateReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e MFAActivateReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e MFAActivateReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e MFAActivateReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e MFAActivateReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e MFAActivateReplyValidationError) ErrorName() string { return "MFAActivateReplyValidationError" }
+
+// Error satisfies the builtin error interface
+func (e MFAActivateReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sMFAActivateReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = MFAActivateReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = MFAActivateReplyValidationError{}
+
+// Validate checks the field values on MFACancelReply with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *MFACancelReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on MFACancelReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in MFACancelReplyMultiError,
+// or nil if none found.
+func (m *MFACancelReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *MFACancelReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Code
+
+	// no validation rules for Msg
+
+	if len(errors) > 0 {
+		return MFACancelReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// MFACancelReplyMultiError is an error wrapping multiple validation errors
+// returned by MFACancelReply.ValidateAll() if the designated constraints
+// aren't met.
+type MFACancelReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m MFACancelReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m MFACancelReplyMultiError) AllErrors() []error { return m }
+
+// MFACancelReplyValidationError is the validation error returned by
+// MFACancelReply.Validate if the designated constraints aren't met.
+type MFACancelReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e MFACancelReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e MFACancelReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e MFACancelReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e MFACancelReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e MFACancelReplyValidationError) ErrorName() string { return "MFACancelReplyValidationError" }
+
+// Error satisfies the builtin error interface
+func (e MFACancelReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sMFACancelReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = MFACancelReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = MFACancelReplyValidationError{}

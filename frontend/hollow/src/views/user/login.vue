@@ -49,6 +49,26 @@
         注册账号
         </v-btn>
     </v-form>
+
+    <v-dialog v-model="mfa" persistent>
+        <v-card title="双因素认证" >
+            <v-card-text>
+                <v-text-field
+                        v-model="code"
+                        :rules="codeRules"
+                        :counter="6"
+                        label="6位数字代码"
+                        required
+                ></v-text-field>
+                <small>*若要继续登录,请在手机中打开Google Authenticator(身份验证器),输入6位动态码</small>
+            </v-card-text>
+            <v-card-actions>
+                <v-btn color="blue-darken-1" text @click="mfa = false">取消登录</v-btn>
+                <v-spacer></v-spacer>
+                <v-btn color="error" text @click="loginMFA">登录</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
 </v-container>
 </template>
 
@@ -60,6 +80,7 @@ export default {
 
     data: () => ({
         valid: false,
+        mfa: false,
         username: '',
         usernameRules: [
             v => !!v || '请输入用户名',
@@ -69,6 +90,11 @@ export default {
         passwordRules: [
             v => !!v || '请输入密码',
             v => (v && v.length <= 16) || '密码长度超限',
+        ],
+        code: '',
+        codeRules: [
+            v => !!v || '请输入6位代码',
+            v => (v && v.length == 6) || '请输入合适的6位代码',
         ],
     }),
 
@@ -91,6 +117,25 @@ export default {
             }
 
             this.HTTP.post('/user/login', data).then(res => {
+                if(res == "NEEDMFA"){
+                    this.mfa = true
+                }else{
+                    this.global.setUser(true, res.data,res.token)
+                    this.snackbar.show("登录成功")
+                    this.$router.push('/')
+                }
+            })
+        },
+        loginMFA(){
+            var data = {
+                username: this.username,
+                password: this.password,
+                code: this.code
+            }
+
+            this.HTTP.post('/user/login', data).then(res => {
+                this.mfa = false
+                console.log(res)
                 this.global.setUser(true, res.data,res.token)
                 this.snackbar.show("登录成功")
                 this.$router.push('/')

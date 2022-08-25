@@ -15,6 +15,7 @@ type Error struct {
 var (
 	ErrCodeNormal              = 400
 	ErrCodeInternalServerError = 500
+	ErrCodeNeedMFA             = 417
 
 	//SERVICE
 	ErrMissingParams = errors.New(ErrCodeNormal, v1.ErrorReason_PARAMS_ILLEGAL.String(), "Missing Params Data")
@@ -37,6 +38,11 @@ var (
 
 	ErrCommentNotFound = errors.New(ErrCodeNormal, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "Comment Not Found")
 	ErrHaveLiked       = errors.New(ErrCodeNormal, v1.ErrorReason_REPEATED_OPERATION.String(), "You have liked this comment")
+
+	ErrNeedMFA          = errors.New(ErrCodeNeedMFA, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "Need MFA")
+	ErrHaveActivatedMFA = errors.New(ErrCodeNormal, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "You have Activated MFA")
+	ErrNotEnabledMFA    = errors.New(ErrCodeNormal, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "You have not enabled MFA")
+	ErrMFAVerifyFailed  = errors.New(ErrCodeNormal, v1.ErrorReason_INFORMATION_ILLEGAL.String(), "MFA Verify Failed")
 )
 
 func GenerateError(err Error) *errors.Error {

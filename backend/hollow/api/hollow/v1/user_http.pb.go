@@ -21,11 +21,17 @@ const _ = http.SupportPackageIsVersion1
 
 const OperationUsersGetUser = "/user.v1.Users/GetUser"
 const OperationUsersLogin = "/user.v1.Users/Login"
+const OperationUsersMFAActivate = "/user.v1.Users/MFAActivate"
+const OperationUsersMFACancel = "/user.v1.Users/MFACancel"
+const OperationUsersMFAGetQRCode = "/user.v1.Users/MFAGetQRCode"
 const OperationUsersRegister = "/user.v1.Users/Register"
 
 type UsersHTTPServer interface {
 	GetUser(context.Context, *GetUserRequest) (*GetUserReply, error)
 	Login(context.Context, *LoginUserRequest) (*LoginUserReply, error)
+	MFAActivate(context.Context, *MFAActivateRequest) (*MFAActivateReply, error)
+	MFACancel(context.Context, *MFACancelRequest) (*MFACancelReply, error)
+	MFAGetQRCode(context.Context, *NullRequest) (*MFAGetQRCodeReply, error)
 	Register(context.Context, *RegisterUserRequest) (*RegisterUserReply, error)
 }
 
@@ -33,7 +39,10 @@ func RegisterUsersHTTPServer(s *http.Server, srv UsersHTTPServer) {
 	r := s.Route("/")
 	r.POST("/api/user/register", _Users_Register0_HTTP_Handler(srv))
 	r.POST("/api/user/login", _Users_Login0_HTTP_Handler(srv))
-	r.GET("/api/user/{id}", _Users_GetUser0_HTTP_Handler(srv))
+	r.GET("/api/user/info/{id}", _Users_GetUser0_HTTP_Handler(srv))
+	r.GET("/api/user/mfa", _Users_MFAGetQRCode0_HTTP_Handler(srv))
+	r.POST("/api/user/mfa", _Users_MFAActivate0_HTTP_Handler(srv))
+	r.DELETE("/api/user/mfa", _Users_MFACancel0_HTTP_Handler(srv))
 }
 
 func _Users_Register0_HTTP_Handler(srv UsersHTTPServer) func(ctx http.Context) error {
@@ -96,9 +105,69 @@ func _Users_GetUser0_HTTP_Handler(srv UsersHTTPServer) func(ctx http.Context) er
 	}
 }
 
+func _Users_MFAGetQRCode0_HTTP_Handler(srv UsersHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in NullRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUsersMFAGetQRCode)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.MFAGetQRCode(ctx, req.(*NullRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*MFAGetQRCodeReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Users_MFAActivate0_HTTP_Handler(srv UsersHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in MFAActivateRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUsersMFAActivate)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.MFAActivate(ctx, req.(*MFAActivateRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*MFAActivateReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Users_MFACancel0_HTTP_Handler(srv UsersHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in MFACancelRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUsersMFACancel)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.MFACancel(ctx, req.(*MFACancelRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*MFACancelReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type UsersHTTPClient interface {
 	GetUser(ctx context.Context, req *GetUserRequest, opts ...http.CallOption) (rsp *GetUserReply, err error)
 	Login(ctx context.Context, req *LoginUserRequest, opts ...http.CallOption) (rsp *LoginUserReply, err error)
+	MFAActivate(ctx context.Context, req *MFAActivateRequest, opts ...http.CallOption) (rsp *MFAActivateReply, err error)
+	MFACancel(ctx context.Context, req *MFACancelRequest, opts ...http.CallOption) (rsp *MFACancelReply, err error)
+	MFAGetQRCode(ctx context.Context, req *NullRequest, opts ...http.CallOption) (rsp *MFAGetQRCodeReply, err error)
 	Register(ctx context.Context, req *RegisterUserRequest, opts ...http.CallOption) (rsp *RegisterUserReply, err error)
 }
 
@@ -112,7 +181,7 @@ func NewUsersHTTPClient(client *http.Client) UsersHTTPClient {
 
 func (c *UsersHTTPClientImpl) GetUser(ctx context.Context, in *GetUserRequest, opts ...http.CallOption) (*GetUserReply, error) {
 	var out GetUserReply
-	pattern := "/api/user/{id}"
+	pattern := "/api/user/info/{id}"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationUsersGetUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -130,6 +199,45 @@ func (c *UsersHTTPClientImpl) Login(ctx context.Context, in *LoginUserRequest, o
 	opts = append(opts, http.Operation(OperationUsersLogin))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *UsersHTTPClientImpl) MFAActivate(ctx context.Context, in *MFAActivateRequest, opts ...http.CallOption) (*MFAActivateReply, error) {
+	var out MFAActivateReply
+	pattern := "/api/user/mfa"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationUsersMFAActivate))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *UsersHTTPClientImpl) MFACancel(ctx context.Context, in *MFACancelRequest, opts ...http.CallOption) (*MFACancelReply, error) {
+	var out MFACancelReply
+	pattern := "/api/user/mfa"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationUsersMFACancel))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *UsersHTTPClientImpl) MFAGetQRCode(ctx context.Context, in *NullRequest, opts ...http.CallOption) (*MFAGetQRCodeReply, error) {
+	var out MFAGetQRCodeReply
+	pattern := "/api/user/mfa"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationUsersMFAGetQRCode))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
