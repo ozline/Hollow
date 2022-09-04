@@ -159,3 +159,73 @@ func (s *ForestService) LikeComment(ctx context.Context, req *v1.LikeCommentRequ
 		Msg:  "ok",
 	}, nil
 }
+
+// 举报
+func (s *ForestService) Report(ctx context.Context, req *v1.ReportRequest) (reply *v1.ReportReply, err error) {
+	err = s.uc.Report(ctx, req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.ReportReply{
+		Code: 200,
+		Msg:  "ok",
+	}, nil
+}
+
+func (s *ForestService) GetReportList(ctx context.Context, req *v1.GetReportListRequest) (reply *v1.GetReportListReply, err error) {
+	reports, count, err := s.uc.GetReportList(ctx, req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.GetReportListReply{
+		Code: 200,
+		Msg:  "ok",
+		Data: &v1.MultipleReportReply{
+			List:  reports,
+			Total: count,
+		},
+	}, nil
+}
+
+func (s *ForestService) UpdateReport(ctx context.Context, req *v1.UpdateReportRequest) (reply *v1.UpdateReportReply, err error) {
+	err = s.uc.UpdateReport(ctx, req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.UpdateReportReply{
+		Code: 200,
+		Msg:  "ok",
+	}, nil
+}
+
+func (s *ForestService) UpdateCommentStatus(ctx context.Context, req *v1.UpdateCommentStatusRequest) (reply *v1.UpdateCommentStatusReply, err error) {
+	err = s.uc.UpdateCommentStatus(ctx, req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.UpdateCommentStatusReply{
+		Code: 200,
+		Msg:  "ok",
+	}, nil
+}
+
+func (s *ForestService) UpdateLeafStatus(ctx context.Context, req *v1.UpdateLeafStatusRequest) (reply *v1.UpdateLeafStatusReply, err error) {
+	err = s.uc.UpdateLeafStatus(ctx, req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.UpdateLeafStatusReply{
+		Code: 200,
+		Msg:  "ok",
+	}, nil
+}

@@ -19,7 +19,7 @@
             clearable
             counter="140"
             append-inner-icon="mdi-comment"
-            label="Text"
+            label="发布内容"
             v-model="message"
             :rules="messageRules"
             rows="8"

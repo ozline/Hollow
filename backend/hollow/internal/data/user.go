@@ -287,3 +287,26 @@ func (r *userRepo) ReBindPhone(ctx context.Context, phone, code, mfacode string)
 
 	return nil
 }
+
+func (r *userRepo) UpdateUserStatus(ctx context.Context, g *v1.UpdateUserStatusRequest) error {
+
+	user := GetUserInfo(ctx)
+
+	if user.Status != 1 {
+		return errors.ErrUserInsufficientPermissions
+	}
+
+	u := new(types.User)
+
+	res := r.data.db.Table(TABLE_USERS).Where("id = ?", g.Id).First(&u)
+
+	if res.Error != nil {
+		return res.Error
+	}
+
+	u.Status = g.Status
+
+	res.Save(&u)
+
+	return res.Error
+}

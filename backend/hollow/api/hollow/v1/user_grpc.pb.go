@@ -39,6 +39,8 @@ type UsersClient interface {
 	MFAActivate(ctx context.Context, in *MFAActivateRequest, opts ...grpc.CallOption) (*MFAActivateReply, error)
 	// MFA解绑
 	MFACancel(ctx context.Context, in *MFACancelRequest, opts ...grpc.CallOption) (*MFACancelReply, error)
+	// [Admin] UpdateUserStatus
+	UpdateUserStatus(ctx context.Context, in *UpdateUserStatusRequest, opts ...grpc.CallOption) (*UpdateUserStatusReply, error)
 }
 
 type usersClient struct {
@@ -130,6 +132,15 @@ func (c *usersClient) MFACancel(ctx context.Context, in *MFACancelRequest, opts 
 	return out, nil
 }
 
+func (c *usersClient) UpdateUserStatus(ctx context.Context, in *UpdateUserStatusRequest, opts ...grpc.CallOption) (*UpdateUserStatusReply, error) {
+	out := new(UpdateUserStatusReply)
+	err := c.cc.Invoke(ctx, "/user.v1.Users/UpdateUserStatus", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UsersServer is the server API for Users service.
 // All implementations must embed UnimplementedUsersServer
 // for forward compatibility
@@ -151,6 +162,8 @@ type UsersServer interface {
 	MFAActivate(context.Context, *MFAActivateRequest) (*MFAActivateReply, error)
 	// MFA解绑
 	MFACancel(context.Context, *MFACancelRequest) (*MFACancelReply, error)
+	// [Admin] UpdateUserStatus
+	UpdateUserStatus(context.Context, *UpdateUserStatusRequest) (*UpdateUserStatusReply, error)
 	mustEmbedUnimplementedUsersServer()
 }
 
@@ -184,6 +197,9 @@ func (UnimplementedUsersServer) MFAActivate(context.Context, *MFAActivateRequest
 }
 func (UnimplementedUsersServer) MFACancel(context.Context, *MFACancelRequest) (*MFACancelReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method MFACancel not implemented")
+}
+func (UnimplementedUsersServer) UpdateUserStatus(context.Context, *UpdateUserStatusRequest) (*UpdateUserStatusReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserStatus not implemented")
 }
 func (UnimplementedUsersServer) mustEmbedUnimplementedUsersServer() {}
 
@@ -360,6 +376,24 @@ func _Users_MFACancel_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Users_UpdateUserStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServer).UpdateUserStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.v1.Users/UpdateUserStatus",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServer).UpdateUserStatus(ctx, req.(*UpdateUserStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Users_ServiceDesc is the grpc.ServiceDesc for Users service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -402,6 +436,10 @@ var Users_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "MFACancel",
 			Handler:    _Users_MFACancel_Handler,
+		},
+		{
+			MethodName: "UpdateUserStatus",
+			Handler:    _Users_UpdateUserStatus_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

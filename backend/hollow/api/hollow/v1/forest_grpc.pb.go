@@ -38,6 +38,16 @@ type ForestsClient interface {
 	DeleteComment(ctx context.Context, in *DeleteCommentRequest, opts ...grpc.CallOption) (*DeleteCommentReply, error)
 	// Like Comment
 	LikeComment(ctx context.Context, in *LikeCommentRequest, opts ...grpc.CallOption) (*LikeCommentReply, error)
+	// Report
+	Report(ctx context.Context, in *ReportRequest, opts ...grpc.CallOption) (*ReportReply, error)
+	// GetMyReport
+	GetReportList(ctx context.Context, in *GetReportListRequest, opts ...grpc.CallOption) (*GetReportListReply, error)
+	// [Admin] UpdateReport
+	UpdateReport(ctx context.Context, in *UpdateReportRequest, opts ...grpc.CallOption) (*UpdateReportReply, error)
+	// [Admin] UpdateCommentStatus
+	UpdateCommentStatus(ctx context.Context, in *UpdateCommentStatusRequest, opts ...grpc.CallOption) (*UpdateCommentStatusReply, error)
+	// [Admin] UpdateLeafStatus
+	UpdateLeafStatus(ctx context.Context, in *UpdateLeafStatusRequest, opts ...grpc.CallOption) (*UpdateLeafStatusReply, error)
 }
 
 type forestsClient struct {
@@ -120,6 +130,51 @@ func (c *forestsClient) LikeComment(ctx context.Context, in *LikeCommentRequest,
 	return out, nil
 }
 
+func (c *forestsClient) Report(ctx context.Context, in *ReportRequest, opts ...grpc.CallOption) (*ReportReply, error) {
+	out := new(ReportReply)
+	err := c.cc.Invoke(ctx, "/forest.v1.Forests/Report", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *forestsClient) GetReportList(ctx context.Context, in *GetReportListRequest, opts ...grpc.CallOption) (*GetReportListReply, error) {
+	out := new(GetReportListReply)
+	err := c.cc.Invoke(ctx, "/forest.v1.Forests/GetReportList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *forestsClient) UpdateReport(ctx context.Context, in *UpdateReportRequest, opts ...grpc.CallOption) (*UpdateReportReply, error) {
+	out := new(UpdateReportReply)
+	err := c.cc.Invoke(ctx, "/forest.v1.Forests/UpdateReport", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *forestsClient) UpdateCommentStatus(ctx context.Context, in *UpdateCommentStatusRequest, opts ...grpc.CallOption) (*UpdateCommentStatusReply, error) {
+	out := new(UpdateCommentStatusReply)
+	err := c.cc.Invoke(ctx, "/forest.v1.Forests/UpdateCommentStatus", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *forestsClient) UpdateLeafStatus(ctx context.Context, in *UpdateLeafStatusRequest, opts ...grpc.CallOption) (*UpdateLeafStatusReply, error) {
+	out := new(UpdateLeafStatusReply)
+	err := c.cc.Invoke(ctx, "/forest.v1.Forests/UpdateLeafStatus", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ForestsServer is the server API for Forests service.
 // All implementations must embed UnimplementedForestsServer
 // for forward compatibility
@@ -140,6 +195,16 @@ type ForestsServer interface {
 	DeleteComment(context.Context, *DeleteCommentRequest) (*DeleteCommentReply, error)
 	// Like Comment
 	LikeComment(context.Context, *LikeCommentRequest) (*LikeCommentReply, error)
+	// Report
+	Report(context.Context, *ReportRequest) (*ReportReply, error)
+	// GetMyReport
+	GetReportList(context.Context, *GetReportListRequest) (*GetReportListReply, error)
+	// [Admin] UpdateReport
+	UpdateReport(context.Context, *UpdateReportRequest) (*UpdateReportReply, error)
+	// [Admin] UpdateCommentStatus
+	UpdateCommentStatus(context.Context, *UpdateCommentStatusRequest) (*UpdateCommentStatusReply, error)
+	// [Admin] UpdateLeafStatus
+	UpdateLeafStatus(context.Context, *UpdateLeafStatusRequest) (*UpdateLeafStatusReply, error)
 	mustEmbedUnimplementedForestsServer()
 }
 
@@ -170,6 +235,21 @@ func (UnimplementedForestsServer) DeleteComment(context.Context, *DeleteCommentR
 }
 func (UnimplementedForestsServer) LikeComment(context.Context, *LikeCommentRequest) (*LikeCommentReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LikeComment not implemented")
+}
+func (UnimplementedForestsServer) Report(context.Context, *ReportRequest) (*ReportReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Report not implemented")
+}
+func (UnimplementedForestsServer) GetReportList(context.Context, *GetReportListRequest) (*GetReportListReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetReportList not implemented")
+}
+func (UnimplementedForestsServer) UpdateReport(context.Context, *UpdateReportRequest) (*UpdateReportReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateReport not implemented")
+}
+func (UnimplementedForestsServer) UpdateCommentStatus(context.Context, *UpdateCommentStatusRequest) (*UpdateCommentStatusReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCommentStatus not implemented")
+}
+func (UnimplementedForestsServer) UpdateLeafStatus(context.Context, *UpdateLeafStatusRequest) (*UpdateLeafStatusReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateLeafStatus not implemented")
 }
 func (UnimplementedForestsServer) mustEmbedUnimplementedForestsServer() {}
 
@@ -328,6 +408,96 @@ func _Forests_LikeComment_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Forests_Report_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReportRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ForestsServer).Report(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/forest.v1.Forests/Report",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ForestsServer).Report(ctx, req.(*ReportRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Forests_GetReportList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetReportListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ForestsServer).GetReportList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/forest.v1.Forests/GetReportList",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ForestsServer).GetReportList(ctx, req.(*GetReportListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Forests_UpdateReport_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateReportRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ForestsServer).UpdateReport(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/forest.v1.Forests/UpdateReport",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ForestsServer).UpdateReport(ctx, req.(*UpdateReportRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Forests_UpdateCommentStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateCommentStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ForestsServer).UpdateCommentStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/forest.v1.Forests/UpdateCommentStatus",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ForestsServer).UpdateCommentStatus(ctx, req.(*UpdateCommentStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Forests_UpdateLeafStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateLeafStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ForestsServer).UpdateLeafStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/forest.v1.Forests/UpdateLeafStatus",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ForestsServer).UpdateLeafStatus(ctx, req.(*UpdateLeafStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Forests_ServiceDesc is the grpc.ServiceDesc for Forests service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -366,6 +536,26 @@ var Forests_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "LikeComment",
 			Handler:    _Forests_LikeComment_Handler,
+		},
+		{
+			MethodName: "Report",
+			Handler:    _Forests_Report_Handler,
+		},
+		{
+			MethodName: "GetReportList",
+			Handler:    _Forests_GetReportList_Handler,
+		},
+		{
+			MethodName: "UpdateReport",
+			Handler:    _Forests_UpdateReport_Handler,
+		},
+		{
+			MethodName: "UpdateCommentStatus",
+			Handler:    _Forests_UpdateCommentStatus_Handler,
+		},
+		{
+			MethodName: "UpdateLeafStatus",
+			Handler:    _Forests_UpdateLeafStatus_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

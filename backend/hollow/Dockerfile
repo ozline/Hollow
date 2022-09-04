@@ -19,6 +19,8 @@ WORKDIR /app
 
 EXPOSE 8000
 EXPOSE 9000
+EXPOSE 9001
+
 VOLUME /data/conf
 
 CMD ["./server", "-conf", "/data/conf"]

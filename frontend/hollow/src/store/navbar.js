@@ -25,6 +25,13 @@ export const navbarStore = defineStore('navbar', {
                     show: false,
                 },
                 {
+                    title: '投诉',
+                    value: '/user/report',
+                    props: {
+                        prependIcon: 'mdi-pencil',
+                    }
+                },
+                {
                     title: '设置',
                     value: '/user/settings',
                     props: {

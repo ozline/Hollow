@@ -13,6 +13,7 @@ const (
 	TABLE_FOREST  = "forest"
 	TABLE_COMMENT = "comment"
 	TABLE_LIKE    = "likes"
+	TABLE_REPORT  = "reports"
 )
 
 // 获取用户信息

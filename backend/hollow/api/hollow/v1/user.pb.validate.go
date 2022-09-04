@@ -1179,6 +1179,130 @@ var _ interface {
 	ErrorName() string
 } = MFACancelRequestValidationError{}
 
+// Validate checks the field values on UpdateUserStatusRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateUserStatusRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateUserStatusRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateUserStatusRequestMultiError, or nil if none found.
+func (m *UpdateUserStatusRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateUserStatusRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() < 1 {
+		err := UpdateUserStatusRequestValidationError{
+			field:  "Id",
+			reason: "value must be greater than or equal to 1",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if val := m.GetStatus(); val < 0 || val > 1 {
+		err := UpdateUserStatusRequestValidationError{
+			field:  "Status",
+			reason: "value must be inside range [0, 1]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return UpdateUserStatusRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateUserStatusRequestMultiError is an error wrapping multiple validation
+// errors returned by UpdateUserStatusRequest.ValidateAll() if the designated
+// constraints aren't met.
+type UpdateUserStatusRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateUserStatusRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateUserStatusRequestMultiError) AllErrors() []error { return m }
+
+// UpdateUserStatusRequestValidationError is the validation error returned by
+// UpdateUserStatusRequest.Validate if the designated constraints aren't met.
+type UpdateUserStatusRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateUserStatusRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateUserStatusRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateUserStatusRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateUserStatusRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateUserStatusRequestValidationError) ErrorName() string {
+	return "UpdateUserStatusRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateUserStatusRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateUserStatusRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateUserStatusRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateUserStatusRequestValidationError{}
+
 // Validate checks the field values on ShortMsg with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -2589,3 +2713,109 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = MFACancelReplyValidationError{}
+
+// Validate checks the field values on UpdateUserStatusReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateUserStatusReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateUserStatusReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateUserStatusReplyMultiError, or nil if none found.
+func (m *UpdateUserStatusReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateUserStatusReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Code
+
+	// no validation rules for Msg
+
+	if len(errors) > 0 {
+		return UpdateUserStatusReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateUserStatusReplyMultiError is an error wrapping multiple validation
+// errors returned by UpdateUserStatusReply.ValidateAll() if the designated
+// constraints aren't met.
+type UpdateUserStatusReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateUserStatusReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateUserStatusReplyMultiError) AllErrors() []error { return m }
+
+// UpdateUserStatusReplyValidationError is the validation error returned by
+// UpdateUserStatusReply.Validate if the designated constraints aren't met.
+type UpdateUserStatusReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateUserStatusReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateUserStatusReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateUserStatusReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateUserStatusReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateUserStatusReplyValidationError) ErrorName() string {
+	return "UpdateUserStatusReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateUserStatusReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateUserStatusReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateUserStatusReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateUserStatusReplyValidationError{}

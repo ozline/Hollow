@@ -25,8 +25,13 @@ const OperationForestsDeleteLeaf = "/forest.v1.Forests/DeleteLeaf"
 const OperationForestsGetComments = "/forest.v1.Forests/GetComments"
 const OperationForestsGetForest = "/forest.v1.Forests/GetForest"
 const OperationForestsGetLeafDetail = "/forest.v1.Forests/GetLeafDetail"
+const OperationForestsGetReportList = "/forest.v1.Forests/GetReportList"
 const OperationForestsLikeComment = "/forest.v1.Forests/LikeComment"
 const OperationForestsPushLeaf = "/forest.v1.Forests/PushLeaf"
+const OperationForestsReport = "/forest.v1.Forests/Report"
+const OperationForestsUpdateCommentStatus = "/forest.v1.Forests/UpdateCommentStatus"
+const OperationForestsUpdateLeafStatus = "/forest.v1.Forests/UpdateLeafStatus"
+const OperationForestsUpdateReport = "/forest.v1.Forests/UpdateReport"
 
 type ForestsHTTPServer interface {
 	Comment(context.Context, *CommentLeafRequest) (*CommentLeafRePly, error)
@@ -35,8 +40,13 @@ type ForestsHTTPServer interface {
 	GetComments(context.Context, *GetCommentsRequest) (*GetCommentsReply, error)
 	GetForest(context.Context, *GetLeafsRequest) (*GetLeafsReply, error)
 	GetLeafDetail(context.Context, *GetLeafDetailRequest) (*GetLeafDetailReply, error)
+	GetReportList(context.Context, *GetReportListRequest) (*GetReportListReply, error)
 	LikeComment(context.Context, *LikeCommentRequest) (*LikeCommentReply, error)
 	PushLeaf(context.Context, *PushLeafRequest) (*PushLeafReply, error)
+	Report(context.Context, *ReportRequest) (*ReportReply, error)
+	UpdateCommentStatus(context.Context, *UpdateCommentStatusRequest) (*UpdateCommentStatusReply, error)
+	UpdateLeafStatus(context.Context, *UpdateLeafStatusRequest) (*UpdateLeafStatusReply, error)
+	UpdateReport(context.Context, *UpdateReportRequest) (*UpdateReportReply, error)
 }
 
 func RegisterForestsHTTPServer(s *http.Server, srv ForestsHTTPServer) {
@@ -49,6 +59,11 @@ func RegisterForestsHTTPServer(s *http.Server, srv ForestsHTTPServer) {
 	r.GET("/api/forest/comments/{root}", _Forests_GetComments0_HTTP_Handler(srv))
 	r.DELETE("/api/forest/comments/{id}", _Forests_DeleteComment0_HTTP_Handler(srv))
 	r.PUT("/api/forest/comments/{id}", _Forests_LikeComment0_HTTP_Handler(srv))
+	r.POST("/api/report", _Forests_Report0_HTTP_Handler(srv))
+	r.GET("/api/report", _Forests_GetReportList0_HTTP_Handler(srv))
+	r.PUT("/api/admin/report", _Forests_UpdateReport0_HTTP_Handler(srv))
+	r.PUT("/api/admin/forest/comments", _Forests_UpdateCommentStatus0_HTTP_Handler(srv))
+	r.PUT("/api/admin/forest/leaf", _Forests_UpdateLeafStatus0_HTTP_Handler(srv))
 }
 
 func _Forests_PushLeaf0_HTTP_Handler(srv ForestsHTTPServer) func(ctx http.Context) error {
@@ -221,6 +236,101 @@ func _Forests_LikeComment0_HTTP_Handler(srv ForestsHTTPServer) func(ctx http.Con
 	}
 }
 
+func _Forests_Report0_HTTP_Handler(srv ForestsHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ReportRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationForestsReport)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.Report(ctx, req.(*ReportRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ReportReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Forests_GetReportList0_HTTP_Handler(srv ForestsHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetReportListRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationForestsGetReportList)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetReportList(ctx, req.(*GetReportListRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetReportListReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Forests_UpdateReport0_HTTP_Handler(srv ForestsHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateReportRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationForestsUpdateReport)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateReport(ctx, req.(*UpdateReportRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateReportReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Forests_UpdateCommentStatus0_HTTP_Handler(srv ForestsHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateCommentStatusRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationForestsUpdateCommentStatus)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateCommentStatus(ctx, req.(*UpdateCommentStatusRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateCommentStatusReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Forests_UpdateLeafStatus0_HTTP_Handler(srv ForestsHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateLeafStatusRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationForestsUpdateLeafStatus)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateLeafStatus(ctx, req.(*UpdateLeafStatusRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateLeafStatusReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type ForestsHTTPClient interface {
 	Comment(ctx context.Context, req *CommentLeafRequest, opts ...http.CallOption) (rsp *CommentLeafRePly, err error)
 	DeleteComment(ctx context.Context, req *DeleteCommentRequest, opts ...http.CallOption) (rsp *DeleteCommentReply, err error)
@@ -228,8 +338,13 @@ type ForestsHTTPClient interface {
 	GetComments(ctx context.Context, req *GetCommentsRequest, opts ...http.CallOption) (rsp *GetCommentsReply, err error)
 	GetForest(ctx context.Context, req *GetLeafsRequest, opts ...http.CallOption) (rsp *GetLeafsReply, err error)
 	GetLeafDetail(ctx context.Context, req *GetLeafDetailRequest, opts ...http.CallOption) (rsp *GetLeafDetailReply, err error)
+	GetReportList(ctx context.Context, req *GetReportListRequest, opts ...http.CallOption) (rsp *GetReportListReply, err error)
 	LikeComment(ctx context.Context, req *LikeCommentRequest, opts ...http.CallOption) (rsp *LikeCommentReply, err error)
 	PushLeaf(ctx context.Context, req *PushLeafRequest, opts ...http.CallOption) (rsp *PushLeafReply, err error)
+	Report(ctx context.Context, req *ReportRequest, opts ...http.CallOption) (rsp *ReportReply, err error)
+	UpdateCommentStatus(ctx context.Context, req *UpdateCommentStatusRequest, opts ...http.CallOption) (rsp *UpdateCommentStatusReply, err error)
+	UpdateLeafStatus(ctx context.Context, req *UpdateLeafStatusRequest, opts ...http.CallOption) (rsp *UpdateLeafStatusReply, err error)
+	UpdateReport(ctx context.Context, req *UpdateReportRequest, opts ...http.CallOption) (rsp *UpdateReportReply, err error)
 }
 
 type ForestsHTTPClientImpl struct {
@@ -318,6 +433,19 @@ func (c *ForestsHTTPClientImpl) GetLeafDetail(ctx context.Context, in *GetLeafDe
 	return &out, err
 }
 
+func (c *ForestsHTTPClientImpl) GetReportList(ctx context.Context, in *GetReportListRequest, opts ...http.CallOption) (*GetReportListReply, error) {
+	var out GetReportListReply
+	pattern := "/api/report"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationForestsGetReportList))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *ForestsHTTPClientImpl) LikeComment(ctx context.Context, in *LikeCommentRequest, opts ...http.CallOption) (*LikeCommentReply, error) {
 	var out LikeCommentReply
 	pattern := "/api/forest/comments/{id}"
@@ -338,6 +466,58 @@ func (c *ForestsHTTPClientImpl) PushLeaf(ctx context.Context, in *PushLeafReques
 	opts = append(opts, http.Operation(OperationForestsPushLeaf))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ForestsHTTPClientImpl) Report(ctx context.Context, in *ReportRequest, opts ...http.CallOption) (*ReportReply, error) {
+	var out ReportReply
+	pattern := "/api/report"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationForestsReport))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ForestsHTTPClientImpl) UpdateCommentStatus(ctx context.Context, in *UpdateCommentStatusRequest, opts ...http.CallOption) (*UpdateCommentStatusReply, error) {
+	var out UpdateCommentStatusReply
+	pattern := "/api/admin/forest/comments"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationForestsUpdateCommentStatus))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ForestsHTTPClientImpl) UpdateLeafStatus(ctx context.Context, in *UpdateLeafStatusRequest, opts ...http.CallOption) (*UpdateLeafStatusReply, error) {
+	var out UpdateLeafStatusReply
+	pattern := "/api/admin/forest/leaf"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationForestsUpdateLeafStatus))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ForestsHTTPClientImpl) UpdateReport(ctx context.Context, in *UpdateReportRequest, opts ...http.CallOption) (*UpdateReportReply, error) {
+	var out UpdateReportReply
+	pattern := "/api/admin/report"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationForestsUpdateReport))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

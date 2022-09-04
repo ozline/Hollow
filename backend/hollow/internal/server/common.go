@@ -18,7 +18,6 @@ func SkipRoutersMatcher() selector.MatchFunc {
 
 	return func(ctx context.Context, operation string) bool {
 		if _, ok := skipRouters[operation]; ok {
-			// return false
 			return false
 		}
 		return true

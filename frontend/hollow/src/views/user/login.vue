@@ -1,17 +1,6 @@
 <template>
 <v-container>
     <h1 style="margin-bottom: 26px;"> 账号登录 </h1>
-    <v-tabs
-        fixed-tabs
-        grow
-    >
-        <v-tab>
-            用户名登录
-        </v-tab>
-        <v-tab>
-            手机号登录
-        </v-tab>
-    </v-tabs>
     <v-form
             ref="form"
             v-model="valid"
@@ -20,10 +9,8 @@
     <!-- :rules="usernameRules" -->
         <v-text-field
             v-model="username"
+            :rules="usernameRules"
             :counter="10"
-            :error-messages="usernameErrors"
-            @input="$v.username.$touch()"
-            @blur="$v.username.$touch()"
             label="用户名"
             variant="outlined"
             required
@@ -94,20 +81,14 @@ import { required, maxLength, minLength } from '@vuelidate/validators'
 export default {
     name: "userLogin",
 
-    // setup(){
-    //     return {
-    //        $v: useVuelidate()
-    //     }
-    // },
-
     data: () => ({
         valid: false,
         mfa: false,
         username: '',
-        // usernameRules: [
-        //     v => !!v || '请输入用户名',
-        //     v => (v && v.length <= 10) || '用户名长度超限',
-        // ],
+        usernameRules: [
+            v => !!v || '请输入用户名',
+            v => (v && v.length <= 10) || '用户名长度超限',
+        ],
         password: '',
         passwordRules: [
             v => !!v || '请输入密码',
@@ -144,12 +125,6 @@ export default {
         reset() {
             this.$refs.form.reset()
             this.$refs.form.resetValidation()
-        },
-        usernameErrors() {
-            const errors = []
-            if (!this.$v.username.$dirty) return errors
-            !this.$v.username.required && errors.push('用户名不能为空')
-            return errors
         },
         login() {
             // this.$v.$touch()

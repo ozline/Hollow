@@ -2,7 +2,7 @@ package tpyes
 
 type User struct {
 	ID          int64  // 用户ID
-	Status      int64  // 用户状态
+	Status      int64  // 用户状态 0=正常 1=管理员 2=封禁
 	Username    string // 用户名
 	Email       string // 邮箱
 	Phone       int64  // 手机号
@@ -49,11 +49,14 @@ type ShortMsg struct {
 }
 
 type Report struct {
-	Id          int64  // 举报id
-	Type        int64  // 举报类型 0=帖子 1=评论 2=用户
-	Status      int64  // 当前状态 0=未审核 1=通过 2=驳回
-	Reporter    int64  // 举报人ID
-	Report_id   int64  // 举报对象ID
-	Description string // 举报描述
-	Message     string // 管理员留言
+	Id         int64  // 举报id
+	Type       int64  // 举报类型 0=帖子 1=评论 2=用户
+	Status     int64  // 当前状态 0=未审核 1=审核通过
+	Reporter   int64  // 举报人ID
+	Report_id  int64  // 举报对象ID
+	Reason     string // 举报描述
+	Message    string // 原始文本
+	Reply      string // 管理员回复
+	Created_at int64  // 创建时间
+	Updated_at int64  // 最后更新
 }

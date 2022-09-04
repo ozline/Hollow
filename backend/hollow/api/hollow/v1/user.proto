@@ -81,12 +81,13 @@ service Users {
         };
     }
 
-    // rpc Update (UpdateUserRequest) returns (UpdateUserReply) {
-    //     option (google.api.http) = {
-    //         put: "/api/user/update",
-    //         body: "*",
-    //     };
-    // }
+    // [Admin] UpdateUserStatus
+    rpc UpdateUserStatus (UpdateUserStatusRequest) returns (UpdateUserStatusReply) {
+        option (google.api.http) = {
+            put: "/api/admin/user/status"
+            body: "*"
+        };
+    }
 }
 //Request Messages
 
@@ -133,6 +134,11 @@ message MFAActivateRequest {
 
 message MFACancelRequest {
     string code = 1 [(validate.rules).string = {len: 6}];
+}
+
+message UpdateUserStatusRequest{
+    int64 id = 1 [(validate.rules).int64 = {gte: 1}];
+    int64 status = 2 [(validate.rules).int64 = {gte: 0, lte: 1}];
 }
 
 //Reply Messages
@@ -208,6 +214,11 @@ message MFAActivateReply{
 }
 
 message MFACancelReply{
+    int64 code = 1;
+    string msg = 2;
+}
+
+message UpdateUserStatusReply{
     int64 code = 1;
     string msg = 2;
 }

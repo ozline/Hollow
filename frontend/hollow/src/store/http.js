@@ -47,8 +47,6 @@ export const httpStore = defineStore('http', {
                 axios(struct)
                 .then(res => {
                     var result = JSON.parse(JSON.stringify(res.data))
-
-                    console.log(result)
                     if(result.code == 200){
                         if(auth == true){
                             global.updateToken(res.headers.authorization)

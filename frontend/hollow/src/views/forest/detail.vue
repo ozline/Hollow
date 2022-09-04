@@ -18,7 +18,37 @@
                 :text="data.message"
                 v-bind:key="0"
                 style="margin-bottom: 26px;"
-        ></v-card>
+        >
+            <v-card-actions>
+                <v-dialog v-model="reportShowLeaf" persistent>
+                    <template v-slot:activator="{ props }">
+                        <v-btn variant="outlined" color="error" v-bind="props" size="x-small">违规投诉</v-btn>
+                    </template>
+                    <v-card :title="'投诉帖子 - ' + data.id" >
+                        <v-card-text>
+                            <v-textarea
+                                clearable
+                                counter="140"
+                                append-inner-icon="mdi-comment"
+                                label="投诉内容"
+                                v-model="reportReason"
+                                rows="8"
+                                required
+                            ></v-textarea>
+                            <small>*请输入投诉理由,理由越充分,审核通过率越高</small>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-btn color="blue-darken-1" text @click="reportShowLeaf = false">关闭</v-btn>
+                            <v-spacer></v-spacer>
+                            <v-btn color="error" text @click="report(0,data.id)">投诉</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+                <v-btn variant="outlined" v-show="data.status == 1" size="x-small" @click="showUser(data.owner)">
+                    查看楼主
+                </v-btn>
+            </v-card-actions>
+        </v-card>
 
         <v-card
             v-for="(item,index) in comments.datas"
@@ -31,9 +61,30 @@
             variant="outlined"
         >
             <v-card-actions>
-                <v-btn variant="outlined" color="error" size="x-small">
-                    违规投诉
-                </v-btn>
+                <v-dialog v-model="reportShowComment[index]" persistent>
+                    <template v-slot:activator="{ props }">
+                        <v-btn variant="outlined" color="error" v-bind="props" size="x-small">违规投诉</v-btn>
+                    </template>
+                    <v-card :title="'投诉评论 - ' + item.id" >
+                        <v-card-text>
+                            <v-textarea
+                                clearable
+                                counter="140"
+                                append-inner-icon="mdi-comment"
+                                label="投诉内容"
+                                v-model="reportReason"
+                                rows="8"
+                                required
+                            ></v-textarea>
+                            <small>*请输入投诉理由,理由越充分,审核通过率越高</small>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-btn color="blue-darken-1" text @click="reportShowComment[index] = false">关闭</v-btn>
+                            <v-spacer></v-spacer>
+                            <v-btn color="error" text @click="report(1,item.id)">投诉</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
                 <v-btn variant="outlined" v-show="item.status == 1" size="x-small" @click="showUser(item.owner)">
                     查看层主
                 </v-btn>
@@ -93,6 +144,11 @@ export default {
                 size: 10,
             },
             icons: { mdiDelete },
+            reportReason: '',
+            reportShowComment: [],
+            reportShowLeaf: false,
+            reportID: '',
+            reportMsg: '',
         }
     },
     created(){
@@ -134,9 +190,6 @@ export default {
                 this.snackbar.show("点赞成功")
             })
         },
-        report(){
-            //举报
-        },
         showUser(id){
             this.$router.push("/user/detail/" + id)
         },
@@ -145,7 +198,22 @@ export default {
                 this.snackbar.show("删除成功!")
                 this.refresh()
             })
-        }
+        },
+        report(type,id){
+            console.log(type,id)
+            var data = {
+                id: id,
+                type: type,
+                reason: this.reportReason,
+            }
+            this.HTTP.post("/report",data,true).then( () => {
+                this.snackbar.show("提交成功~请等待审查",2000)
+                this.reportShowComment = false
+                this.reportShowLeaf = false
+            })
+
+            this.reportReason = ''
+        },
     }
 }
 </script>

@@ -24,6 +24,7 @@ type UserRepo interface {
 	SendShortMsg(ctx context.Context, phone, code string) (data *types.ShortMsg, err error)
 	CheckMsgCode(ctx context.Context, phone, code string) (result bool, err error)
 	ReBindPhone(ctx context.Context, phone, code, mfacode string) error
+	UpdateUserStatus(ctx context.Context, g *v1.UpdateUserStatusRequest) error
 }
 
 type UserUsecase struct {
@@ -41,6 +42,11 @@ func (uc *UserUsecase) LoginUser(ctx context.Context, u *v1.LoginUserRequest) (*
 
 	if err != nil {
 		return nil, err
+	}
+
+	// 被封禁
+	if data.Status == 2 {
+		return nil, errors.ErrUserBlocked
 	}
 
 	// MFA验证
@@ -135,4 +141,8 @@ func (uc *UserUsecase) MFAActivate(ctx context.Context, u *v1.MFAActivateRequest
 
 func (uc *UserUsecase) MFACancel(ctx context.Context, u *v1.MFACancelRequest) error {
 	return uc.ur.MFACancel(ctx, u.Code)
+}
+
+func (uc *UserUsecase) UpdateUserStatus(ctx context.Context, u *v1.UpdateUserStatusRequest) error {
+	return uc.ur.UpdateUserStatus(ctx, u)
 }

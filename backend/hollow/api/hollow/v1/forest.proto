@@ -71,6 +71,45 @@ service Forests {
             body: "*"
         };
     }
+
+    // Report
+    rpc Report (ReportRequest) returns (ReportReply) {
+        option (google.api.http) = {
+            post: "/api/report"
+            body: "*"
+        };
+    }
+
+    // GetMyReport
+    rpc GetReportList (GetReportListRequest) returns (GetReportListReply) {
+        option (google.api.http) = {
+            get: "/api/report"
+        };
+    }
+
+    // [Admin] UpdateReport
+    rpc UpdateReport (UpdateReportRequest) returns (UpdateReportReply) {
+        option (google.api.http) = {
+            put: "/api/admin/report"
+            body: "*"
+        };
+    }
+
+    // [Admin] UpdateCommentStatus
+    rpc UpdateCommentStatus (UpdateCommentStatusRequest) returns (UpdateCommentStatusReply) {
+        option (google.api.http) = {
+            put: "/api/admin/forest/comments",
+            body: "*"
+        };
+    }
+
+    // [Admin] UpdateLeafStatus
+    rpc UpdateLeafStatus (UpdateLeafStatusRequest) returns (UpdateLeafStatusReply) {
+        option (google.api.http) = {
+            put: "/api/admin/forest/leaf",
+            body: "*"
+        };
+    }
 }
 //Request Messages
 
@@ -114,6 +153,32 @@ message LikeCommentRequest{
     int64 id = 1 [(validate.rules).int64 = {gte: 0}];
 }
 
+message ReportRequest{
+    int64 id = 1 [(validate.rules).int64 = {gte: 0}];
+    int64 type = 2 [(validate.rules).int64 = {gte: 0, lt: 2}];
+    string reason = 3 [(validate.rules).string = {min_len: 1, max_len: 140}];
+}
+
+message GetReportListRequest{
+    int64 page = 1 [(validate.rules).int64 = {gte: 1}];
+    int64 pagesize = 2 [(validate.rules).int64 = {gte: 1}];
+}
+
+message UpdateReportRequest{
+    int64 id = 1 [(validate.rules).int64 = {gte: 0}];
+    string reply = 2 [(validate.rules).string = {min_len: 1, max_len: 140}];
+}
+
+message UpdateCommentStatusRequest{
+    int64 id = 1 [(validate.rules).int64 = {gte: 1}];
+    int64 status = 2 [(validate.rules).int64 = {gte: 0, lte: 1}];
+}
+
+message UpdateLeafStatusRequest{
+    int64 id = 1 [(validate.rules).int64 = {gte: 1}];
+    int64 status = 2 [(validate.rules).int64 = {gte: 0, lte: 1}];
+}
+
 //Reply Messages
 
 message Leaf{
@@ -136,6 +201,19 @@ message Comment{
     int64 liked = 8;
 }
 
+message Report{
+    int64 id = 1;
+    int64 type = 2;
+    int64 status = 3;
+    int64 reporter = 4;
+    int64 report_id = 5;
+    string reason = 6;
+    string message = 7;
+    string reply = 8;
+    int64 created_at = 9;
+    int64 updated_at = 10;
+}
+
 message MultipleLeafReply{
     repeated Leaf list = 1;
     int64 total = 2;
@@ -143,6 +221,11 @@ message MultipleLeafReply{
 
 message MultipleCommentReply{
     repeated Comment list = 1;
+    int64 total = 2;
+}
+
+message MultipleReportReply{
+    repeated Report list = 1;
     int64 total = 2;
 }
 
@@ -185,6 +268,32 @@ message DeleteCommentReply{
 }
 
 message LikeCommentReply{
+    int64 code = 1;
+    string msg = 2;
+}
+
+message ReportReply{
+    int64 code = 1;
+    string msg = 2;
+}
+
+message GetReportListReply{
+    int64 code = 1;
+    string msg = 2;
+    MultipleReportReply data = 3;
+}
+
+message UpdateReportReply{
+    int64 code = 1;
+    string msg = 2;
+}
+
+message UpdateCommentStatusReply{
+    int64 code = 1;
+    string msg = 2;
+}
+
+message UpdateLeafStatusReply{
     int64 code = 1;
     string msg = 2;
 }

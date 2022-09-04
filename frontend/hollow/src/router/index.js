@@ -7,6 +7,7 @@ import NotFound from '../views/404.vue'
 import Upload from '../views/forest/push.vue'
 import LeafDetail from '../views/forest/detail.vue'
 import UserSettings from '../views/user/settings.vue'
+import UserReport from '../views/user/report.vue'
 import pinia from '../store/store'
 import { globalStore } from '../store/global'
 import { snackbarStore } from '../store/snackbar'
@@ -46,6 +47,11 @@ const routes=[
         path:'/user/settings',
         component:UserSettings,
         meta:{ title: '账号设置', auth: true }
+    },
+    {
+        path:'/user/report',
+        component:UserReport,
+        meta:{ title: '我的投诉', auth: true }
     },
     {
         path:'/forest/upload',

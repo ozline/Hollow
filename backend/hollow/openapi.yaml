@@ -6,6 +6,82 @@ info:
     title: ""
     version: 0.0.1
 paths:
+    /api/admin/forest/comments:
+        put:
+            tags:
+                - Forests
+            description: '[Admin] UpdateCommentStatus'
+            operationId: Forests_UpdateCommentStatus
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/forest.v1.UpdateCommentStatusRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/forest.v1.UpdateCommentStatusReply'
+    /api/admin/forest/leaf:
+        put:
+            tags:
+                - Forests
+            description: '[Admin] UpdateLeafStatus'
+            operationId: Forests_UpdateLeafStatus
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/forest.v1.UpdateLeafStatusRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/forest.v1.UpdateLeafStatusReply'
+    /api/admin/report:
+        put:
+            tags:
+                - Forests
+            description: '[Admin] UpdateReport'
+            operationId: Forests_UpdateReport
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/forest.v1.UpdateReportRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/forest.v1.UpdateReportReply'
+    /api/admin/user/status:
+        put:
+            tags:
+                - Users
+            description: '[Admin] UpdateUserStatus'
+            operationId: Users_UpdateUserStatus
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/user.v1.UpdateUserStatusRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/user.v1.UpdateUserStatusReply'
     /api/forest:
         post:
             tags:
@@ -206,6 +282,48 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/user.v1.PingConnectReply'
+    /api/report:
+        get:
+            tags:
+                - Forests
+            description: GetMyReport
+            operationId: Forests_GetReportList
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+                - name: pagesize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int64
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/forest.v1.GetReportListReply'
+        post:
+            tags:
+                - Forests
+            description: Report
+            operationId: Forests_Report
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/forest.v1.ReportRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/forest.v1.ReportReply'
     /api/user/info/{id}:
         get:
             tags:
@@ -445,6 +563,16 @@ components:
                     type: string
                 data:
                     $ref: '#/components/schemas/forest.v1.MultipleLeafReply'
+        forest.v1.GetReportListReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int64
+                msg:
+                    type: string
+                data:
+                    $ref: '#/components/schemas/forest.v1.MultipleReportReply'
         forest.v1.Leaf:
             type: object
             properties:
@@ -499,6 +627,16 @@ components:
                 total:
                     type: integer
                     format: int64
+        forest.v1.MultipleReportReply:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/forest.v1.Report'
+                total:
+                    type: integer
+                    format: int64
         forest.v1.PushLeafReply:
             type: object
             properties:
@@ -514,6 +652,105 @@ components:
                     type: integer
                     format: int64
                 message:
+                    type: string
+        forest.v1.Report:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                type:
+                    type: integer
+                    format: int64
+                status:
+                    type: integer
+                    format: int64
+                reporter:
+                    type: integer
+                    format: int64
+                reportId:
+                    type: integer
+                    format: int64
+                reason:
+                    type: string
+                message:
+                    type: string
+                reply:
+                    type: string
+                createdAt:
+                    type: integer
+                    format: int64
+                updatedAt:
+                    type: integer
+                    format: int64
+        forest.v1.ReportReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int64
+                msg:
+                    type: string
+        forest.v1.ReportRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                type:
+                    type: integer
+                    format: int64
+                reason:
+                    type: string
+        forest.v1.UpdateCommentStatusReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int64
+                msg:
+                    type: string
+        forest.v1.UpdateCommentStatusRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                status:
+                    type: integer
+                    format: int64
+        forest.v1.UpdateLeafStatusReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int64
+                msg:
+                    type: string
+        forest.v1.UpdateLeafStatusRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                status:
+                    type: integer
+                    format: int64
+        forest.v1.UpdateReportReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int64
+                msg:
+                    type: string
+        forest.v1.UpdateReportRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                reply:
                     type: string
         user.v1.GetUserReply:
             type: object
@@ -660,6 +897,23 @@ components:
                     type: string
                 requestid:
                     type: string
+        user.v1.UpdateUserStatusReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int64
+                msg:
+                    type: string
+        user.v1.UpdateUserStatusRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int64
+                status:
+                    type: integer
+                    format: int64
         user.v1.User:
             type: object
             properties:

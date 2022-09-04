@@ -28,6 +28,7 @@ const OperationUsersPingConnect = "/user.v1.Users/PingConnect"
 const OperationUsersreBindPhone = "/user.v1.Users/reBindPhone"
 const OperationUsersRegister = "/user.v1.Users/Register"
 const OperationUsersSendShortMsg = "/user.v1.Users/SendShortMsg"
+const OperationUsersUpdateUserStatus = "/user.v1.Users/UpdateUserStatus"
 
 type UsersHTTPServer interface {
 	GetUser(context.Context, *GetUserRequest) (*GetUserReply, error)
@@ -39,6 +40,7 @@ type UsersHTTPServer interface {
 	ReBindPhone(context.Context, *ReBindPhoneRequest) (*ReBindPhoneReply, error)
 	Register(context.Context, *RegisterUserRequest) (*RegisterUserReply, error)
 	SendShortMsg(context.Context, *SendShortMsgRequest) (*SendShortMsgReply, error)
+	UpdateUserStatus(context.Context, *UpdateUserStatusRequest) (*UpdateUserStatusReply, error)
 }
 
 func RegisterUsersHTTPServer(s *http.Server, srv UsersHTTPServer) {
@@ -52,6 +54,7 @@ func RegisterUsersHTTPServer(s *http.Server, srv UsersHTTPServer) {
 	r.GET("/api/user/mfa", _Users_MFAGetQRCode0_HTTP_Handler(srv))
 	r.POST("/api/user/mfa", _Users_MFAActivate0_HTTP_Handler(srv))
 	r.DELETE("/api/user/mfa", _Users_MFACancel0_HTTP_Handler(srv))
+	r.PUT("/api/admin/user/status", _Users_UpdateUserStatus0_HTTP_Handler(srv))
 }
 
 func _Users_PingConnect0_HTTP_Handler(srv UsersHTTPServer) func(ctx http.Context) error {
@@ -228,6 +231,25 @@ func _Users_MFACancel0_HTTP_Handler(srv UsersHTTPServer) func(ctx http.Context) 
 	}
 }
 
+func _Users_UpdateUserStatus0_HTTP_Handler(srv UsersHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateUserStatusRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUsersUpdateUserStatus)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateUserStatus(ctx, req.(*UpdateUserStatusRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateUserStatusReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type UsersHTTPClient interface {
 	GetUser(ctx context.Context, req *GetUserRequest, opts ...http.CallOption) (rsp *GetUserReply, err error)
 	Login(ctx context.Context, req *LoginUserRequest, opts ...http.CallOption) (rsp *LoginUserReply, err error)
@@ -238,6 +260,7 @@ type UsersHTTPClient interface {
 	ReBindPhone(ctx context.Context, req *ReBindPhoneRequest, opts ...http.CallOption) (rsp *ReBindPhoneReply, err error)
 	Register(ctx context.Context, req *RegisterUserRequest, opts ...http.CallOption) (rsp *RegisterUserReply, err error)
 	SendShortMsg(ctx context.Context, req *SendShortMsgRequest, opts ...http.CallOption) (rsp *SendShortMsgReply, err error)
+	UpdateUserStatus(ctx context.Context, req *UpdateUserStatusRequest, opts ...http.CallOption) (rsp *UpdateUserStatusReply, err error)
 }
 
 type UsersHTTPClientImpl struct {
@@ -359,6 +382,19 @@ func (c *UsersHTTPClientImpl) SendShortMsg(ctx context.Context, in *SendShortMsg
 	opts = append(opts, http.Operation(OperationUsersSendShortMsg))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *UsersHTTPClientImpl) UpdateUserStatus(ctx context.Context, in *UpdateUserStatusRequest, opts ...http.CallOption) (*UpdateUserStatusReply, error) {
+	var out UpdateUserStatusReply
+	pattern := "/api/admin/user/status"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationUsersUpdateUserStatus))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

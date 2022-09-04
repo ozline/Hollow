@@ -1,7 +1,7 @@
 <template>
 <v-container>
     <div style="margin-bottom: 26px;">
-        <h1 style="margin-bottom: 26px;"> 账号信息 -  #{{ id }}
+        <h1 style="margin-bottom: 26px;"> 账号信息
         <v-btn color="warning" style="float:right;margin-top:6px;" @click="goback">
             <v-icon
             start

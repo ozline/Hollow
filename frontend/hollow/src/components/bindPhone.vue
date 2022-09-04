@@ -10,12 +10,8 @@
         当前手机号: <b>{{ getPhoneNumber() }}</b>
     </v-card-text>
     <v-card-actions>
-        <!-- 关闭手机号登录 -->
-        <v-dialog v-model="activate" persistent>
-            <template v-slot:activator="{ props }">
-                <v-btn variant="outlined" color="success" v-bind="props" v-show="false"></v-btn>
-            </template>
-        </v-dialog>
+        <!-- 关闭手机号登录
+        <v-btn variant="outlined" color="success" v-show="false"></v-btn> -->
         <!-- 换绑手机号 -->
         <v-dialog v-model="cancel" persistent>
             <template v-slot:activator="{ props }">

@@ -189,3 +189,18 @@ func (s *UserService) MFACancel(ctx context.Context, req *v1.MFACancelRequest) (
 		Msg:  "ok",
 	}, nil
 }
+
+// 更新用户状态
+func (s *UserService) UpdateUserStatus(ctx context.Context, req *v1.UpdateUserStatusRequest) (reply *v1.UpdateUserStatusReply, err error) {
+
+	err = s.uc.UpdateUserStatus(ctx, req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.UpdateUserStatusReply{
+		Code: 200,
+		Msg:  "ok",
+	}, nil
+}

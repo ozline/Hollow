@@ -198,7 +198,7 @@ func (r *forestRepo) DeleteComment(ctx context.Context, g *v1.DeleteCommentReque
 	}
 
 	if count == 0 {
-		return errors.ErrCommentNotFound
+		return errors.ErrCommentNotExist
 	}
 
 	res = res.First(&comment)
@@ -230,7 +230,7 @@ func (r *forestRepo) LikeComment(ctx context.Context, g *v1.LikeCommentRequest) 
 	}
 
 	if count == 0 {
-		return errors.ErrCommentNotFound
+		return errors.ErrCommentNotExist
 	}
 
 	user := GetUserInfo(ctx)
@@ -264,6 +264,173 @@ func (r *forestRepo) LikeComment(ctx context.Context, g *v1.LikeCommentRequest) 
 	comment.Liked = comment.Liked + 1
 
 	res = res.Save(&comment)
+
+	return res.Error
+}
+
+func (r *forestRepo) Report(ctx context.Context, g *v1.ReportRequest) error {
+	var count int64
+	var message string
+	user := GetUserInfo(ctx)
+
+	res := r.data.db.Table(TABLE_REPORT).Where("reporter = ? AND report_id = ? AND type = ? AND Status = ?", user.ID, g.Id, g.Type, 0).Limit(1).Count(&count)
+
+	if count != 0 {
+		return errors.ErrReportExisted
+	}
+
+	if g.Type == 0 {
+		source := r.data.db.Table(TABLE_FOREST).Where("id = ?", g.Id).Limit(1).Count(&count)
+
+		if count == 0 {
+			return errors.ErrLeafNotExisted
+		}
+
+		var leaf = new(types.Leaf)
+
+		_ = source.First(&leaf)
+
+		message = leaf.Message
+	}
+
+	if g.Type == 1 {
+		source := r.data.db.Table(TABLE_COMMENT).Where("id = ?", g.Id).Limit(1).Count(&count)
+
+		if count == 0 {
+			return errors.ErrCommentNotExist
+		}
+
+		var comment = new(types.Comment)
+
+		_ = source.First(&comment)
+
+		message = comment.Message
+	}
+
+	if g.Type == 2 {
+		message = "待开发"
+	}
+
+	report := types.Report{
+		Id:         GetSnowflakeID(r.data.node),
+		Type:       g.Type,
+		Status:     0,
+		Reporter:   user.ID,
+		Report_id:  g.Id,
+		Reason:     g.Reason,
+		Message:    message,
+		Reply:      "",
+		Created_at: utils.GetTimestamp13(),
+		Updated_at: utils.GetTimestamp13(),
+	}
+
+	res = res.Create(&report)
+
+	return res.Error
+}
+
+func (r *forestRepo) GetReportList(ctx context.Context, g *v1.GetReportListRequest) (list []*types.Report, total int64, err error) {
+
+	user := GetUserInfo(ctx)
+
+	var reports []types.Report
+	var count int64
+	var res *gorm.DB
+
+	res = r.data.db.Table(TABLE_REPORT).Where("reporter = ?", user.ID).Count(&count).Order("id desc")
+	res = res.Offset(int((g.Page - 1) * g.Pagesize)).Limit(int(g.Pagesize)).Find(&reports)
+
+	if res.Error != nil {
+		return nil, 0, res.Error
+	}
+
+	list = make([]*types.Report, 0)
+
+	for _, v := range reports {
+		list = append(list, &types.Report{
+			Id:         v.Id,
+			Type:       v.Type,
+			Status:     v.Status,
+			Reporter:   v.Reporter,
+			Report_id:  v.Report_id,
+			Reason:     v.Reason,
+			Message:    v.Message,
+			Reply:      v.Reply,
+			Created_at: v.Created_at,
+			Updated_at: v.Updated_at,
+		})
+	}
+
+	return list, count, nil
+}
+
+func (r *forestRepo) UpdateReport(ctx context.Context, g *v1.UpdateReportRequest) error {
+	user := GetUserInfo(ctx)
+
+	if user.Status != 1 {
+		return errors.ErrUserInsufficientPermissions
+	}
+
+	var count int64
+
+	res := r.data.db.Table(TABLE_REPORT).Where("id = ?", g.Id).Count(&count)
+
+	if count == 0 {
+		return errors.ErrReportsNotExisted
+	}
+
+	report := new(types.Report)
+
+	res = res.First(&report)
+
+	report.Status = 1
+	report.Reply = g.Reply
+
+	res = res.Save(&report)
+
+	return res.Error
+}
+
+func (r *forestRepo) UpdateCommentStatus(ctx context.Context, g *v1.UpdateCommentStatusRequest) error {
+	user := GetUserInfo(ctx)
+
+	if user.Status != 1 {
+		return errors.ErrUserInsufficientPermissions
+	}
+
+	comment := new(types.Comment)
+
+	res := r.data.db.Table(TABLE_COMMENT).Where("id = ?", g.Id).First(&comment)
+
+	if res.Error != nil {
+		return res.Error
+	}
+
+	comment.Status = g.Status
+
+	res = res.Save(&comment)
+
+	return res.Error
+}
+
+func (r *forestRepo) UpdateLeafStatus(ctx context.Context, g *v1.UpdateLeafStatusRequest) error {
+	user := GetUserInfo(ctx)
+
+	if user.Status != 1 {
+		return errors.ErrUserInsufficientPermissions
+	}
+
+	leaf := new(types.Leaf)
+
+	res := r.data.db.Table(TABLE_FOREST).Where("id = ?", g.Id).First(&leaf)
+
+	if res.Error != nil {
+		return res.Error
+	}
+
+	leaf.Status = g.Status
+
+	res = res.Save(&leaf)
 
 	return res.Error
 }
