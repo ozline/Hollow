@@ -193,6 +193,19 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/forest.v1.DeleteLeafReply'
+    /api/ping:
+        get:
+            tags:
+                - Users
+            description: 测试连通性
+            operationId: Users_PingConnect
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/user.v1.PingConnectReply'
     /api/user/info/{id}:
         get:
             tags:
@@ -280,6 +293,24 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/user.v1.MFACancelReply'
+    /api/user/rebind/phone:
+        post:
+            tags:
+                - Users
+            operationId: Users_ReBindPhone
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/user.v1.ReBindPhoneRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/user.v1.ReBindPhoneReply'
     /api/user/register:
         post:
             tags:
@@ -299,6 +330,25 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/user.v1.RegisterUserReply'
+    /api/user/register/shortmsg:
+        post:
+            tags:
+                - Users
+            description: 发送手机验证码
+            operationId: Users_SendShortMsg
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/user.v1.SendShortMsgRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/user.v1.SendShortMsgReply'
 components:
     schemas:
         forest.v1.Comment:
@@ -536,6 +586,31 @@ components:
                     type: string
                 data:
                     $ref: '#/components/schemas/user.v1.MFA'
+        user.v1.PingConnectReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int64
+                msg:
+                    type: string
+        user.v1.ReBindPhoneReply:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    format: int64
+                msg:
+                    type: string
+        user.v1.ReBindPhoneRequest:
+            type: object
+            properties:
+                phone:
+                    type: string
+                code:
+                    type: string
+                mfacode:
+                    type: string
         user.v1.RegisterUserReply:
             type: object
             properties:
@@ -556,8 +631,35 @@ components:
                 email:
                     type: string
                 phone:
+                    type: string
+                code:
+                    type: string
+        user.v1.SendShortMsgReply:
+            type: object
+            properties:
+                code:
                     type: integer
                     format: int64
+                msg:
+                    type: string
+                data:
+                    $ref: '#/components/schemas/user.v1.ShortMsg'
+        user.v1.SendShortMsgRequest:
+            type: object
+            properties:
+                phone:
+                    type: string
+        user.v1.ShortMsg:
+            type: object
+            properties:
+                code:
+                    type: string
+                message:
+                    type: string
+                bizid:
+                    type: string
+                requestid:
+                    type: string
         user.v1.User:
             type: object
             properties:

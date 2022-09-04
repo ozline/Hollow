@@ -21,7 +21,7 @@ type CurrentUser struct {
 }
 
 var (
-	ErrorCode       = 500 //JWT解析错误返回状态码
+	ErrorCode       = 510 //JWT解析错误返回状态码
 	ErrMissingToken = errors.New(ErrorCode, v1.ErrorReason_PARAMS_ILLEGAL.String(), "Token Missing")
 	ErrInvaildToken = errors.New(ErrorCode, v1.ErrorReason_PARAMS_ILLEGAL.String(), "Token Invalid")
 )

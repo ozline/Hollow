@@ -108,9 +108,9 @@ router.beforeEach((to,from,next) => {
     next()
 })
 
-router.afterEach(() => {
-
-    window.scrollTo(0,0);
-})
+// router.afterEach( (to,from,next) => {
+//     window.scrollTo(0,0);
+//     console.log(to,from,next)
+// })
 
 export default router

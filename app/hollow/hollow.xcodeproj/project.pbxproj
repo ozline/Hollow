@@ -7,15 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		264B385F28BA903000701576 /* Entrance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264B385E28BA903000701576 /* Entrance.swift */; };
+		264B386128BA90C900701576 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264B386028BA90C900701576 /* MainView.swift */; };
+		264B386528BB501C00701576 /* Detail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264B386428BB501C00701576 /* Detail.swift */; };
+		264B386728BB503400701576 /* Push.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264B386628BB503400701576 /* Push.swift */; };
+		264B386928BB504900701576 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264B386828BB504800701576 /* Login.swift */; };
+		264B386B28BB505600701576 /* Register.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264B386A28BB505600701576 /* Register.swift */; };
+		264B386D28BB506300701576 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264B386C28BB506300701576 /* Settings.swift */; };
+		264B386F28BB506D00701576 /* Space.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264B386E28BB506D00701576 /* Space.swift */; };
+		264B387128BB53C600701576 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264B387028BB53C600701576 /* Types.swift */; };
+		264B387328BB53E200701576 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264B387228BB53E200701576 /* Utils.swift */; };
+		264B387528BB54AC00701576 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264B387428BB54AC00701576 /* Global.swift */; };
+		264B387728BB6C4100701576 /* HTTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264B387628BB6C4100701576 /* HTTP.swift */; };
 		26D5BEA3289813680018555A /* hollowApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D5BEA2289813680018555A /* hollowApp.swift */; };
-		26D5BEA5289813680018555A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D5BEA4289813680018555A /* ContentView.swift */; };
 		26D5BEA72898136A0018555A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26D5BEA62898136A0018555A /* Assets.xcassets */; };
 		26D5BEAA2898136A0018555A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26D5BEA92898136A0018555A /* Preview Assets.xcassets */; };
 		26D5BEAC2898136A0018555A /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D5BEAB2898136A0018555A /* Persistence.swift */; };
 		26D5BEAF2898136A0018555A /* hollow.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 26D5BEAD2898136A0018555A /* hollow.xcdatamodeld */; };
-		26D5BEB92898136A0018555A /* hollowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D5BEB82898136A0018555A /* hollowTests.swift */; };
-		26D5BEC32898136A0018555A /* hollowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D5BEC22898136A0018555A /* hollowUITests.swift */; };
-		26D5BEC52898136A0018555A /* hollowUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D5BEC42898136A0018555A /* hollowUITestsLaunchTests.swift */; };
+		6EE5C594762BECE6864D0AE1 /* Pods_hollow.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B028D80F396FE1D8925EFF9F /* Pods_hollow.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,18 +45,30 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		264B385E28BA903000701576 /* Entrance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entrance.swift; sourceTree = "<group>"; };
+		264B386028BA90C900701576 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		264B386428BB501C00701576 /* Detail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Detail.swift; sourceTree = "<group>"; };
+		264B386628BB503400701576 /* Push.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Push.swift; sourceTree = "<group>"; };
+		264B386828BB504800701576 /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
+		264B386A28BB505600701576 /* Register.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Register.swift; sourceTree = "<group>"; };
+		264B386C28BB506300701576 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		264B386E28BB506D00701576 /* Space.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Space.swift; sourceTree = "<group>"; };
+		264B387028BB53C600701576 /* Types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
+		264B387228BB53E200701576 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		264B387428BB54AC00701576 /* Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
+		264B387628BB6C4100701576 /* HTTP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HTTP.swift; sourceTree = "<group>"; };
+		26521EA128BDB09B00303701 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		26D5BE9F289813680018555A /* hollow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hollow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		26D5BEA2289813680018555A /* hollowApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = hollowApp.swift; sourceTree = "<group>"; };
-		26D5BEA4289813680018555A /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		26D5BEA62898136A0018555A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		26D5BEA92898136A0018555A /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		26D5BEAB2898136A0018555A /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		26D5BEAE2898136A0018555A /* hollow.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = hollow.xcdatamodel; sourceTree = "<group>"; };
 		26D5BEB42898136A0018555A /* hollowTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = hollowTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		26D5BEB82898136A0018555A /* hollowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = hollowTests.swift; sourceTree = "<group>"; };
 		26D5BEBE2898136A0018555A /* hollowUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = hollowUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		26D5BEC22898136A0018555A /* hollowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = hollowUITests.swift; sourceTree = "<group>"; };
-		26D5BEC42898136A0018555A /* hollowUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = hollowUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		62729D170842E957087C0B47 /* Pods-hollow.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hollow.debug.xcconfig"; path = "Target Support Files/Pods-hollow/Pods-hollow.debug.xcconfig"; sourceTree = "<group>"; };
+		B028D80F396FE1D8925EFF9F /* Pods_hollow.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_hollow.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B7E40D203032C68084ECC26C /* Pods-hollow.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-hollow.release.xcconfig"; path = "Target Support Files/Pods-hollow/Pods-hollow.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6EE5C594762BECE6864D0AE1 /* Pods_hollow.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,13 +97,62 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		264B385B28BA8FAE00701576 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		264B385C28BA8FB800701576 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				264B387028BB53C600701576 /* Types.swift */,
+				264B387228BB53E200701576 /* Utils.swift */,
+				264B387428BB54AC00701576 /* Global.swift */,
+				264B387628BB6C4100701576 /* HTTP.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		264B385D28BA8FBD00701576 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				264B386328BB500500701576 /* Forest */,
+				264B386228BB500100701576 /* User */,
+				264B385E28BA903000701576 /* Entrance.swift */,
+				264B386028BA90C900701576 /* MainView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		264B386228BB500100701576 /* User */ = {
+			isa = PBXGroup;
+			children = (
+				264B386828BB504800701576 /* Login.swift */,
+				264B386A28BB505600701576 /* Register.swift */,
+				264B386C28BB506300701576 /* Settings.swift */,
+				264B386E28BB506D00701576 /* Space.swift */,
+			);
+			path = User;
+			sourceTree = "<group>";
+		};
+		264B386328BB500500701576 /* Forest */ = {
+			isa = PBXGroup;
+			children = (
+				264B386428BB501C00701576 /* Detail.swift */,
+				264B386628BB503400701576 /* Push.swift */,
+			);
+			path = Forest;
+			sourceTree = "<group>";
+		};
 		26D5BE96289813680018555A = {
 			isa = PBXGroup;
 			children = (
 				26D5BEA1289813680018555A /* hollow */,
-				26D5BEB72898136A0018555A /* hollowTests */,
-				26D5BEC12898136A0018555A /* hollowUITests */,
 				26D5BEA0289813680018555A /* Products */,
+				2F9F2FF37ADCBF426D173455 /* Pods */,
+				4309E2C11EC9ADB4936FB2E7 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -98,8 +169,11 @@
 		26D5BEA1289813680018555A /* hollow */ = {
 			isa = PBXGroup;
 			children = (
+				26521EA128BDB09B00303701 /* Info.plist */,
+				264B385D28BA8FBD00701576 /* Views */,
+				264B385C28BA8FB800701576 /* Data */,
+				264B385B28BA8FAE00701576 /* Components */,
 				26D5BEA2289813680018555A /* hollowApp.swift */,
-				26D5BEA4289813680018555A /* ContentView.swift */,
 				26D5BEA62898136A0018555A /* Assets.xcassets */,
 				26D5BEAB2898136A0018555A /* Persistence.swift */,
 				26D5BEAD2898136A0018555A /* hollow.xcdatamodeld */,
@@ -116,21 +190,21 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		26D5BEB72898136A0018555A /* hollowTests */ = {
+		2F9F2FF37ADCBF426D173455 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				26D5BEB82898136A0018555A /* hollowTests.swift */,
+				62729D170842E957087C0B47 /* Pods-hollow.debug.xcconfig */,
+				B7E40D203032C68084ECC26C /* Pods-hollow.release.xcconfig */,
 			);
-			path = hollowTests;
+			path = Pods;
 			sourceTree = "<group>";
 		};
-		26D5BEC12898136A0018555A /* hollowUITests */ = {
+		4309E2C11EC9ADB4936FB2E7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				26D5BEC22898136A0018555A /* hollowUITests.swift */,
-				26D5BEC42898136A0018555A /* hollowUITestsLaunchTests.swift */,
+				B028D80F396FE1D8925EFF9F /* Pods_hollow.framework */,
 			);
-			path = hollowUITests;
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -140,9 +214,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 26D5BEC82898136A0018555A /* Build configuration list for PBXNativeTarget "hollow" */;
 			buildPhases = (
+				E0D03E04F737F101E8695C28 /* [CP] Check Pods Manifest.lock */,
 				26D5BE9B289813680018555A /* Sources */,
 				26D5BE9C289813680018555A /* Frameworks */,
 				26D5BE9D289813680018555A /* Resources */,
+				3EC7895AFD5B7652E675A0CF /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -258,15 +334,68 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		3EC7895AFD5B7652E675A0CF /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-hollow/Pods-hollow-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-hollow/Pods-hollow-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-hollow/Pods-hollow-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E0D03E04F737F101E8695C28 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-hollow-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		26D5BE9B289813680018555A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				264B387728BB6C4100701576 /* HTTP.swift in Sources */,
 				26D5BEAF2898136A0018555A /* hollow.xcdatamodeld in Sources */,
+				264B386F28BB506D00701576 /* Space.swift in Sources */,
+				264B386128BA90C900701576 /* MainView.swift in Sources */,
+				264B387128BB53C600701576 /* Types.swift in Sources */,
+				264B386528BB501C00701576 /* Detail.swift in Sources */,
+				264B387328BB53E200701576 /* Utils.swift in Sources */,
+				264B387528BB54AC00701576 /* Global.swift in Sources */,
+				264B386B28BB505600701576 /* Register.swift in Sources */,
+				264B386D28BB506300701576 /* Settings.swift in Sources */,
+				264B385F28BA903000701576 /* Entrance.swift in Sources */,
+				264B386728BB503400701576 /* Push.swift in Sources */,
 				26D5BEAC2898136A0018555A /* Persistence.swift in Sources */,
-				26D5BEA5289813680018555A /* ContentView.swift in Sources */,
 				26D5BEA3289813680018555A /* hollowApp.swift in Sources */,
+				264B386928BB504900701576 /* Login.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -274,7 +403,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				26D5BEB92898136A0018555A /* hollowTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -282,8 +410,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				26D5BEC32898136A0018555A /* hollowUITests.swift in Sources */,
-				26D5BEC52898136A0018555A /* hollowUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -419,6 +545,7 @@
 		};
 		26D5BEC92898136A0018555A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 62729D170842E957087C0B47 /* Pods-hollow.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -428,6 +555,7 @@
 				DEVELOPMENT_TEAM = 524DPYAE9P;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = hollow/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -448,6 +576,7 @@
 		};
 		26D5BECA2898136A0018555A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B7E40D203032C68084ECC26C /* Pods-hollow.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -457,6 +586,7 @@
 				DEVELOPMENT_TEAM = 524DPYAE9P;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = hollow/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

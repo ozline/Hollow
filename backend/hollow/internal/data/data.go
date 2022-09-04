@@ -9,35 +9,44 @@ import (
 
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"github.com/go-kratos/kratos/v2/log"
+	"github.com/gomodule/redigo/redis"
 	"github.com/google/wire"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
 	snowflake "github.com/bwmarrin/snowflake"
+
+	shortmsg "hollow/internal/pkg/aliyun/shortmsg"
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewDB, NewSnowflake, NewOSS, NewUserRepo, NewForestRepo)
+var ProviderSet = wire.NewSet(NewData, NewDB, NewSnowflake, NewOSS, NewRedis, NewShortMsg, NewUserRepo, NewForestRepo)
 
 // Data .
 type Data struct {
 	// TODO wrapped database client
 
-	db   *gorm.DB
-	node *snowflake.Node
-	oss  *oss.Bucket
+	db       *gorm.DB                 // 阿里云RDS
+	node     *snowflake.Node          // 雪花
+	oss      *oss.Bucket              // 阿里云OSS
+	shortmsg *shortmsg.AliyunShortMsg // 阿里云短信服务封装
+	dbRedis  redis.Conn               // Redis
 }
 
 // NewData .
-func NewData(c *conf.Data, logger log.Logger, db *gorm.DB, oss *oss.Bucket, node *snowflake.Node) (*Data, func(), error) {
+func NewData(c *conf.Data, logger log.Logger, db *gorm.DB, oss *oss.Bucket, dbRedis redis.Conn, shortmsg *shortmsg.AliyunShortMsg, node *snowflake.Node) (*Data, func(), error) {
 	cleanup := func() {
 		log.NewHelper(logger).Info("closing the data resources")
+		dbRedis.Close()
+		fmt.Println("Redis 连接关闭")
 	}
 
 	return &Data{
-		db:   db,
-		node: node,
-		oss:  oss,
+		db:       db,
+		node:     node,
+		oss:      oss,
+		shortmsg: shortmsg,
+		dbRedis:  dbRedis,
 	}, cleanup, nil
 }
 
@@ -54,6 +63,19 @@ func NewDB(c *conf.Data) *gorm.DB {
 	}
 	fmt.Println("DATABASE CONNECTED")
 	return db
+}
+
+func NewRedis(c *conf.Data) redis.Conn {
+	addr := c.Redis.Address + ":" + strconv.FormatInt(c.Redis.Port, 10)
+	account := c.Redis.Username + ":" + c.Redis.Password
+	redisdb, err := redis.Dial("tcp", addr, redis.DialDatabase(0), redis.DialPassword(account))
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Redis 连接成功")
+	return redisdb
 }
 
 func NewSnowflake(c *conf.Data) *snowflake.Node {
@@ -81,4 +103,15 @@ func NewOSS(c *conf.Data) *oss.Bucket {
 	}
 	fmt.Println("OSS CONNECTED, SDK VERSION:", oss.Version)
 	return Bucket
+}
+
+func NewShortMsg(c *conf.Data) *shortmsg.AliyunShortMsg {
+	asm := shortmsg.NewAliyunShortMsg()
+	err := asm.Init(c.Shortmsg.AccessKeyID, c.Shortmsg.AccessKeySecret, c.Shortmsg.RegionId, c.Shortmsg.Scheme, c.Shortmsg.Signname, c.Shortmsg.Templatecode)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return asm
 }

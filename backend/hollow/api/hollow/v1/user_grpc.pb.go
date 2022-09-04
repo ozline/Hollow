@@ -22,6 +22,11 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UsersClient interface {
+	// 测试连通性
+	PingConnect(ctx context.Context, in *PingConnectRequest, opts ...grpc.CallOption) (*PingConnectReply, error)
+	// 发送手机验证码
+	SendShortMsg(ctx context.Context, in *SendShortMsgRequest, opts ...grpc.CallOption) (*SendShortMsgReply, error)
+	ReBindPhone(ctx context.Context, in *ReBindPhoneRequest, opts ...grpc.CallOption) (*ReBindPhoneReply, error)
 	// 注册
 	Register(ctx context.Context, in *RegisterUserRequest, opts ...grpc.CallOption) (*RegisterUserReply, error)
 	// 登录
@@ -42,6 +47,33 @@ type usersClient struct {
 
 func NewUsersClient(cc grpc.ClientConnInterface) UsersClient {
 	return &usersClient{cc}
+}
+
+func (c *usersClient) PingConnect(ctx context.Context, in *PingConnectRequest, opts ...grpc.CallOption) (*PingConnectReply, error) {
+	out := new(PingConnectReply)
+	err := c.cc.Invoke(ctx, "/user.v1.Users/PingConnect", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usersClient) SendShortMsg(ctx context.Context, in *SendShortMsgRequest, opts ...grpc.CallOption) (*SendShortMsgReply, error) {
+	out := new(SendShortMsgReply)
+	err := c.cc.Invoke(ctx, "/user.v1.Users/SendShortMsg", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *usersClient) ReBindPhone(ctx context.Context, in *ReBindPhoneRequest, opts ...grpc.CallOption) (*ReBindPhoneReply, error) {
+	out := new(ReBindPhoneReply)
+	err := c.cc.Invoke(ctx, "/user.v1.Users/reBindPhone", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *usersClient) Register(ctx context.Context, in *RegisterUserRequest, opts ...grpc.CallOption) (*RegisterUserReply, error) {
@@ -102,6 +134,11 @@ func (c *usersClient) MFACancel(ctx context.Context, in *MFACancelRequest, opts 
 // All implementations must embed UnimplementedUsersServer
 // for forward compatibility
 type UsersServer interface {
+	// 测试连通性
+	PingConnect(context.Context, *PingConnectRequest) (*PingConnectReply, error)
+	// 发送手机验证码
+	SendShortMsg(context.Context, *SendShortMsgRequest) (*SendShortMsgReply, error)
+	ReBindPhone(context.Context, *ReBindPhoneRequest) (*ReBindPhoneReply, error)
 	// 注册
 	Register(context.Context, *RegisterUserRequest) (*RegisterUserReply, error)
 	// 登录
@@ -121,6 +158,15 @@ type UsersServer interface {
 type UnimplementedUsersServer struct {
 }
 
+func (UnimplementedUsersServer) PingConnect(context.Context, *PingConnectRequest) (*PingConnectReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PingConnect not implemented")
+}
+func (UnimplementedUsersServer) SendShortMsg(context.Context, *SendShortMsgRequest) (*SendShortMsgReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendShortMsg not implemented")
+}
+func (UnimplementedUsersServer) ReBindPhone(context.Context, *ReBindPhoneRequest) (*ReBindPhoneReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReBindPhone not implemented")
+}
 func (UnimplementedUsersServer) Register(context.Context, *RegisterUserRequest) (*RegisterUserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
@@ -150,6 +196,60 @@ type UnsafeUsersServer interface {
 
 func RegisterUsersServer(s grpc.ServiceRegistrar, srv UsersServer) {
 	s.RegisterService(&Users_ServiceDesc, srv)
+}
+
+func _Users_PingConnect_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PingConnectRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServer).PingConnect(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.v1.Users/PingConnect",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServer).PingConnect(ctx, req.(*PingConnectRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Users_SendShortMsg_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendShortMsgRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServer).SendShortMsg(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.v1.Users/SendShortMsg",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServer).SendShortMsg(ctx, req.(*SendShortMsgRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Users_ReBindPhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReBindPhoneRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UsersServer).ReBindPhone(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/user.v1.Users/reBindPhone",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UsersServer).ReBindPhone(ctx, req.(*ReBindPhoneRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Users_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -267,6 +367,18 @@ var Users_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "user.v1.Users",
 	HandlerType: (*UsersServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "PingConnect",
+			Handler:    _Users_PingConnect_Handler,
+		},
+		{
+			MethodName: "SendShortMsg",
+			Handler:    _Users_SendShortMsg_Handler,
+		},
+		{
+			MethodName: "reBindPhone",
+			Handler:    _Users_ReBindPhone_Handler,
+		},
 		{
 			MethodName: "Register",
 			Handler:    _Users_Register_Handler,

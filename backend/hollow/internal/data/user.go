@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"strconv"
 
 	v1 "hollow/api/hollow/v1"
 	"hollow/internal/biz"
@@ -75,12 +76,18 @@ func (r *userRepo) GetUserByID(ctx context.Context, userid int64) (user *types.U
 
 func (r *userRepo) CreateUser(ctx context.Context, g *v1.RegisterUserRequest) error {
 
+	num, err := strconv.ParseInt(g.Phone, 10, 64)
+
+	if err != nil {
+		return err
+	}
+
 	timeStamp := utils.GetTimestamp13()
 	u := types.User{
 		ID:         GetSnowflakeID(r.data.node),
 		Username:   g.Username,
 		Password:   utils.GenerateTokenSHA256(g.Password),
-		Phone:      g.Phone,
+		Phone:      num,
 		Email:      g.Email,
 		Created_at: timeStamp,
 		Updated_at: 0,
@@ -179,6 +186,103 @@ func (r *userRepo) MFACancel(ctx context.Context, code string) error {
 
 	u.Mfa_enabled = false
 	u.Mfa_secret = ""
+	res.Save(&u)
+
+	return nil
+}
+
+// 发送短信
+func (r *userRepo) SendShortMsg(ctx context.Context, phone, code string) (data *types.ShortMsg, err error) {
+	rs, err := r.data.dbRedis.Do("TTL", phone)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// 存在的话说明还没过期
+	if utils.Intval(rs) >= 0 {
+		return nil, errors.GenerateErrorString("发信时间间隔过短,还需" + utils.Strval(rs) + "秒")
+	}
+
+	_, err = r.data.dbRedis.Do("SET", phone, code)
+
+	if err != nil {
+		return nil, err
+	}
+
+	// 设置5分钟过期
+	rs, err = r.data.dbRedis.Do("EXPIRE", phone, 60) // 设置1分钟过期
+
+	if err != nil {
+		return nil, err
+	}
+
+	if utils.Strval(rs) != "1" {
+		return nil, errors.ErrNormal
+	}
+
+	return r.data.shortmsg.PostMsg(phone, code) //开始发信
+}
+
+func (r *userRepo) CheckMsgCode(ctx context.Context, phone, code string) (result bool, err error) {
+	rs, err := r.data.dbRedis.Do("GET", phone)
+
+	if utils.Strval(rs) == "" {
+		return false, errors.ErrMsgCodeInvalid
+	}
+
+	if err != nil {
+		return false, err
+	}
+
+	if utils.Strval(rs) != code {
+		return false, errors.ErrMsgCodeVerifyFailed
+	}
+
+	return true, nil
+}
+
+func (r *userRepo) ReBindPhone(ctx context.Context, phone, code, mfacode string) error {
+	user := GetUserInfo(ctx)
+
+	u := new(types.User)
+
+	res := r.data.db.Table(TABLE_USERS).Where("id = ?", user.ID).First(&u)
+
+	if res.Error != nil {
+		return res.Error
+	}
+
+	// 如果开启MFA，则优先验证MFA
+	if u.Mfa_enabled {
+		auth := mfa.NewGoogleAuth()
+		ans, err := auth.VerifyCode(u.Mfa_secret, mfacode)
+
+		if err != nil {
+			return err
+		}
+
+		if !ans {
+			return errors.ErrMFAVerifyFailed
+		}
+	}
+
+	result, err := r.CheckMsgCode(ctx, phone, code)
+
+	if err != nil {
+		return err
+	}
+
+	if !result {
+		return errors.ErrMsgCodeVerifyFailed
+	}
+
+	u.Phone, err = strconv.ParseInt(phone, 10, 64)
+
+	if err != nil {
+		return err
+	}
+
 	res.Save(&u)
 
 	return nil

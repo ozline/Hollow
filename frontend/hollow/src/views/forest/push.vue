@@ -90,7 +90,7 @@ export default {
 
             this.HTTP.post(url, data, true).then( () => {
                 this.snackbar.show("发表成功")
-                this.goback()
+                this.$router.push((this.commentID == -1) ? '/' : ('/forest/' + this.commentID))
             })
         }
     }

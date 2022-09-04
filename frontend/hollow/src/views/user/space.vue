@@ -1,6 +1,15 @@
 <template>
 <v-container>
-    <h1 style="margin-bottom: 26px;"> 账号信息 -  #{{ id }}</h1>
+    <div style="margin-bottom: 26px;">
+        <h1 style="margin-bottom: 26px;"> 账号信息 -  #{{ id }}
+        <v-btn color="warning" style="float:right;margin-top:6px;" @click="goback">
+            <v-icon
+            start
+            icon="mdi-arrow-left"
+            ></v-icon>返回
+        </v-btn>
+        </h1>
+    </div>
 
     <v-card
         class="mx-auto"

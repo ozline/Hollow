@@ -22,6 +22,13 @@ func NewUserService(uc *biz.UserUsecase) *UserService {
 	return &UserService{uc: uc}
 }
 
+func (s *UserService) PingConnect(ctx context.Context, req *v1.PingConnectRequest) (reply *v1.PingConnectReply, err error) {
+	return &v1.PingConnectReply{
+		Code: 200,
+		Msg:  "ok",
+	}, nil
+}
+
 // 用户登录
 func (s *UserService) Login(ctx context.Context, req *v1.LoginUserRequest) (reply *v1.LoginUserReply, err error) {
 	if len(req.Username) == 0 || len(req.Password) == 0 {
@@ -49,6 +56,40 @@ func (s *UserService) Login(ctx context.Context, req *v1.LoginUserRequest) (repl
 			CreatedAt:  data.Created_at,
 			MfaEnabled: data.Mfa_enabled,
 		},
+	}, nil
+}
+
+// 发送手机验证码
+func (s *UserService) SendShortMsg(ctx context.Context, req *v1.SendShortMsgRequest) (reply *v1.SendShortMsgReply, err error) {
+	data, err := s.uc.SendShortMsg(ctx, req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.SendShortMsgReply{
+		Code: 200,
+		Msg:  "ok",
+		Data: &v1.ShortMsg{
+			Code:      data.Code,
+			Message:   data.Message,
+			Bizid:     data.BizId,
+			Requestid: data.RequestId,
+		},
+	}, nil
+}
+
+// 换绑手机号
+func (s *UserService) ReBindPhone(ctx context.Context, req *v1.ReBindPhoneRequest) (reply *v1.ReBindPhoneReply, err error) {
+	err = s.uc.ReBindPhone(ctx, req)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.ReBindPhoneReply{
+		Code: 200,
+		Msg:  "ok",
 	}, nil
 }
 

@@ -21,6 +21,9 @@ type UserRepo interface {
 	MFAGetQrCode(ctx context.Context) (string, string, error)
 	MFAActivate(ctx context.Context, g *v1.MFAActivateRequest) error
 	MFACancel(ctx context.Context, code string) error
+	SendShortMsg(ctx context.Context, phone, code string) (data *types.ShortMsg, err error)
+	CheckMsgCode(ctx context.Context, phone, code string) (result bool, err error)
+	ReBindPhone(ctx context.Context, phone, code, mfacode string) error
 }
 
 type UserUsecase struct {
@@ -67,13 +70,23 @@ func (uc *UserUsecase) LoginUser(ctx context.Context, u *v1.LoginUserRequest) (*
 }
 
 func (uc *UserUsecase) RegisterUser(ctx context.Context, u *v1.RegisterUserRequest) (*types.User, error) {
-	//检查用户名是否重复
+
+	result, err := uc.ur.CheckMsgCode(ctx, u.Phone, u.Code)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if !result {
+		return nil, errors.ErrMsgCodeVerifyFailed
+	}
+	// 检查用户名是否重复
 	if uc.ur.CheckIsUserExistByUsername(ctx, u.Username) {
 		return nil, errors.ErrUserExisted
 	}
 
-	//创建用户
-	err := uc.ur.CreateUser(ctx, u)
+	// 创建用户
+	err = uc.ur.CreateUser(ctx, u)
 	if err != nil {
 		return nil, err
 	}
@@ -86,6 +99,26 @@ func (uc *UserUsecase) RegisterUser(ctx context.Context, u *v1.RegisterUserReque
 	}
 
 	return data, nil
+}
+
+func (uc *UserUsecase) SendShortMsg(ctx context.Context, u *v1.SendShortMsgRequest) (*types.ShortMsg, error) {
+	code := utils.GetCapature() // 获取验证码
+	data, err := uc.ur.SendShortMsg(ctx, u.Phone, code)
+
+	if err != nil {
+		return nil, errors.GenerateErrorNormal(err)
+	}
+
+	// 返回错误信息
+	if data.Code != "OK" {
+		return nil, errors.GenerateErrorString(data.Message)
+	}
+
+	return data, nil
+}
+
+func (uc *UserUsecase) ReBindPhone(ctx context.Context, u *v1.ReBindPhoneRequest) error {
+	return uc.ur.ReBindPhone(ctx, u.Phone, u.Code, u.Mfacode)
 }
 
 func (uc *UserUsecase) GetUserInfo(ctx context.Context, u *v1.GetUserRequest) (*types.User, error) {

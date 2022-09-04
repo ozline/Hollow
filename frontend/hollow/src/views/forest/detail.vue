@@ -34,7 +34,7 @@
                 <v-btn variant="outlined" color="error" size="x-small">
                     违规投诉
                 </v-btn>
-                <v-btn variant="outlined" v-show="item.status == 1" size="x-small">
+                <v-btn variant="outlined" v-show="item.status == 1" size="x-small" @click="showUser(item.owner)">
                     查看层主
                 </v-btn>
             </v-card-actions>
@@ -137,8 +137,11 @@ export default {
         report(){
             //举报
         },
+        showUser(id){
+            this.$router.push("/user/detail/" + id)
+        },
         delComment(id){
-            this.HTTP.delete("/forest/comments/" + id,true).then(() => {
+            this.HTTP.delete("/forest/comments/" + id,{ },true).then(() => {
                 this.snackbar.show("删除成功!")
                 this.refresh()
             })

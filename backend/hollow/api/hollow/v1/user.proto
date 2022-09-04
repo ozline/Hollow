@@ -14,6 +14,28 @@ option java_outer_classname = "UserProtoV1";
 // The greeting service definition.
 service Users {
 
+    // 测试连通性
+    rpc PingConnect (PingConnectRequest) returns (PingConnectReply) {
+        option (google.api.http) = {
+            get: "/api/ping"
+        };
+    }
+
+    // 发送手机验证码
+    rpc SendShortMsg (SendShortMsgRequest) returns (SendShortMsgReply) {
+        option (google.api.http) = {
+            post: "/api/user/register/shortmsg",
+            body: "*",
+        };
+    }
+
+    rpc reBindPhone (reBindPhoneRequest) returns (reBindPhoneReply) {
+        option (google.api.http) = {
+            post: "/api/user/rebind/phone",
+            body: "*"
+        };
+    }
+
     // 注册
     rpc Register (RegisterUserRequest) returns (RegisterUserReply) {
         option (google.api.http) = {
@@ -68,6 +90,20 @@ service Users {
 }
 //Request Messages
 
+message PingConnectRequest{
+
+}
+
+message SendShortMsgRequest{
+    string phone = 1 [(validate.rules).string = {len: 11}]; // 手机号
+}
+
+message reBindPhoneRequest{
+    string phone = 1 [(validate.rules).string = {len: 11}]; // 手机号
+    string code = 2 [(validate.rules).string = {len: 6}];
+    string mfacode = 3 [(validate.rules).string = {ignore_empty: true,len: 6}];
+}
+
 message LoginUserRequest{
     string username = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
     string password = 2 [(validate.rules).string = {min_len: 6, max_len: 16}];
@@ -78,7 +114,8 @@ message RegisterUserRequest{
     string username = 1 [(validate.rules).string = {min_len: 1, max_len: 10}];
     string password = 2 [(validate.rules).string = {min_len: 6, max_len: 16}];
     string email = 3 [(validate.rules).string.email = true];
-    int64 phone = 4;
+    string phone = 4 [(validate.rules).string = {len: 11}];
+    string code = 5 [(validate.rules).string = {len: 6}];
 }
 
 message GetUserRequest{
@@ -100,6 +137,13 @@ message MFACancelRequest {
 
 //Reply Messages
 
+message ShortMsg{
+    string code = 1;
+    string message = 2;
+    string bizid = 3;
+    string requestid = 4;
+}
+
 message User{
     int64 userid = 1;
     string username = 2;
@@ -114,6 +158,22 @@ message User{
 message MFA{
     string qrlink = 1;
     string secret = 2;
+}
+
+message PingConnectReply{
+    int64 code = 1;
+    string msg = 2;
+}
+
+message SendShortMsgReply{
+    int64 code = 1;
+    string msg = 2;
+    ShortMsg data = 3;
+}
+
+message reBindPhoneReply{
+    int64 code = 1;
+    string msg = 2;
 }
 
 message RegisterUserReply{

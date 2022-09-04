@@ -1,0 +1,33 @@
+PODS:
+  - Alamofire (5.6.1)
+  - AlamofireImage (4.2.0):
+    - Alamofire (~> 5.4)
+  - HandyJSON (5.0.2)
+  - MJRefresh (3.7.5)
+  - SwiftyJSON (4.3.0)
+
+DEPENDENCIES:
+  - Alamofire (~> 5.5)
+  - AlamofireImage (~> 4.1)
+  - HandyJSON (~> 5.0.2)
+  - MJRefresh
+  - SwiftyJSON (~> 4.0)
+
+SPEC REPOS:
+  trunk:
+    - Alamofire
+    - AlamofireImage
+    - HandyJSON
+    - MJRefresh
+    - SwiftyJSON
+
+SPEC CHECKSUMS:
+  Alamofire: 87bd8c952f9a4454320fce00d9cc3de57bcadaf5
+  AlamofireImage: 34a2d90b0e5fe6a5605f85ae4b7b01e784c60192
+  HandyJSON: 9e4e236f5d2dbefad5155a77417bbea438201c03
+  MJRefresh: fdf5e979eb406a0341468932d1dfc8b7f9fce961
+  SwiftyJSON: 6faa0040f8b59dead0ee07436cbf76b73c08fd08
+
+PODFILE CHECKSUM: cab1d935057c5e13823d680cebc3a197bbe13571
+
+COCOAPODS: 1.11.3

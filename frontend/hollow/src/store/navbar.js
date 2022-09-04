@@ -28,7 +28,7 @@ export const navbarStore = defineStore('navbar', {
                     title: '设置',
                     value: '/user/settings',
                     props: {
-                        prependIcon: 'mdi-account',
+                        prependIcon: 'mdi-wrench',
                     }
                 },
             ]

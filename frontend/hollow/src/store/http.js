@@ -20,13 +20,18 @@ export const httpStore = defineStore('http', {
         // 错误处理
         handleError(error){
             var status = error.status
-            if(status == 500) dialog.show("出现错误","服务器请求失败,请检查网络连接(500)")
-            else if(status == 404) dialog.show("出现错误","服务器异常,请等待管理员检查(404)")
+            // if(status == 500) dialog.show("出现错误","服务器请求失败,请检查网络连接(500)")
+            // else if(status == 404) dialog.show("出现错误","服务器异常,请等待管理员检查(404)")
+            if(status == 510){
+                global.logout()
+                dialog.show("出现错误","登录已过期,请重新登录(510)")
+                global.token = "expired"
+            }
             else{
                 var reason = (error.data.reason == undefined ? 'NULL' : error.data.reason)
                 var code = (error.data.code == undefined ? 'NULL' : error.data.code)
                 var message = (error.data.message == undefined ? 'NULL' : error.data.message)
-                dialog.show("出现错误","["+code+" "+reason+"] "+message)
+                dialog.show("出现错误","("+code+" "+reason+") "+message)
             }
         },
         // 统一请求结构
@@ -42,6 +47,8 @@ export const httpStore = defineStore('http', {
                 axios(struct)
                 .then(res => {
                     var result = JSON.parse(JSON.stringify(res.data))
+
+                    console.log(result)
                     if(result.code == 200){
                         if(auth == true){
                             global.updateToken(res.headers.authorization)

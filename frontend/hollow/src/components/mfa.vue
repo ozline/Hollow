@@ -1,7 +1,7 @@
 <template>
 
 <v-card
-    title="双因素认证登录(MFA)"
+    title="多因素认证登录(MFA)"
     subtitle="利用Google Authenticator实现二步验证登录"
     style="margin-bottom: 26px;"
     variant="outlined"
@@ -10,10 +10,10 @@
         启用状态: <b>{{ getMFAStatus() == true ? '已启用' : '未启用' }}</b>
     </v-card-text>
     <v-card-actions>
-        <!-- 启用双因素验证 -->
+        <!-- 启用多因素验证 -->
         <v-dialog v-model="activate" persistent>
             <template v-slot:activator="{ props }">
-                <v-btn variant="outlined" color="primary" v-bind="props" @click="refershQRCode" v-show="getMFAStatus() == false">启用双因素认证</v-btn>
+                <v-btn variant="outlined" color="success" v-bind="props" @click="refershQRCode" v-show="getMFAStatus() == false">启用多因素认证</v-btn>
             </template>
             <v-card title="启用MFA" >
                 <v-card-text>
@@ -56,10 +56,10 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <!-- 关闭双因素认证 -->
+        <!-- 关闭多因素认证 -->
         <v-dialog v-model="cancel" persistent>
             <template v-slot:activator="{ props }">
-                <v-btn variant="outlined" color="error" v-bind="props" v-show="getMFAStatus() == true">关闭双因素认证</v-btn>
+                <v-btn variant="outlined" color="error" v-bind="props" v-show="getMFAStatus() == true">关闭多因素认证</v-btn>
             </template>
             <v-card title="关闭MFA" >
                 <v-card-text>
@@ -70,10 +70,10 @@
                             label="6位数字代码"
                             required
                     ></v-text-field>
-                    <small>*若要关闭双因素认证,请在手机中打开Google Authenticator(身份验证器),输入6位动态码</small>
+                    <small>*若要关闭多因素认证,请在手机中打开Google Authenticator(身份验证器),输入6位动态码</small>
                 </v-card-text>
                 <v-card-actions>
-                    <v-btn color="blue-darken-1" text @click="cancel = false">保留双因素认证</v-btn>
+                    <v-btn color="blue-darken-1" text @click="cancel = false">保留多因素认证</v-btn>
                     <v-spacer></v-spacer>
                     <v-btn color="error" text @click="cancelMFA">确认取消</v-btn>
                 </v-card-actions>

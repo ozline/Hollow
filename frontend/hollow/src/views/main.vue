@@ -68,6 +68,7 @@ export default {
                 this.total = res.data.total
                 this.page.length = Math.ceil(this.total/this.page.size)
             })
+            this.scollTop()
         },
         cardClickEvent(id){
             this.$router.push("/forest/" + id)

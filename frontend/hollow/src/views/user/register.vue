@@ -25,7 +25,10 @@
             required
         ></v-text-field>
 
-        <v-text-field
+
+        <v-row>
+            <v-col cols="12" md="6">
+                <v-text-field
             v-model="phone"
             :rules="phoneRules"
             :counter="11"
@@ -33,6 +36,17 @@
             variant="outlined"
             required
         ></v-text-field>
+            </v-col>
+            <v-col cols="12" md="6">
+                <v-text-field
+                    v-model="code"
+                    :counter="6"
+                    label="验证码"
+                    variant="outlined"
+                    required
+                ></v-text-field>
+            </v-col>
+        </v-row>
 
         <v-text-field
             v-model="email"
@@ -47,6 +61,14 @@
             class="mr-4"
             @click="reset"
         >重置</v-btn>
+
+        <v-btn
+            color="primary"
+            @click="postShortMsg"
+            class="mr-4"
+            :loading="shortMsgLoading"
+        >
+        获取短信验证码</v-btn>
 
         <v-btn
             color="secondary"
@@ -99,6 +121,10 @@ export default {
             v => /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/.test(v) || '邮箱格式不正确',
         ],
 
+        code: '',
+
+        shortMsgLoading: false,
+
     }),
 
     methods: {
@@ -109,34 +135,37 @@ export default {
         login() {
             this.$router.push('/user/login');
         },
+        postShortMsg(){
+            var data = {
+                phone : this.phone
+            }
+            this.HTTP.post('/user/register/shortmsg',data).then( () => {
+                this.snackbar.show("获取短信验证码成功,1分钟后可再次获取")
+                this.shortMsgLoading = true
+                setTimeout(() => {
+                    this.shortMsgLoading = false
+                }, 60000);
+            })
+        },
         register() {
             this.$refs.form.validate()
 
-            if(this.valid==false){
+            if(this.valid == false){
                 this.dialog.show('提示','请检查输入的信息是否正确')
                 return
             }
 
-            var data = JSON.stringify({
+            var data = {
                 username: this.username,
                 password: this.password,
                 phone: this.phone,
                 email: this.email,
-            })
+                code: this.code,
+            }
 
-            this.axios.post("/apis/user/register", data).then(res => {
-                var result = JSON.parse(JSON.stringify(res.data))
-                if(result.code == 200){
-                    this.dialog.show('注册成功','注册成功,3秒后跳转到登录页面')
-                    setTimeout(() => {
-                        this.$router.push('/user/login');
-                    }, 3000);
-                }
-                else{
-                    this.dialog.handleError(result)
-                }
-            }).catch(err => {
-                this.dialog.handleError(err.response)
+            this.HTTP.post('/user/register', data).then( () => {
+                this.snackbar.show('注册成功','注册成功,请登录账号')
+                this.$router.push('/user/login');
             })
         },
     },

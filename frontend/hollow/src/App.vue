@@ -36,5 +36,12 @@ export default {
     'dialog-view' : ComponentMessage,
     'snackbar' : ComponentSnackbar
   },
+  created(){
+    this.global.$subscribe( (mutation, state) => {
+      if(state.token == "expired"){
+        this.$router.push("/user/login")
+      }
+    })
+  }
 }
 </script>

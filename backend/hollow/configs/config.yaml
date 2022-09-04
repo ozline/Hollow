@@ -13,7 +13,10 @@ data:
     port: 3306
     dbname: ozline_test
   redis:
-    addr: 127.0.0.1:6379
+    address: r-bp18nt2a14c52xu3t0pd.redis.rds.aliyuncs.com
+    port: 6379
+    username: r-bp18nt2a14c52xu3t0
+    password: Mima011216
     read_timeout: 0.2s
     write_timeout: 0.2s
   snowflake:
@@ -21,9 +24,16 @@ data:
     machine_id: 1
   OSS:
     endpoint: files.ozline.icu #默认启用自定义域名
-    accessKeyID: LTAI5tEHEZVCNhGVUFPDQ72w
-    accessKeySecret: r2AMvWTgaokelvgUtnnfyeoqCxQK1Q
+    accessKeyID: LTAI5t9h8KXfcmfrpFdmfkaF
+    accessKeySecret: tWYPlgdjyVlp2iyRY3aRmDUxClhYhu
     bucket: ozliinex
     maindir: bilibili
+  shortmsg:
+    accessKeyID: LTAI5t9h8KXfcmfrpFdmfkaF
+    accessKeySecret: tWYPlgdjyVlp2iyRY3aRmDUxClhYhu
+    regionId: cn-hangzhou
+    scheme: https
+    signname: Hollow抒发树洞
+    templatecode: SMS_247945313
 auth:
   secret: MTAxNTkwMTg1Mw==

@@ -8,13 +8,13 @@
 import SwiftUI
 
 @main
-struct hollowApp: App {
-    let persistenceController = PersistenceController.shared
+struct lazyfishApp: App {
+    
+    var tmp : [String : String] = ["page" : "1","pagesize" : "10"]
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            EntranceView()
         }
     }
 }

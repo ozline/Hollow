@@ -35,6 +35,364 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on PingConnectRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *PingConnectRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on PingConnectRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// PingConnectRequestMultiError, or nil if none found.
+func (m *PingConnectRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *PingConnectRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return PingConnectRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// PingConnectRequestMultiError is an error wrapping multiple validation errors
+// returned by PingConnectRequest.ValidateAll() if the designated constraints
+// aren't met.
+type PingConnectRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m PingConnectRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m PingConnectRequestMultiError) AllErrors() []error { return m }
+
+// PingConnectRequestValidationError is the validation error returned by
+// PingConnectRequest.Validate if the designated constraints aren't met.
+type PingConnectRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e PingConnectRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e PingConnectRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e PingConnectRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e PingConnectRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e PingConnectRequestValidationError) ErrorName() string {
+	return "PingConnectRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e PingConnectRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sPingConnectRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = PingConnectRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = PingConnectRequestValidationError{}
+
+// Validate checks the field values on SendShortMsgRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *SendShortMsgRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on SendShortMsgRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// SendShortMsgRequestMultiError, or nil if none found.
+func (m *SendShortMsgRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *SendShortMsgRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetPhone()) != 11 {
+		err := SendShortMsgRequestValidationError{
+			field:  "Phone",
+			reason: "value length must be 11 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+
+	}
+
+	if len(errors) > 0 {
+		return SendShortMsgRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// SendShortMsgRequestMultiError is an error wrapping multiple validation
+// errors returned by SendShortMsgRequest.ValidateAll() if the designated
+// constraints aren't met.
+type SendShortMsgRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m SendShortMsgRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m SendShortMsgRequestMultiError) AllErrors() []error { return m }
+
+// SendShortMsgRequestValidationError is the validation error returned by
+// SendShortMsgRequest.Validate if the designated constraints aren't met.
+type SendShortMsgRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e SendShortMsgRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e SendShortMsgRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e SendShortMsgRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e SendShortMsgRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e SendShortMsgRequestValidationError) ErrorName() string {
+	return "SendShortMsgRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e SendShortMsgRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sSendShortMsgRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = SendShortMsgRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = SendShortMsgRequestValidationError{}
+
+// Validate checks the field values on ReBindPhoneRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ReBindPhoneRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ReBindPhoneRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ReBindPhoneRequestMultiError, or nil if none found.
+func (m *ReBindPhoneRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ReBindPhoneRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetPhone()) != 11 {
+		err := ReBindPhoneRequestValidationError{
+			field:  "Phone",
+			reason: "value length must be 11 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+
+	}
+
+	if utf8.RuneCountInString(m.GetCode()) != 6 {
+		err := ReBindPhoneRequestValidationError{
+			field:  "Code",
+			reason: "value length must be 6 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+
+	}
+
+	if m.GetMfacode() != "" {
+
+		if utf8.RuneCountInString(m.GetMfacode()) != 6 {
+			err := ReBindPhoneRequestValidationError{
+				field:  "Mfacode",
+				reason: "value length must be 6 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ReBindPhoneRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ReBindPhoneRequestMultiError is an error wrapping multiple validation errors
+// returned by ReBindPhoneRequest.ValidateAll() if the designated constraints
+// aren't met.
+type ReBindPhoneRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ReBindPhoneRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ReBindPhoneRequestMultiError) AllErrors() []error { return m }
+
+// ReBindPhoneRequestValidationError is the validation error returned by
+// ReBindPhoneRequest.Validate if the designated constraints aren't met.
+type ReBindPhoneRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ReBindPhoneRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ReBindPhoneRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ReBindPhoneRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ReBindPhoneRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ReBindPhoneRequestValidationError) ErrorName() string {
+	return "ReBindPhoneRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ReBindPhoneRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sReBindPhoneRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ReBindPhoneRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ReBindPhoneRequestValidationError{}
+
 // Validate checks the field values on LoginUserRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
@@ -229,7 +587,29 @@ func (m *RegisterUserRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	// no validation rules for Phone
+	if utf8.RuneCountInString(m.GetPhone()) != 11 {
+		err := RegisterUserRequestValidationError{
+			field:  "Phone",
+			reason: "value length must be 11 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+
+	}
+
+	if utf8.RuneCountInString(m.GetCode()) != 6 {
+		err := RegisterUserRequestValidationError{
+			field:  "Code",
+			reason: "value length must be 6 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+
+	}
 
 	if len(errors) > 0 {
 		return RegisterUserRequestMultiError(errors)
@@ -799,6 +1179,113 @@ var _ interface {
 	ErrorName() string
 } = MFACancelRequestValidationError{}
 
+// Validate checks the field values on ShortMsg with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *ShortMsg) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ShortMsg with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in ShortMsgMultiError, or nil
+// if none found.
+func (m *ShortMsg) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ShortMsg) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Code
+
+	// no validation rules for Message
+
+	// no validation rules for Bizid
+
+	// no validation rules for Requestid
+
+	if len(errors) > 0 {
+		return ShortMsgMultiError(errors)
+	}
+
+	return nil
+}
+
+// ShortMsgMultiError is an error wrapping multiple validation errors returned
+// by ShortMsg.ValidateAll() if the designated constraints aren't met.
+type ShortMsgMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ShortMsgMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ShortMsgMultiError) AllErrors() []error { return m }
+
+// ShortMsgValidationError is the validation error returned by
+// ShortMsg.Validate if the designated constraints aren't met.
+type ShortMsgValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ShortMsgValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ShortMsgValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ShortMsgValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ShortMsgValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ShortMsgValidationError) ErrorName() string { return "ShortMsgValidationError" }
+
+// Error satisfies the builtin error interface
+func (e ShortMsgValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sShortMsg.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ShortMsgValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ShortMsgValidationError{}
+
 // Validate checks the field values on User with the rules defined in the proto
 // definition for this message. If any rules are violated, the first error
 // encountered is returned, or nil if there are no violations.
@@ -1014,6 +1501,349 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = MFAValidationError{}
+
+// Validate checks the field values on PingConnectReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *PingConnectReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on PingConnectReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// PingConnectReplyMultiError, or nil if none found.
+func (m *PingConnectReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *PingConnectReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Code
+
+	// no validation rules for Msg
+
+	if len(errors) > 0 {
+		return PingConnectReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// PingConnectReplyMultiError is an error wrapping multiple validation errors
+// returned by PingConnectReply.ValidateAll() if the designated constraints
+// aren't met.
+type PingConnectReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m PingConnectReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m PingConnectReplyMultiError) AllErrors() []error { return m }
+
+// PingConnectReplyValidationError is the validation error returned by
+// PingConnectReply.Validate if the designated constraints aren't met.
+type PingConnectReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e PingConnectReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e PingConnectReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e PingConnectReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e PingConnectReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e PingConnectReplyValidationError) ErrorName() string { return "PingConnectReplyValidationError" }
+
+// Error satisfies the builtin error interface
+func (e PingConnectReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sPingConnectReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = PingConnectReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = PingConnectReplyValidationError{}
+
+// Validate checks the field values on SendShortMsgReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *SendShortMsgReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on SendShortMsgReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// SendShortMsgReplyMultiError, or nil if none found.
+func (m *SendShortMsgReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *SendShortMsgReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Code
+
+	// no validation rules for Msg
+
+	if all {
+		switch v := interface{}(m.GetData()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, SendShortMsgReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, SendShortMsgReplyValidationError{
+					field:  "Data",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetData()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return SendShortMsgReplyValidationError{
+				field:  "Data",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return SendShortMsgReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// SendShortMsgReplyMultiError is an error wrapping multiple validation errors
+// returned by SendShortMsgReply.ValidateAll() if the designated constraints
+// aren't met.
+type SendShortMsgReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m SendShortMsgReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m SendShortMsgReplyMultiError) AllErrors() []error { return m }
+
+// SendShortMsgReplyValidationError is the validation error returned by
+// SendShortMsgReply.Validate if the designated constraints aren't met.
+type SendShortMsgReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e SendShortMsgReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e SendShortMsgReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e SendShortMsgReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e SendShortMsgReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e SendShortMsgReplyValidationError) ErrorName() string {
+	return "SendShortMsgReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e SendShortMsgReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sSendShortMsgReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = SendShortMsgReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = SendShortMsgReplyValidationError{}
+
+// Validate checks the field values on ReBindPhoneReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *ReBindPhoneReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ReBindPhoneReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ReBindPhoneReplyMultiError, or nil if none found.
+func (m *ReBindPhoneReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ReBindPhoneReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Code
+
+	// no validation rules for Msg
+
+	if len(errors) > 0 {
+		return ReBindPhoneReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// ReBindPhoneReplyMultiError is an error wrapping multiple validation errors
+// returned by ReBindPhoneReply.ValidateAll() if the designated constraints
+// aren't met.
+type ReBindPhoneReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ReBindPhoneReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ReBindPhoneReplyMultiError) AllErrors() []error { return m }
+
+// ReBindPhoneReplyValidationError is the validation error returned by
+// ReBindPhoneReply.Validate if the designated constraints aren't met.
+type ReBindPhoneReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ReBindPhoneReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ReBindPhoneReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ReBindPhoneReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ReBindPhoneReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ReBindPhoneReplyValidationError) ErrorName() string { return "ReBindPhoneReplyValidationError" }
+
+// Error satisfies the builtin error interface
+func (e ReBindPhoneReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sReBindPhoneReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ReBindPhoneReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ReBindPhoneReplyValidationError{}
 
 // Validate checks the field values on RegisterUserReply with the rules defined
 // in the proto definition for this message. If any rules are violated, the
