@@ -5,23 +5,23 @@ import (
 
 	v1 "hollow/api/hollow/v1"
 	errors "hollow/internal/errors"
+	models "hollow/internal/models"
 	mfa "hollow/internal/pkg/middleware/MFA"
 	utils "hollow/internal/pkg/utils"
-	types "hollow/internal/types"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
 
 type UserRepo interface {
-	GetUserByUsername(ctx context.Context, username string) (*types.User, error)
-	GetUserByID(ctx context.Context, userid int64) (*types.User, error)
+	GetUserByUsername(ctx context.Context, username string) (*models.User, error)
+	GetUserByID(ctx context.Context, userid int64) (*models.User, error)
 	CreateUser(ctx context.Context, req *v1.RegisterUserRequest) error
 	CheckIsUserExistByUsername(ctx context.Context, username string) bool
 	CheckIsUserExistByID(ctx context.Context, userid int64) bool
 	MFAGetQrCode(ctx context.Context) (string, string, error)
 	MFAActivate(ctx context.Context, g *v1.MFAActivateRequest) error
 	MFACancel(ctx context.Context, code string) error
-	SendShortMsg(ctx context.Context, phone, code string) (data *types.ShortMsg, err error)
+	SendShortMsg(ctx context.Context, phone, code string) (data *models.ShortMsg, err error)
 	CheckMsgCode(ctx context.Context, phone, code string) (result bool, err error)
 	ReBindPhone(ctx context.Context, phone, code, mfacode string) error
 	UpdateUserStatus(ctx context.Context, g *v1.UpdateUserStatusRequest) error
@@ -36,7 +36,7 @@ func NewUserUsecase(repo UserRepo, logger log.Logger) *UserUsecase {
 	return &UserUsecase{ur: repo, log: log.NewHelper(logger)}
 }
 
-func (uc *UserUsecase) LoginUser(ctx context.Context, u *v1.LoginUserRequest) (*types.User, error) {
+func (uc *UserUsecase) LoginUser(ctx context.Context, u *v1.LoginUserRequest) (*models.User, error) {
 
 	data, err := uc.ur.GetUserByUsername(ctx, u.Username)
 
@@ -75,7 +75,7 @@ func (uc *UserUsecase) LoginUser(ctx context.Context, u *v1.LoginUserRequest) (*
 	return data, err
 }
 
-func (uc *UserUsecase) RegisterUser(ctx context.Context, u *v1.RegisterUserRequest) (*types.User, error) {
+func (uc *UserUsecase) RegisterUser(ctx context.Context, u *v1.RegisterUserRequest) (*models.User, error) {
 
 	result, err := uc.ur.CheckMsgCode(ctx, u.Phone, u.Code)
 
@@ -107,7 +107,7 @@ func (uc *UserUsecase) RegisterUser(ctx context.Context, u *v1.RegisterUserReque
 	return data, nil
 }
 
-func (uc *UserUsecase) SendShortMsg(ctx context.Context, u *v1.SendShortMsgRequest) (*types.ShortMsg, error) {
+func (uc *UserUsecase) SendShortMsg(ctx context.Context, u *v1.SendShortMsgRequest) (*models.ShortMsg, error) {
 	code := utils.GetCapature() // 获取验证码
 	data, err := uc.ur.SendShortMsg(ctx, u.Phone, code)
 
@@ -127,7 +127,7 @@ func (uc *UserUsecase) ReBindPhone(ctx context.Context, u *v1.ReBindPhoneRequest
 	return uc.ur.ReBindPhone(ctx, u.Phone, u.Code, u.Mfacode)
 }
 
-func (uc *UserUsecase) GetUserInfo(ctx context.Context, u *v1.GetUserRequest) (*types.User, error) {
+func (uc *UserUsecase) GetUserInfo(ctx context.Context, u *v1.GetUserRequest) (*models.User, error) {
 	return uc.ur.GetUserByID(ctx, u.Id)
 }
 

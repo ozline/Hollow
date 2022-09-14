@@ -15,7 +15,8 @@ type Error struct {
 var (
 	ErrCodeNormal              = 400
 	ErrCodeInternalServerError = 500
-	ErrCodeNeedMFA             = 417
+
+	ErrCodeNeedMFA = 417
 
 	//SERVICE
 	ErrMissingParams = errors.New(ErrCodeNormal, v1.ErrorReason_PARAMS_ILLEGAL.String(), "缺失必要参数")

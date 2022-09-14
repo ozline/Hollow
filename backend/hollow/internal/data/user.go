@@ -9,8 +9,8 @@ import (
 	"hollow/internal/pkg/utils"
 
 	errors "hollow/internal/errors"
+	models "hollow/internal/models"
 	mfa "hollow/internal/pkg/middleware/MFA"
-	types "hollow/internal/types"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
@@ -40,8 +40,8 @@ func (r *userRepo) CheckIsUserExistByID(ctx context.Context, userid int64) bool 
 	return count != 0
 }
 
-func (r *userRepo) GetUserByUsername(ctx context.Context, username string) (user *types.User, err error) {
-	u := new(types.User)
+func (r *userRepo) GetUserByUsername(ctx context.Context, username string) (user *models.User, err error) {
+	u := new(models.User)
 	var count int64
 	res := r.data.db.Table(TABLE_USERS).Where("username = ?", username).Count(&count)
 	if res.Error != nil {
@@ -57,8 +57,8 @@ func (r *userRepo) GetUserByUsername(ctx context.Context, username string) (user
 	return u, nil
 }
 
-func (r *userRepo) GetUserByID(ctx context.Context, userid int64) (user *types.User, err error) {
-	u := new(types.User)
+func (r *userRepo) GetUserByID(ctx context.Context, userid int64) (user *models.User, err error) {
+	u := new(models.User)
 	var count int64
 	res := r.data.db.Table(TABLE_USERS).Where("id = ?", userid).Count(&count)
 	if res.Error != nil {
@@ -83,7 +83,7 @@ func (r *userRepo) CreateUser(ctx context.Context, g *v1.RegisterUserRequest) er
 	}
 
 	timeStamp := utils.GetTimestamp13()
-	u := types.User{
+	u := models.User{
 		ID:         GetSnowflakeID(r.data.node),
 		Username:   g.Username,
 		Password:   utils.GenerateTokenSHA256(g.Password),
@@ -102,7 +102,7 @@ func (r *userRepo) CreateUser(ctx context.Context, g *v1.RegisterUserRequest) er
 func (r *userRepo) MFAGetQrCode(ctx context.Context) (string, string, error) {
 	user := GetUserInfo(ctx)
 
-	u := new(types.User)
+	u := new(models.User)
 
 	res := r.data.db.Table(TABLE_USERS).Where("id = ?", user.ID).First(&u)
 
@@ -125,7 +125,7 @@ func (r *userRepo) MFAGetQrCode(ctx context.Context) (string, string, error) {
 func (r *userRepo) MFAActivate(ctx context.Context, g *v1.MFAActivateRequest) error {
 	user := GetUserInfo(ctx)
 
-	u := new(types.User)
+	u := new(models.User)
 
 	res := r.data.db.Table(TABLE_USERS).Where("id = ?", user.ID).First(&u)
 
@@ -161,7 +161,7 @@ func (r *userRepo) MFAActivate(ctx context.Context, g *v1.MFAActivateRequest) er
 func (r *userRepo) MFACancel(ctx context.Context, code string) error {
 	user := GetUserInfo(ctx)
 
-	u := new(types.User)
+	u := new(models.User)
 
 	res := r.data.db.Table(TABLE_USERS).Where("id = ?", user.ID).First(&u)
 
@@ -192,7 +192,7 @@ func (r *userRepo) MFACancel(ctx context.Context, code string) error {
 }
 
 // 发送短信
-func (r *userRepo) SendShortMsg(ctx context.Context, phone, code string) (data *types.ShortMsg, err error) {
+func (r *userRepo) SendShortMsg(ctx context.Context, phone, code string) (data *models.ShortMsg, err error) {
 	rs, err := r.data.dbRedis.Do("TTL", phone)
 
 	if err != nil {
@@ -245,7 +245,7 @@ func (r *userRepo) CheckMsgCode(ctx context.Context, phone, code string) (result
 func (r *userRepo) ReBindPhone(ctx context.Context, phone, code, mfacode string) error {
 	user := GetUserInfo(ctx)
 
-	u := new(types.User)
+	u := new(models.User)
 
 	res := r.data.db.Table(TABLE_USERS).Where("id = ?", user.ID).First(&u)
 
@@ -296,7 +296,7 @@ func (r *userRepo) UpdateUserStatus(ctx context.Context, g *v1.UpdateUserStatusR
 		return errors.ErrUserInsufficientPermissions
 	}
 
-	u := new(types.User)
+	u := new(models.User)
 
 	res := r.data.db.Table(TABLE_USERS).Where("id = ?", g.Id).First(&u)
 

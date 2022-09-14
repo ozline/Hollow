@@ -23,4 +23,4 @@ EXPOSE 9001
 
 VOLUME /data/conf
 
-CMD ["./server", "-conf", "/data/conf"]
+CMD ["./hollow", "-conf", "/data/conf"]

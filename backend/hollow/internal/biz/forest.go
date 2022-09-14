@@ -6,7 +6,7 @@ import (
 	v1 "hollow/api/hollow/v1"
 
 	"hollow/internal/errors"
-	types "hollow/internal/types"
+	models "hollow/internal/models"
 
 	"github.com/go-kratos/kratos/v2/log"
 )
@@ -14,14 +14,14 @@ import (
 type ForestRepo interface {
 	PushLeaf(ctx context.Context, g *v1.PushLeafRequest) error
 	DeleteLeaf(ctx context.Context, g *v1.DeleteLeafRequest) error
-	GetForest(ctx context.Context, g *v1.GetLeafsRequest) (list []*types.Leaf, total int64, err error)
-	GetLeafDetail(ctx context.Context, g *v1.GetLeafDetailRequest) (leaf *types.Leaf, err error)
+	GetForest(ctx context.Context, g *v1.GetLeafsRequest) (list []*models.Leaf, total int64, err error)
+	GetLeafDetail(ctx context.Context, g *v1.GetLeafDetailRequest) (leaf *models.Leaf, err error)
 	CommentLeaf(ctx context.Context, g *v1.CommentLeafRequest) error
-	GetComments(ctx context.Context, g *v1.GetCommentsRequest) (list []*types.Comment, total int64, err error)
+	GetComments(ctx context.Context, g *v1.GetCommentsRequest) (list []*models.Comment, total int64, err error)
 	DeleteComment(ctx context.Context, g *v1.DeleteCommentRequest) error
 	LikeComment(ctx context.Context, u *v1.LikeCommentRequest) error
 	Report(ctx context.Context, g *v1.ReportRequest) error
-	GetReportList(ctx context.Context, g *v1.GetReportListRequest) (list []*types.Report, total int64, err error)
+	GetReportList(ctx context.Context, g *v1.GetReportListRequest) (list []*models.Report, total int64, err error)
 	UpdateReport(ctx context.Context, g *v1.UpdateReportRequest) error
 	UpdateCommentStatus(ctx context.Context, g *v1.UpdateCommentStatusRequest) error
 	UpdateLeafStatus(ctx context.Context, g *v1.UpdateLeafStatusRequest) error
@@ -32,7 +32,7 @@ type ForestUsecase struct {
 	log *log.Helper
 }
 
-func convertLeafToReply(forest *types.Leaf) *v1.Leaf {
+func convertLeafToReply(forest *models.Leaf) *v1.Leaf {
 	return &v1.Leaf{
 		Id:        forest.ID,
 		Owner:     forest.Owner,
@@ -43,7 +43,7 @@ func convertLeafToReply(forest *types.Leaf) *v1.Leaf {
 	}
 }
 
-func convertCommentToReply(comment *types.Comment) *v1.Comment {
+func convertCommentToReply(comment *models.Comment) *v1.Comment {
 	return &v1.Comment{
 		Id:        comment.ID,
 		Owner:     comment.Owner,
@@ -56,7 +56,7 @@ func convertCommentToReply(comment *types.Comment) *v1.Comment {
 	}
 }
 
-func convertReportReply(report *types.Report) *v1.Report {
+func convertReportReply(report *models.Report) *v1.Report {
 	return &v1.Report{
 		Id:        report.Id,
 		Type:      report.Type,
@@ -100,7 +100,7 @@ func (uc *ForestUsecase) GetForest(ctx context.Context, u *v1.GetLeafsRequest) (
 	return forest, count, nil
 }
 
-func (uc *ForestUsecase) GetLeafDetail(ctx context.Context, u *v1.GetLeafDetailRequest) (comment *types.Leaf, err error) {
+func (uc *ForestUsecase) GetLeafDetail(ctx context.Context, u *v1.GetLeafDetailRequest) (comment *models.Leaf, err error) {
 	return uc.ur.GetLeafDetail(ctx, u)
 }
 

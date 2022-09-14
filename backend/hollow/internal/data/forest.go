@@ -7,8 +7,8 @@ import (
 	"hollow/internal/biz"
 
 	errors "hollow/internal/errors"
+	models "hollow/internal/models"
 	utils "hollow/internal/pkg/utils"
-	types "hollow/internal/types"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"gorm.io/gorm"
@@ -42,7 +42,7 @@ func (r *forestRepo) PushLeaf(ctx context.Context, g *v1.PushLeafRequest) error 
 		return errors.ErrUserInvalid
 	}
 
-	u := types.Leaf{
+	u := models.Leaf{
 		ID:         GetSnowflakeID(r.data.node),
 		Owner:      user.ID,
 		Created_at: timeStamp,
@@ -55,7 +55,7 @@ func (r *forestRepo) PushLeaf(ctx context.Context, g *v1.PushLeafRequest) error 
 
 // 删除评论
 func (r *forestRepo) DeleteLeaf(ctx context.Context, g *v1.DeleteLeafRequest) error {
-	leaf := new(types.Leaf)
+	leaf := new(models.Leaf)
 	res := r.data.db.Table(TABLE_FOREST).Where("id = ?", g.Id).Limit(1).Find(&leaf)
 
 	if res.Error != nil {
@@ -77,8 +77,8 @@ func (r *forestRepo) DeleteLeaf(ctx context.Context, g *v1.DeleteLeafRequest) er
 }
 
 // 获取列表
-func (r *forestRepo) GetForest(ctx context.Context, g *v1.GetLeafsRequest) (list []*types.Leaf, total int64, err error) {
-	var leafs []types.Leaf
+func (r *forestRepo) GetForest(ctx context.Context, g *v1.GetLeafsRequest) (list []*models.Leaf, total int64, err error) {
+	var leafs []models.Leaf
 	var count int64
 	var res *gorm.DB
 
@@ -89,13 +89,13 @@ func (r *forestRepo) GetForest(ctx context.Context, g *v1.GetLeafsRequest) (list
 		return nil, 0, res.Error
 	}
 
-	list = make([]*types.Leaf, 0)
+	list = make([]*models.Leaf, 0)
 
 	for _, v := range leafs {
 		if v.Status != 1 { //匿名 且 与自身ID不等
 			v.Owner = 0
 		}
-		list = append(list, &types.Leaf{
+		list = append(list, &models.Leaf{
 			ID:         v.ID,
 			Owner:      v.Owner,
 			Created_at: v.Created_at,
@@ -107,8 +107,8 @@ func (r *forestRepo) GetForest(ctx context.Context, g *v1.GetLeafsRequest) (list
 	return list, count, nil
 }
 
-func (r *forestRepo) GetLeafDetail(ctx context.Context, g *v1.GetLeafDetailRequest) (leaf *types.Leaf, err error) {
-	var data = new(types.Leaf)
+func (r *forestRepo) GetLeafDetail(ctx context.Context, g *v1.GetLeafDetailRequest) (leaf *models.Leaf, err error) {
+	var data = new(models.Leaf)
 	res := r.data.db.Table(TABLE_FOREST).Where("id = ?", g.Id).Limit(1).Find(&data)
 
 	if res.Error != nil {
@@ -139,7 +139,7 @@ func (r *forestRepo) CommentLeaf(ctx context.Context, g *v1.CommentLeafRequest) 
 		return errors.ErrLeafNotExisted
 	}
 
-	u := types.Comment{
+	u := models.Comment{
 		ID:         GetSnowflakeID(r.data.node),
 		Owner:      user.ID,
 		Root:       g.Root,
@@ -153,8 +153,8 @@ func (r *forestRepo) CommentLeaf(ctx context.Context, g *v1.CommentLeafRequest) 
 	return res.Error
 }
 
-func (r *forestRepo) GetComments(ctx context.Context, g *v1.GetCommentsRequest) (list []*types.Comment, total int64, err error) {
-	var comments []types.Comment
+func (r *forestRepo) GetComments(ctx context.Context, g *v1.GetCommentsRequest) (list []*models.Comment, total int64, err error) {
+	var comments []models.Comment
 	var count int64
 	var res *gorm.DB
 
@@ -167,13 +167,13 @@ func (r *forestRepo) GetComments(ctx context.Context, g *v1.GetCommentsRequest) 
 
 	user := GetUserInfo(ctx)
 
-	list = make([]*types.Comment, 0)
+	list = make([]*models.Comment, 0)
 
 	for _, v := range comments {
 		if v.Status != 1 && v.Owner != user.ID { //匿名 且 与自身ID不等
 			v.Owner = 0
 		}
-		list = append(list, &types.Comment{
+		list = append(list, &models.Comment{
 			ID:         v.ID,
 			Owner:      v.Owner,
 			Root:       v.Root,
@@ -189,7 +189,7 @@ func (r *forestRepo) GetComments(ctx context.Context, g *v1.GetCommentsRequest) 
 }
 
 func (r *forestRepo) DeleteComment(ctx context.Context, g *v1.DeleteCommentRequest) error {
-	comment := new(types.Comment)
+	comment := new(models.Comment)
 	var count int64
 	res := r.data.db.Table(TABLE_COMMENT).Where("id = ?", g.Id).Limit(1).Count(&count)
 
@@ -245,7 +245,7 @@ func (r *forestRepo) LikeComment(ctx context.Context, g *v1.LikeCommentRequest) 
 		return errors.ErrHaveLiked
 	}
 
-	like := types.Like{
+	like := models.Like{
 		Timestamp: utils.GetTimestamp13(),
 		User:      user.ID,
 		Comment:   g.Id,
@@ -257,7 +257,7 @@ func (r *forestRepo) LikeComment(ctx context.Context, g *v1.LikeCommentRequest) 
 		return errors.GenerateErrorNormal(res.Error)
 	}
 
-	comment := new(types.Comment)
+	comment := new(models.Comment)
 
 	res = r.data.db.Table(TABLE_COMMENT).Where("id = ?", g.Id).First(&comment)
 
@@ -286,7 +286,7 @@ func (r *forestRepo) Report(ctx context.Context, g *v1.ReportRequest) error {
 			return errors.ErrLeafNotExisted
 		}
 
-		var leaf = new(types.Leaf)
+		var leaf = new(models.Leaf)
 
 		_ = source.First(&leaf)
 
@@ -300,7 +300,7 @@ func (r *forestRepo) Report(ctx context.Context, g *v1.ReportRequest) error {
 			return errors.ErrCommentNotExist
 		}
 
-		var comment = new(types.Comment)
+		var comment = new(models.Comment)
 
 		_ = source.First(&comment)
 
@@ -311,7 +311,7 @@ func (r *forestRepo) Report(ctx context.Context, g *v1.ReportRequest) error {
 		message = "待开发"
 	}
 
-	report := types.Report{
+	report := models.Report{
 		Id:         GetSnowflakeID(r.data.node),
 		Type:       g.Type,
 		Status:     0,
@@ -329,11 +329,11 @@ func (r *forestRepo) Report(ctx context.Context, g *v1.ReportRequest) error {
 	return res.Error
 }
 
-func (r *forestRepo) GetReportList(ctx context.Context, g *v1.GetReportListRequest) (list []*types.Report, total int64, err error) {
+func (r *forestRepo) GetReportList(ctx context.Context, g *v1.GetReportListRequest) (list []*models.Report, total int64, err error) {
 
 	user := GetUserInfo(ctx)
 
-	var reports []types.Report
+	var reports []models.Report
 	var count int64
 	var res *gorm.DB
 
@@ -344,10 +344,10 @@ func (r *forestRepo) GetReportList(ctx context.Context, g *v1.GetReportListReque
 		return nil, 0, res.Error
 	}
 
-	list = make([]*types.Report, 0)
+	list = make([]*models.Report, 0)
 
 	for _, v := range reports {
-		list = append(list, &types.Report{
+		list = append(list, &models.Report{
 			Id:         v.Id,
 			Type:       v.Type,
 			Status:     v.Status,
@@ -379,7 +379,7 @@ func (r *forestRepo) UpdateReport(ctx context.Context, g *v1.UpdateReportRequest
 		return errors.ErrReportsNotExisted
 	}
 
-	report := new(types.Report)
+	report := new(models.Report)
 
 	res = res.First(&report)
 
@@ -398,7 +398,7 @@ func (r *forestRepo) UpdateCommentStatus(ctx context.Context, g *v1.UpdateCommen
 		return errors.ErrUserInsufficientPermissions
 	}
 
-	comment := new(types.Comment)
+	comment := new(models.Comment)
 
 	res := r.data.db.Table(TABLE_COMMENT).Where("id = ?", g.Id).First(&comment)
 
@@ -420,7 +420,7 @@ func (r *forestRepo) UpdateLeafStatus(ctx context.Context, g *v1.UpdateLeafStatu
 		return errors.ErrUserInsufficientPermissions
 	}
 
-	leaf := new(types.Leaf)
+	leaf := new(models.Leaf)
 
 	res := r.data.db.Table(TABLE_FOREST).Where("id = ?", g.Id).First(&leaf)
 

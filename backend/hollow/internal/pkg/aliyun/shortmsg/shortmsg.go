@@ -5,7 +5,7 @@ import (
 	"github.com/aliyun/alibaba-cloud-sdk-go/sdk/auth/credentials"
 	"github.com/aliyun/alibaba-cloud-sdk-go/services/dysmsapi"
 
-	types "hollow/internal/types"
+	models "hollow/internal/models"
 )
 
 type AliyunShortMsg struct {
@@ -38,7 +38,7 @@ func (asm *AliyunShortMsg) getTemplateParam(code string) string {
 	return "{\"code\":\"" + code + "\"}"
 }
 
-func (asm *AliyunShortMsg) PostMsg(PhoneNumbers, params string) (data *types.ShortMsg, err error) {
+func (asm *AliyunShortMsg) PostMsg(PhoneNumbers, params string) (data *models.ShortMsg, err error) {
 	asm.requestInfo.TemplateParam = asm.getTemplateParam(params) //更新参数
 	asm.requestInfo.PhoneNumbers = PhoneNumbers
 
@@ -50,7 +50,7 @@ func (asm *AliyunShortMsg) PostMsg(PhoneNumbers, params string) (data *types.Sho
 
 	// 项目较小，不需要实现短信回执
 
-	return &types.ShortMsg{
+	return &models.ShortMsg{
 		Code:      response.Code,
 		Message:   response.Message,
 		BizId:     response.BizId,
